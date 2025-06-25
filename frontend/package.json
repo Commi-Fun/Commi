@@ -1,0 +1,46 @@
+{
+  "name": "commi",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^7.1.2",
+    "@mui/material": "^7.1.2",
+    "@mui/x-charts": "^8.5.3",
+    "@mui/x-data-grid": "^8.5.3",
+    "@mui/x-date-pickers": "^8.5.3",
+    "@mui/x-tree-view": "^8.5.3",
+    "@react-spring/web": "^10.0.1",
+    "Image": "link:@mui/icons-material/Image",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "material,": "link:@mui/material,",
+    "next": "15.3.4",
+    "react": "^19.0.0",
+    "react,": "link:@emotion/react,",
+    "react-dom": "^19.0.0",
+    "styled,": "link:@emotion/styled,",
+    "x-charts,": "link:@mui/x-charts,",
+    "x-data-grid,": "link:@mui/x-data-grid,",
+    "x-date-pickers,": "link:@mui/x-date-pickers,",
+    "x-tree-view,": "link:@mui/x-tree-view,"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "15.3.4",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
