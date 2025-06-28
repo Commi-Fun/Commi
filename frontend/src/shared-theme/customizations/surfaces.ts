@@ -67,7 +67,7 @@ export const surfacesCustomizations: Components<Theme> = {
           border: `1px solid ${(theme.vars || theme).palette.divider}`,
           boxShadow: 'none',
           ...theme.applyStyles('dark', {
-            backgroundColor: gray[800],
+            backgroundColor: 'var(--card-background)',
           }),
           variants: [
             {

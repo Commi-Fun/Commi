@@ -5,8 +5,9 @@ import CustomDatePicker from './CustomDatePicker';
 import NavbarBreadcrumbs from './NavbarBreadcrumbs';
 import MenuButton from './MenuButton';
 import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
-
+import AddIcon from '@mui/icons-material/Add';
 import Search from './Search';
+import Button from '@mui/material/Button';
 
 export default function Header() {
   return (
@@ -15,21 +16,15 @@ export default function Header() {
       sx={{
         display: { xs: 'none', md: 'flex' },
         width: '100%',
-        alignItems: { xs: 'flex-start', md: 'center' },
-        justifyContent: 'space-between',
         maxWidth: { sm: '100%', md: '1700px' },
         pt: 1.5,
       }}
       spacing={2}
+      justifyContent={'end'}
     >
-      <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
+        <Button variant="contained" startIcon={<AddIcon />} sx={{borderRadius: '1.25rem'}}>Launch pool</Button>
         <Search />
-        <CustomDatePicker />
-        <MenuButton showBadge aria-label="Open notifications">
-          <NotificationsRoundedIcon />
-        </MenuButton>
-        <ColorModeIconDropdown />
       </Stack>
     </Stack>
   );
