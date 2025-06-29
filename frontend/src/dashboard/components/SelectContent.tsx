@@ -45,9 +45,6 @@ export default function SelectContent() {
       sx={{
         maxHeight: 56,
         width: 215,
-        '&.MuiList-root': {
-          p: '8px',
-        },
         [`& .${selectClasses.select}`]: {
           display: 'flex',
           alignItems: 'center',

@@ -14,6 +14,7 @@ import StatCard, {StatCardProps} from './StatCard';
 import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import HotContainer from "@/dashboard/components/HotContainer";
 import CampaignCard from "@/dashboard/components/CampaignCard";
+import CampaignsContainer from "@/dashboard/CampaignsContainer";
 
 const data: StatCardProps[] = [
     {
@@ -53,21 +54,7 @@ export default function MainGrid() {
         <Box sx={{width: '100%', maxWidth: {sm: '100%', md: '1700px'}}}>
             <HotContainer />
 
-            <Typography component="h2" variant="h6" sx={{mb: 2}}>
-                Details
-            </Typography>
-            <Grid container spacing={2} columns={12}>
-                <Grid size={{xs: 12, lg: 9}}>
-                    <CustomizedDataGrid/>
-                </Grid>
-                <Grid size={{xs: 12, lg: 3}}>
-                    <Stack gap={2} direction={{xs: 'column', sm: 'row', lg: 'column'}}>
-                        <CustomizedTreeView/>
-                        <ChartUserByCountry/>
-                    </Stack>
-                </Grid>
-            </Grid>
-            <Copyright sx={{my: 4}}/>
+            <CampaignsContainer />
         </Box>
     );
 }

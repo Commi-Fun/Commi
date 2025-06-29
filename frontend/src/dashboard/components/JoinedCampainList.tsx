@@ -1,3 +1,4 @@
+"use client"
 import Avatar from "@mui/material/Avatar";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -53,7 +54,6 @@ const JoinedCampaignList = () => {
           sx={{
             width: "100%",
             maxWidth: 360,
-            bgcolor: "background.paper",
             p: 0,
           }}
         >

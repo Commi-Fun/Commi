@@ -14,34 +14,6 @@ import { gray } from '../../../shared-theme/themePrimitives';
 export const dataGridCustomizations: DataGridProComponents<Theme> & DataGridProComponents<Theme> = {
   MuiDataGrid: {
     styleOverrides: {
-      root: ({ theme }) => ({
-        '--DataGrid-overlayHeight': '300px',
-        overflow: 'clip',
-        borderColor: (theme.vars || theme).palette.divider,
-        backgroundColor: (theme.vars || theme).palette.background.default,
-        [`& .${gridClasses.columnHeader}`]: {
-          backgroundColor: (theme.vars || theme).palette.background.paper,
-        },
-        [`& .${gridClasses.footerContainer}`]: {
-          backgroundColor: (theme.vars || theme).palette.background.paper,
-        },
-        [`& .${checkboxClasses.root}`]: {
-          padding: theme.spacing(0.5),
-          '& > svg': {
-            fontSize: '1rem',
-          },
-        },
-        [`& .${tablePaginationClasses.root}`]: {
-          marginRight: theme.spacing(1),
-          '& .MuiIconButton-root': {
-            maxHeight: 32,
-            maxWidth: 32,
-            '& > svg': {
-              fontSize: '1rem',
-            },
-          },
-        },
-      }),
       cell: ({ theme }) => ({ borderTopColor: (theme.vars || theme).palette.divider }),
       menu: ({ theme }) => ({
         borderRadius: theme.shape.borderRadius,

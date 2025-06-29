@@ -1,7 +1,8 @@
+"use client"
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
-import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
+import MuiDrawer, {drawerClasses} from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
@@ -11,89 +12,85 @@ import MenuContent from './MenuContent';
 import CardAlert from './CardAlert';
 import OptionsMenu from './OptionsMenu';
 import JoinedCampaignList from './JoinedCampainList';
+import Chip from "@mui/material/Chip";
+import {customColors} from "@/shared-theme/themePrimitives";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const drawerWidth = 240;
 
-const Drawer = styled(MuiDrawer)({
-  width: drawerWidth,
-  flexShrink: 0,
-  boxSizing: 'border-box',
-  mt: 10,
-  [`& .${drawerClasses.paper}`]: {
-    width: drawerWidth,
-    boxSizing: 'border-box',
-  },
-});
-
 export default function SideMenu() {
-  return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        display: { xs: 'none', md: 'block' },
-        [`& .${drawerClasses.paper}`]: {
-          backgroundColor: 'background.paper',
-        },
-      }}
-    >
-      
-      {/* <Box
-        sx={{
-          display: 'flex',
-          mt: 'calc(var(--template-frame-height, 0px) + 4px)',
-          p: 1.5,
-        }}
-      >
-        <SelectContent />
-      </Box> */}
-      <Stack
-        direction="row"
-        sx={{
-          p: 2,
-          gap: 1,
-          alignItems: 'center',
-          borderTop: '1px solid',
-          borderColor: 'divider',
-        }}
-      >
-        <Avatar
-          sizes="small"
-          alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
-          sx={{ width: 36, height: 36 }}
-        />
-        <Box sx={{ mr: 'auto' }}>
-          <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
-          </Typography>
-          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
-          </Typography>
-        </Box>
-        <OptionsMenu />
-      </Stack>
+    return (
+        <Box
+            sx={{
+                display: {xs: 'none', md: 'block'},
+                [`& .${drawerClasses.paper}`]: {
+                    backgroundColor: customColors.main["400"],
+                },
+            }}
+        >
 
-      <Divider />
-      <Box
-        sx={{
-          overflow: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <MenuContent />
-        {/* <CardAlert /> */}
-      </Box>
-      <Divider />
-      <Box
-        sx={{
-          overflow: 'auto',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <JoinedCampaignList />
-      </Box>
-    </Drawer>
-  );
+            <Stack direction={'row'} alignItems={'end'} gap={1} paddingX={2.5} py={3}>
+                <Typography sx={{fontSize: '1rem', fontWeight: 'bold', mb: '-0.25rem'}}>
+                    Commi
+                </Typography>
+                <div style={{
+                    color: '#000000',
+                    background: 'linear-gradient(to right, #024634 0%, #d0f685 50%, #d0f685 100%)',
+                    height: '1.25rem',
+                    lineHeight: '1.25rem',
+                    padding: '2px 4px',
+                    fontWeight: 'bold',
+                    borderRadius: '2px'
+                }}>
+                    MVP
+                </div>
+            </Stack>
+            <Stack
+                direction="row"
+                sx={{
+                    gap: 1,
+                    alignItems: 'center',
+                    mt: 3,
+                    position: 'relative'
+                }}
+                paddingX={2}
+            >
+                <Avatar
+                    alt="Riley Carter"
+                    src="https://images.steamusercontent.com/ugc/1637611602253477558/8D6958D1C1CF006D6D461206E0059C1FD4D00B2A/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+                    sx={{width: 50, height: 50, border: '1px solid #fff'}}
+                />
+                <Box sx={{mr: 'auto'}}>
+                    <Typography variant="body2" sx={{fontWeight: 500, lineHeight: '16px'}}>
+                        Riley Carter
+                    </Typography>
+                    <Typography variant="caption" sx={{color: 'text.secondary'}}>
+                        riley@email.com
+                    </Typography>
+                </Box>
+                <SettingsIcon fontSize={'small'} sx={{position: 'absolute', top: '6px', right: '16px', color: 'gray'}}/>
+            </Stack>
+
+            <Box
+                sx={{
+                    overflow: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    mt: 2
+                }}
+            >
+                <MenuContent/>
+            </Box>
+            <Divider/>
+            <Box
+                sx={{
+                    overflow: 'auto',
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}
+            >
+                <JoinedCampaignList/>
+            </Box>
+        </Box>
+    );
 }

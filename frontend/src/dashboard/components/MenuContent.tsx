@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -12,9 +13,11 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
+import {styled} from "@mui/material/styles";
+import {customColors} from "@/shared-theme/themePrimitives";
 
 const mainListItems = [
-  { text: 'Campaign', icon: <HomeRoundedIcon /> },
+  { text: 'Campaign', icon: <HomeRoundedIcon sx={{color: 'red'}} /> },
   { text: 'My campaigns', icon: <AnalyticsRoundedIcon /> },
   { text: 'Airdrop Earn', icon: <PeopleRoundedIcon /> },
   { text: 'Message', icon: <AssignmentRoundedIcon /> },
@@ -26,10 +29,17 @@ const secondaryListItems = [
   { text: 'Feedback', icon: <HelpRoundedIcon /> },
 ];
 
+const StyledList = styled(List)({
+  '& .Mui-selected': {
+    background: `linear-gradient(to right, ${customColors.main["400"]} 0%, ${customColors.main["400"]} 50%, ${customColors.main["300"]} 75%, ${customColors.main["200"]} 100%)`,
+    color: customColors.main["100"]
+  }
+})
+
 export default function MenuContent() {
   return (
-    <Stack sx={{ flexGrow: 1, p: 1, justifyContent: 'space-between' }}>
-      <List dense>
+    <Stack sx={{ flexGrow: 1, justifyContent: 'space-between' }}>
+      <StyledList dense>
         {mainListItems.map((item, index) => (
           <ListItem key={index} sx={{ display: 'block', px: 0 }}>
             <ListItemButton selected={index === 0}>
@@ -38,7 +48,7 @@ export default function MenuContent() {
             </ListItemButton>
           </ListItem>
         ))}
-      </List>
+      </StyledList>
       {/* <List dense>
         {secondaryListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>

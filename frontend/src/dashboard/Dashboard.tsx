@@ -1,7 +1,6 @@
 import * as React from 'react';
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-charts/themeAugmentation';
-import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import type {} from '@mui/x-tree-view/themeAugmentation';
 import {alpha} from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline'
@@ -19,6 +18,7 @@ import {
     treeViewCustomizations,
 } from './theme/customizations';
 import Divider from "@mui/material/Divider";
+import {customColors} from "@/shared-theme/themePrimitives";
 
 const xThemeComponents = {
     ...chartsCustomizations,
@@ -30,17 +30,14 @@ const xThemeComponents = {
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     return (
         <AppTheme {...props} themeComponents={xThemeComponents}>
-            <CssBaseline enableColorScheme/>
-            <Box sx={{display: 'flex'}}>
+            <CssBaseline />
+            <Box sx={{display: 'flex', backgroundColor: customColors.black["100"], height: '100vh'}}>
                 <SideMenu/>
                 <AppNavbar/>
                 <Box
                     component="main"
                     sx={(theme) => ({
                         flexGrow: 1,
-                        backgroundColor: theme.vars
-                            ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-                            : alpha(theme.palette.background.default, 1),
                         overflow: 'auto',
                     })}
                 >

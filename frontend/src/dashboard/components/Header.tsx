@@ -1,13 +1,25 @@
+'use client'
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
-import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
-import CustomDatePicker from './CustomDatePicker';
-import NavbarBreadcrumbs from './NavbarBreadcrumbs';
-import MenuButton from './MenuButton';
-import ColorModeIconDropdown from '../../shared-theme/ColorModeIconDropdown';
 import AddIcon from '@mui/icons-material/Add';
 import Search from './Search';
 import Button from '@mui/material/Button';
+import {styled} from "@mui/material/styles";
+import {customColors} from "@/shared-theme/themePrimitives";
+
+const RedButton = styled(Button)({
+    backgroundColor: '#4d3b41',
+    color: '#ca7983',
+    height: '1.75rem',
+    fontSize: '0.75rem'
+})
+
+const GreenButton = styled(Button)({
+    backgroundColor: '#024634',
+    color: customColors.main["100"],
+    height: '1.75rem',
+    fontSize: '0.75rem'
+})
 
 export default function Header() {
   return (
@@ -20,10 +32,19 @@ export default function Header() {
         pt: 1.5,
       }}
       spacing={2}
-      justifyContent={'end'}
+      justifyContent={'space-between'}
+      alignItems={'center'}
     >
+        <Stack direction={'row'} gap={1}>
+            <RedButton>
+                Beta Join {`{Campaign Name}`}
+            </RedButton>
+            <GreenButton>
+                Zita Create {`{Campaign Name}`}
+            </GreenButton>
+        </Stack>
       <Stack direction="row" sx={{ gap: 1 }}>
-        <Button variant="contained" startIcon={<AddIcon />} sx={{borderRadius: '1.25rem'}}>Launch pool</Button>
+        <Button variant="contained" size={"small"} startIcon={<AddIcon />} sx={{borderRadius: '1.25rem'}}>Launch pool</Button>
         <Search />
       </Stack>
     </Stack>

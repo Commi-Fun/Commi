@@ -7,7 +7,7 @@ import { menuItemClasses } from '@mui/material/MenuItem';
 import { selectClasses } from '@mui/material/Select';
 import { tabClasses } from '@mui/material/Tab';
 import UnfoldMoreRoundedIcon from '@mui/icons-material/UnfoldMoreRounded';
-import { gray, brand } from '../themePrimitives';
+import {gray, brand, customColors} from '../themePrimitives';
 
 /* eslint-disable import/prefer-default-export */
 export const navigationCustomizations: Components<Theme> = {
@@ -176,7 +176,7 @@ export const navigationCustomizations: Components<Theme> = {
       indicator: ({ theme }) => ({
         backgroundColor: (theme.vars || theme).palette.grey[800],
         ...theme.applyStyles('dark', {
-          backgroundColor: (theme.vars || theme).palette.grey[200],
+          backgroundColor: customColors.main["100"]
         }),
       }),
     },
@@ -184,31 +184,31 @@ export const navigationCustomizations: Components<Theme> = {
   MuiTab: {
     styleOverrides: {
       root: ({ theme }) => ({
-        padding: '6px 8px',
+        padding: '6px 4px',
         marginBottom: '8px',
         textTransform: 'none',
+        marginLeft: '16px',
         minWidth: 'fit-content',
         minHeight: 'fit-content',
-        color: (theme.vars || theme).palette.text.secondary,
         borderRadius: (theme.vars || theme).shape.borderRadius,
-        border: '1px solid',
-        borderColor: 'transparent',
         ':hover': {
           color: (theme.vars || theme).palette.text.primary,
           backgroundColor: gray[100],
           borderColor: gray[200],
         },
         [`&.${tabClasses.selected}`]: {
-          color: gray[900],
+          color: customColors.main["100"]
         },
         ...theme.applyStyles('dark', {
+          color: '#fff',
+
           ':hover': {
             color: (theme.vars || theme).palette.text.primary,
             backgroundColor: gray[800],
             borderColor: gray[700],
           },
           [`&.${tabClasses.selected}`]: {
-            color: '#fff',
+            color: customColors.main["100"]
           },
         }),
       }),

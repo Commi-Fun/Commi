@@ -27,6 +27,3 @@ body {
   --orange-100: #fe6100;
   --gray-100: #1c292d;
 }
-.MuiButtonBase-root.Mui-selected {
-  background-color: var(--primary-color) !important;
-}

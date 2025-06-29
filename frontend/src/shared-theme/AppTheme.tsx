@@ -1,12 +1,13 @@
+'use client'
 import * as React from "react";
-import {ThemeProvider, createTheme, CssVarsProvider} from "@mui/material/styles";
+import {ThemeProvider, createTheme, CssVarsProvider, alpha} from "@mui/material/styles";
 import type {ThemeOptions} from "@mui/material/styles";
 import {inputsCustomizations} from "./customizations/inputs";
 import {dataDisplayCustomizations} from "./customizations/dataDisplay";
 import {feedbackCustomizations} from "./customizations/feedback";
 import {navigationCustomizations} from "./customizations/navigation";
 import {surfacesCustomizations} from "./customizations/surfaces";
-import {colorSchemes, typography, shadows, shape} from "./themePrimitives";
+import {colorSchemes, typography, shadows, shape, brand, orange, red, green, gray} from "./themePrimitives";
 
 interface AppThemeProps {
     children: React.ReactNode;
@@ -20,20 +21,60 @@ interface AppThemeProps {
 export default function AppTheme(props: AppThemeProps) {
     const {children, disableCustomTheme, themeComponents} = props;
     const theme = React.useMemo(() => createTheme({
-        // For more details about CSS variables configuration, see https://mui.com/material-ui/customization/css-theme-variables/configuration/
-        colorSchemes, // Recently added in v6 for building light & dark mode app, see https://mui.com/material-ui/customization/palette/#color-schemes
-        cssVariables: true,
-        // typography,
-        // shadows,
-        // shape,
-        // components: {
-        //     ...inputsCustomizations,
-        //     ...dataDisplayCustomizations,
-        //     ...feedbackCustomizations,
-        //     ...navigationCustomizations,
-        //     ...surfacesCustomizations,
-        //     ...themeComponents,
-        // },
+        palette: {
+            primary: {
+                main: "#d0f685",
+                light: '#809b4d'
+            },
+            info: {
+                contrastText: brand[300],
+                light: brand[500],
+                main: brand[700],
+                dark: brand[900],
+            },
+            warning: {
+                light: orange[400],
+                main: orange[500],
+                dark: orange[700],
+            },
+            error: {
+                light: red[400],
+                main: red[500],
+                dark: red[700],
+            },
+            success: {
+                light: green[400],
+                main: green[500],
+                dark: green[700],
+            },
+            grey: {
+                ...gray,
+            },
+            divider: alpha(gray[700], 0.6),
+            background: {
+                default: gray[900],
+                paper: 'hsl(220, 30%, 7%)',
+            },
+            text: {
+                primary: 'hsl(0, 0%, 100%)',
+                secondary: gray[400],
+            },
+            action: {
+                hover: alpha(gray[600], 0.2),
+                selected: alpha(gray[600], 0.3),
+            }
+        },
+        typography,
+        shadows,
+        shape,
+        components: {
+            ...inputsCustomizations,
+            ...dataDisplayCustomizations,
+            ...feedbackCustomizations,
+            ...navigationCustomizations,
+            ...surfacesCustomizations,
+            ...themeComponents,
+        },
     }), [disableCustomTheme, themeComponents]);
     return (
             <ThemeProvider theme={theme} defaultMode={'dark'}  disableTransitionOnChange>
