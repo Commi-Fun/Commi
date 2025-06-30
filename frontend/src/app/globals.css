@@ -27,3 +27,7 @@ body {
   --orange-100: #fe6100;
   --gray-100: #1c292d;
 }
+
+.MuiTypography-root {
+  font-family: Nunito Sans, Nunito Sans Fallback;;
+}

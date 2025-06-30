@@ -1,70 +1,27 @@
-import CssBaseline from '@mui/material/CssBaseline'
-import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
-import AppNavbar from '@/dashboard/components/AppNavbar';
-import Header from '@/dashboard/components/Header';
-import MainGrid from '@/dashboard/components/MainGrid';
-import SideMenu from '@/dashboard/components/SideMenu';
-import AppTheme from '@/shared-theme/AppTheme';
-import {
-    chartsCustomizations,
-    dataGridCustomizations,
-    datePickersCustomizations,
-    treeViewCustomizations,
-} from '@/dashboard/theme/customizations';
-import Divider from "@mui/material/Divider";
-import {customColors} from "@/shared-theme/themePrimitives";
-import {Metadata} from "next";
+import DashboardLayout from "@/dashboard/DashboardLayout";
+import React from "react";
+import { Nunito_Sans } from 'next/font/google';
 
-const xThemeComponents = {
-    ...chartsCustomizations,
-    ...dataGridCustomizations,
-    ...datePickersCustomizations,
-    ...treeViewCustomizations,
+const nunitoSans = Nunito_Sans({
+  weight: ['400', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+})
+
+const ff = nunitoSans.className
+
+type MyComponentProps = React.PropsWithChildren<{
+  title: string;
+}>;
+
+const Layout: React.FC<MyComponentProps> = ({ children }) => {
+  return (
+    <html>
+      <body className={ff}>
+        <DashboardLayout>{children}</DashboardLayout>;
+      </body>
+    </html>
+  );
 };
 
-export const metadata: Metadata = {
-    title: 'Dashboard - My Campaigns',
-    icons: {
-        icon: '/logo.svg',
-    },
-};
-
-export default function DashboardLayout({
-                                            children,
-                                        }: Readonly<{
-    children: React.ReactNode;
-}>) {
-    return (
-        <AppTheme themeComponents={xThemeComponents}>
-            <CssBaseline/>
-            <Box sx={{display: 'flex', backgroundColor: customColors.gray["800"], height: '100vh'}}>
-                <SideMenu/>
-                <AppNavbar/>
-                <Box
-                    component="main"
-                    sx={(theme) => ({
-                        flexGrow: 1,
-                        overflow: 'auto',
-                    })}
-                >
-
-                    <Stack
-                        spacing={2}
-                        sx={{
-                            alignItems: 'center',
-                            mx: 3,
-                            pb: 5,
-                            mt: {xs: 8, md: 0},
-                        }}
-                    >
-                        <Header/>
-                        <Divider sx={{width: '100%'}}/>
-                        {children}
-                    </Stack>
-
-                </Box>
-            </Box>
-        </AppTheme>
-    );
-}
+export default Layout;
