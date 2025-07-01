@@ -45,7 +45,7 @@ export default function SideMenu() {
         sx={{
           gap: 1,
           alignItems: "center",
-          mt: 3,
+          mt: 1,
           position: "relative",
         }}
         paddingX={2}
@@ -67,7 +67,7 @@ export default function SideMenu() {
               Beta-Q
             </Typography>
             <SettingsIcon
-              fontSize={"small"}
+              fontSize={"medium"}
               sx={{
                 position: "absolute",
                 top: "6px",

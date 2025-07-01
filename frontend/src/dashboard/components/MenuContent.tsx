@@ -62,22 +62,23 @@ const secondaryListItems = [
 ];
 
 const StyledList = styled(List)({
-  "& .MuiButtonBase-root": {
+  "& .MuiButtonBase-root.MuiListItemButton-root": {
     opacity: 1,
     padding: "0 1.25rem",
+    height: '2.875rem',
+    // lineHeight: "5.5rem",
   },
-  "& .Mui-selected": {
+  "& .MuiButtonBase-root.Mui-selected": {
     background: `linear-gradient(to right, transparent 0%, transparent 59%, ${customColors.green["600"] + "00"} 59%, ${customColors.main["600"] + "80"} 100%)`,
-    color: customColors.main["600"],
-    fontWeight: "bold",
-  },
-  "& .MuiListItemButton-gutters.Mui-selected": {
     backgroundColor: "transparent",
   },
   "& .MuiListItemText-root .MuiListItemText-primary": {
-    fontWeight: "bold",
+    fontWeight: "600",
     fontSize: "1.125rem",
     color: "#ffffff",
+  },
+  "& .Mui-selected .MuiListItemText-root .MuiListItemText-primary": {
+    color: customColors.main["600"],
   },
 });
 
@@ -87,13 +88,13 @@ export default function MenuContent() {
     <Stack sx={{ flexGrow: 1, justifyContent: "space-between" }}>
       <StyledList dense>
         {mainListItems.map((item, index) => (
-          <ListItem key={index} sx={{ display: "block", px: 0 }}>
+          <ListItem key={index} sx={{ display: "block", p: 0, my: 1 }}>
             <ListItemButton
               onClick={() => setSelectedIndex(index)}
               selected={index === seletedIndex}
             >
               <ListItemIcon>
-                {index === 0 ? item["activeIcon"] : item["icon"]}
+                {index === seletedIndex ? item["activeIcon"] : item["icon"]}
               </ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>
