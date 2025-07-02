@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -15,6 +16,7 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import HotContainer from "@/dashboard/components/HotContainer";
 import CampaignCard from "@/dashboard/components/CampaignCard";
 import CampaignsContainer from "@/dashboard/CampaignsContainer";
+import {usePrivy} from "@privy-io/react-auth";
 
 const data: StatCardProps[] = [
     {
@@ -50,10 +52,10 @@ const data: StatCardProps[] = [
 ];
 
 export default function MainGrid() {
+    const {user, authenticated, login} = usePrivy()
     return (
         <Box sx={{width: '100%', maxWidth: {sm: '100%', md: '1700px'}}}>
             <HotContainer />
-
             <CampaignsContainer />
         </Box>
     );

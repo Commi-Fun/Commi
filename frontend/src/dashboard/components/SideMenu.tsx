@@ -26,7 +26,7 @@ export default function SideMenu() {
       sx={{
         display: { xs: "none", md: "block" },
         [`& .${drawerClasses.paper}`]: {},
-        backgroundColor: customColors.gray["600"],
+        backgroundColor: customColors.blue["1200"],
       }}
     >
       <Stack direction={"row"} alignItems={"end"} paddingX={2.5} py={3}>

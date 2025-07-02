@@ -69,7 +69,7 @@ const StyledList = styled(List)({
     // lineHeight: "5.5rem",
   },
   "& .MuiButtonBase-root.Mui-selected": {
-    background: `linear-gradient(to right, transparent 0%, transparent 59%, ${customColors.green["600"] + "00"} 59%, ${customColors.main["600"] + "80"} 100%)`,
+    background: `radial-gradient(circle at right center, #A3C958 0%, #325537 21%, #152026 36%, transparent 80%)`,
     backgroundColor: "transparent",
   },
   "& .MuiListItemText-root .MuiListItemText-primary": {
@@ -78,7 +78,7 @@ const StyledList = styled(List)({
     color: "#ffffff",
   },
   "& .Mui-selected .MuiListItemText-root .MuiListItemText-primary": {
-    color: customColors.main["600"],
+    color: customColors.main["Green01"],
   },
 });
 

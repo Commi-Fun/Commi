@@ -23,7 +23,7 @@ const CampaignCard = ({ address, members }: Props) => {
   return (
     <Card
       style={{
-        backgroundColor: customColors.gray["600"],
+        backgroundColor: customColors.blue["1300"],
         position: "relative",
       }}
     >
@@ -58,7 +58,7 @@ const CampaignCard = ({ address, members }: Props) => {
             />
             <GroupIcon sx={{ fontSize: "1rem" }} />
             <Typography
-              sx={{ color: customColors.main["100"], fontSize: "0.75rem" }}
+              sx={{ color: customColors.main["Green01"], fontSize: "0.75rem" }}
             >
               1.0M
             </Typography>
@@ -74,7 +74,7 @@ const CampaignCard = ({ address, members }: Props) => {
           </Stack>
           <Stack direction={"row"} gap={1} alignItems={"center"}>
             <Typography
-              sx={{ fontSize: "0.75rem", color: customColors.main["100"] }}
+              sx={{ fontSize: "0.75rem", color: customColors.main["Green01"] }}
             >
               MCap $39.7M
             </Typography>
@@ -111,7 +111,7 @@ const CampaignCard = ({ address, members }: Props) => {
 
       <Stack justifyContent={"end"} direction={"row"} sx={{ mt: 1 }} gap={1}>
         <Typography
-          sx={{ color: customColors.main["100"], fontSize: "0.75rem" }}
+          sx={{ color: customColors.main["Green01"], fontSize: "0.75rem" }}
         >
           {`{X}`} Members Joined
         </Typography>
@@ -134,8 +134,8 @@ const CampaignCard = ({ address, members }: Props) => {
           height: "1.5rem",
           borderRadius: "0.75rem",
           mt: 1,
-          borderColor: customColors.main["200"],
-          color: customColors.main["200"],
+          borderColor: customColors.main["Green02"],
+          color: customColors.main["Green02"],
           fontSize: "0.75rem",
         }}
         fullWidth

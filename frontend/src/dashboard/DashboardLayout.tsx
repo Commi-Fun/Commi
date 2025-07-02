@@ -43,7 +43,7 @@ export default function DashboardLayout({
       <Box
         sx={{
           display: "flex",
-          backgroundColor: customColors.gray["800"],
+          backgroundColor: customColors.main.Black,
           height: "100vh",
         }}
       >

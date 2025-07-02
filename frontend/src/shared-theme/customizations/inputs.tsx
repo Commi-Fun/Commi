@@ -21,7 +21,7 @@ export const inputsCustomizations: Components<Theme> = {
         boxSizing: 'border-box',
         transition: 'all 100ms ease-in',
         '&:focus-visible': {
-          outline: `3px solid ${alpha(customColors.main["100"], 0.5)}`,
+          outline: `3px solid ${alpha(customColors.main["White"], 0.5)}`,
           outlineOffset: '2px',
         },
       }),

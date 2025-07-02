@@ -97,205 +97,67 @@ export const red = {
 
 export const customColors = {
   main: {
-    [100]: '#EDFCCF',
-    [200]: '#E6FABD',
-    [300]: '#DEF9AA',
-    [400]: '#D7F897',
-    [500]: '#D0F685',
-    [600]: '#C9F572',
-    [700]: '#A5C95D',
-    [800]: '#819D49',
-    [900]: '#5C7134',
-    [1000]: '#384520',
-    [1100]: '#14190B',
+    White: '#F3FBFF',
+    Black: '#020F15',
+    Red: '#F76472',
+    Green02: '#078B5A',
+    Green01: '#C9F572'
   },
-  green: {
-    [100]: '#CEFDEB',
-    [200]: '#E6FABD',
-    [300]: '#57F7BB',
-    [400]: '#1CF4A3',
-    [500]: '#0AC781',
+  green01: {
+    [100]: '#14190B',
+    [200]: '#384520',
+    [300]: '#5C7134',
+    [400]: '#819D49',
+    [500]: '#A5C95D',
+    [600]: '#C9F572',
+    [700]: '#D0F685',
+    [800]: '#D7F897',
+    [900]: '#DEF9AA',
+    [1000]: '#E6FABD',
+    [1100]: '#EDFCCF',
+  },
+  green02: {
+    [100]: '#022719',
+    [200]: '#034029',
+    [300]: '#03593A',
+    [400]: '#05724A',
+    [500]: '#058B5A',
     [600]: '#078B5A',
-    [700]: '#058B5A',
-    [800]: '#05724A',
-    [900]: '#03593A',
-    [1000]: '#034029',
-    [1100]: '#022719',
+    [700]: '#0AC781',
+    [800]: '#1CF4A3',
+    [900]: '#57F7BB',
+    [1000]: '#E6FABD',
+    [1100]: '#CEFDEB',
   },
   red: {
-    [100]: '#FDCED3',
-    [200]: '#FBB9C0',
-    [300]: '#FAA4AC',
-    [400]: '#F98E99',
-    [500]: '#F87986',
+    [100]: '#190A0B',
+    [200]: '#451C20',
+    [300]: '#722E35',
+    [400]: '#9E4049',
+    [500]: '#CB525E',
     [600]: '#F76472',
-    [700]: '#CB525E',
-    [800]: '#9E4049',
-    [900]: '#722E35',
-    [1000]: '#451C20',
-    [1100]: '#190A0B',
+    [700]: '#F87986',
+    [800]: '#F98E99',
+    [900]: '#FAA4AC',
+    [1000]: '#FBB9C0',
+    [1100]: '#FDCED3',
   },
   blue: {
-    [100]: '#D0EDFB',
-    [200]: '#81CFF3',
-    [300]: '#31B1EB',
-    [400]: '#1181B4',
-    [500]: '#0A4865'
-  },
-  gray: {
     [100]: '#E6E7E8',
     [200]: '#B8BCBD',
     [300]: '#8B9193',
     [400]: '#5D6569',
     [500]: '#303A3F',
-    [600]: '#1c292d',
-    [700]: '#152026',
-    [800]: '#020F15',
+    [600]: '#020F15',
+    [700]: '#0A4865',
+    [800]: '#1181B4',
+    [900]: '#31B1EB',
+    [1000]: '#81CFF3',
+    [1100]: '#D0EDFB',
+    [1200]: '#172028', // secondary blue
+    [1300]: '#152026'
   }
 }
-
-export const getDesignTokens = (mode: PaletteMode) => {
-  customShadows[1] =
-    mode === 'dark'
-      ? 'hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px'
-      : 'hsla(220, 30%, 5%, 0.07) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.07) 0px 8px 16px -5px';
-
-  return {
-    palette: {
-      mode,
-      primary: {
-        light: brand[200],
-        main: brand[400],
-        dark: brand[700],
-        contrastText: brand[50],
-        ...(mode === 'dark' && {
-          contrastText: brand[50],
-          light: brand[300],
-          main: brand[400],
-          dark: brand[700],
-        }),
-      },
-      info: {
-        light: brand[100],
-        main: brand[300],
-        dark: brand[600],
-        contrastText: gray[50],
-        ...(mode === 'dark' && {
-          contrastText: brand[300],
-          light: brand[500],
-          main: brand[700],
-          dark: brand[900],
-        }),
-      },
-      warning: {
-        light: orange[300],
-        main: orange[400],
-        dark: orange[800],
-        ...(mode === 'dark' && {
-          light: orange[400],
-          main: orange[500],
-          dark: orange[700],
-        }),
-      },
-      error: {
-        light: red[300],
-        main: red[400],
-        dark: red[800],
-        ...(mode === 'dark' && {
-          light: red[400],
-          main: red[500],
-          dark: red[700],
-        }),
-      },
-      success: {
-        light: green[300],
-        main: green[400],
-        dark: green[800],
-        ...(mode === 'dark' && {
-          light: green[400],
-          main: green[500],
-          dark: green[700],
-        }),
-      },
-      grey: {
-        ...gray,
-      },
-      divider: mode === 'dark' ? alpha(gray[700], 0.6) : alpha(gray[300], 0.4),
-      background: {
-        default: 'hsl(0, 0%, 99%)',
-        paper: 'hsl(220, 35%, 97%)',
-        ...(mode === 'dark' && { default: gray[900], paper: 'hsl(220, 30%, 7%)' }),
-      },
-      text: {
-        primary: gray[800],
-        secondary: gray[600],
-        warning: orange[400],
-        ...(mode === 'dark' && { primary: 'hsl(0, 0%, 100%)', secondary: gray[400] }),
-      },
-      action: {
-        hover: alpha(gray[200], 0.2),
-        selected: `${alpha(gray[200], 0.3)}`,
-        ...(mode === 'dark' && {
-          hover: alpha(gray[600], 0.2),
-          selected: alpha(gray[600], 0.3),
-        }),
-      },
-    },
-    typography: {
-      fontFamily: 'Nunito Sans, Nunito Sans Fallback;',
-      h1: {
-        fontSize: defaultTheme.typography.pxToRem(48),
-        fontWeight: 600,
-        lineHeight: 1.2,
-        letterSpacing: -0.5,
-      },
-      h2: {
-        fontSize: defaultTheme.typography.pxToRem(36),
-        fontWeight: 600,
-        lineHeight: 1.2,
-      },
-      h3: {
-        fontSize: defaultTheme.typography.pxToRem(30),
-        lineHeight: 1.2,
-      },
-      h4: {
-        fontSize: defaultTheme.typography.pxToRem(24),
-        fontWeight: 600,
-        lineHeight: 1.5,
-      },
-      h5: {
-        fontSize: defaultTheme.typography.pxToRem(20),
-        fontWeight: 600,
-      },
-      h6: {
-        fontSize: defaultTheme.typography.pxToRem(18),
-        fontWeight: 600,
-      },
-      subtitle1: {
-        fontSize: defaultTheme.typography.pxToRem(18),
-      },
-      subtitle2: {
-        fontSize: defaultTheme.typography.pxToRem(14),
-        fontWeight: 500,
-      },
-      body1: {
-        fontSize: defaultTheme.typography.pxToRem(14),
-      },
-      body2: {
-        fontSize: defaultTheme.typography.pxToRem(14),
-        fontWeight: 400,
-      },
-      caption: {
-        fontSize: defaultTheme.typography.pxToRem(12),
-        fontWeight: 400,
-      },
-    },
-    shape: {
-      borderRadius: 8,
-    },
-    shadows: customShadows,
-  };
-};
 
 export const colorSchemes = {
   dark: {
