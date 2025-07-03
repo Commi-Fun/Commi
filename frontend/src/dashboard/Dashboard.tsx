@@ -10,26 +10,15 @@ import Header from './components/Header';
 import MainGrid from './components/MainGrid';
 import SideMenu from './components/SideMenu';
 import AppTheme from '../shared-theme/AppTheme';
-import {
-    chartsCustomizations,
-    dataGridCustomizations,
-    datePickersCustomizations,
-    treeViewCustomizations,
-} from './theme/customizations';
 import Divider from "@mui/material/Divider";
 import {customColors} from "@/shared-theme/themePrimitives";
 
-const xThemeComponents = {
-    ...chartsCustomizations,
-    ...dataGridCustomizations,
-    ...datePickersCustomizations,
-    ...treeViewCustomizations,
-};
+const xThemeComponents = {};
 
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
     return (
         <AppTheme {...props} themeComponents={xThemeComponents}>
-            <CssBaseline />
+            <CssBaseline/>
             <Box sx={{display: 'flex', backgroundColor: customColors.main.Green01, height: '100vh'}}>
                 <SideMenu/>
                 <AppNavbar/>
@@ -51,7 +40,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
                         }}
                     >
                         <Header/>
-                        <Divider sx={{width: '100%'}} />
+                        <Divider sx={{width: '100%'}}/>
                         <MainGrid/>
                     </Stack>
 

@@ -16,7 +16,7 @@ const RedButton = styled(Button)({
 
 const GreenButton = styled(Button)({
     backgroundColor: '#024634',
-    color: customColors.main["100"],
+    color: customColors.main.Green01,
     height: '1.75rem',
     fontSize: '0.75rem'
 })
