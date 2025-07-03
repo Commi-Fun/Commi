@@ -1,13 +1,8 @@
 'use client'
 import * as React from "react";
-import {ThemeProvider, createTheme, CssVarsProvider, alpha} from "@mui/material/styles";
+import {ThemeProvider, createTheme, alpha} from "@mui/material/styles";
 import type {ThemeOptions} from "@mui/material/styles";
-import {inputsCustomizations} from "./customizations/inputs";
-import {dataDisplayCustomizations} from "./customizations/dataDisplay";
-import {feedbackCustomizations} from "./customizations/feedback";
-import {navigationCustomizations} from "./customizations/navigation";
-import {surfacesCustomizations} from "./customizations/surfaces";
-import {colorSchemes, typography, shadows, shape, brand, orange, red, green, gray} from "./themePrimitives";
+import { typography, shadows, shape, brand, orange, red, green, gray} from "./themePrimitives";
 
 interface AppThemeProps {
     children: React.ReactNode;
@@ -19,7 +14,7 @@ interface AppThemeProps {
 }
 
 export default function AppTheme(props: AppThemeProps) {
-    const {children, disableCustomTheme, themeComponents} = props;
+    const {children, themeComponents} = props;
     const theme = React.useMemo(() => createTheme({
         palette: {
             primary: {
@@ -68,14 +63,9 @@ export default function AppTheme(props: AppThemeProps) {
         shadows,
         shape,
         components: {
-            ...inputsCustomizations,
-            ...dataDisplayCustomizations,
-            ...feedbackCustomizations,
-            ...navigationCustomizations,
-            ...surfacesCustomizations,
             ...themeComponents,
         },
-    }), [disableCustomTheme, themeComponents]);
+    }), [themeComponents]);
     return (
             <ThemeProvider theme={theme} defaultMode={'dark'}  disableTransitionOnChange>
                 {children}

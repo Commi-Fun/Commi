@@ -1,6 +1,5 @@
 "use client";
 import Stack from "@mui/material/Stack";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import CampaignCard from "@/dashboard/components/CampaignCard";

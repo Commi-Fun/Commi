@@ -3,9 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import AppNavbar from "@/dashboard/components/AppNavbar";
-import Header from "@/dashboard/components/Header";
-import MainGrid from "@/dashboard/components/MainGrid";
-import SideMenu from "@/dashboard/components/SideMenu";
+import Header from "@/dashboard/components/Header";import SideMenu from "@/dashboard/components/SideMenu";
 import AppTheme from "@/shared-theme/AppTheme";
 import {
   chartsCustomizations,
@@ -51,7 +49,7 @@ export default function DashboardLayout({
         <AppNavbar />
         <Box
           component="main"
-          sx={(theme) => ({
+          sx={() => ({
             flexGrow: 1,
             overflow: "auto",
           })}

@@ -3,7 +3,6 @@ import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import GroupIcon from "@mui/icons-material/Group";
-import { useColorScheme, useTheme } from "@mui/material/styles";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { gray, customColors } from "@/shared-theme/themePrimitives";
 import Button from "@mui/material/Button";
@@ -14,11 +13,10 @@ function truncateMiddle(text: string): string {
 
 interface Props {
   address: string;
-  members: any[];
+  members: Record<string, string>[];
 }
 
 const CampaignCard = ({ address, members }: Props) => {
-  const theme = useTheme();
 
   return (
     <Card

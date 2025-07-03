@@ -6,16 +6,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
-import HomeRoundedIcon from "@mui/icons-material/HomeRounded";
-import AnalyticsRoundedIcon from "@mui/icons-material/AnalyticsRounded";
-import PeopleRoundedIcon from "@mui/icons-material/PeopleRounded";
-import AssignmentRoundedIcon from "@mui/icons-material/AssignmentRounded";
-import SettingsRoundedIcon from "@mui/icons-material/SettingsRounded";
-import InfoRoundedIcon from "@mui/icons-material/InfoRounded";
-import HelpRoundedIcon from "@mui/icons-material/HelpRounded";
 import { styled } from "@mui/material/styles";
 import { customColors } from "@/shared-theme/themePrimitives";
-import PersonVoiceSvg from "@/dashboard/svgs/PersonVoice";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -55,18 +47,11 @@ const mainListItems = [
   },
 ];
 
-const secondaryListItems = [
-  { text: "Settings", icon: <SettingsRoundedIcon /> },
-  { text: "About", icon: <InfoRoundedIcon /> },
-  { text: "Feedback", icon: <HelpRoundedIcon /> },
-];
-
 const StyledList = styled(List)({
   "& .MuiButtonBase-root.MuiListItemButton-root": {
     opacity: 1,
     padding: "0 1.25rem",
     height: '2.875rem',
-    // lineHeight: "5.5rem",
   },
   "& .MuiButtonBase-root.Mui-selected": {
     background: `radial-gradient(circle at right center, #A3C958 0%, #325537 21%, #152026 36%, transparent 80%)`,
@@ -101,16 +86,6 @@ export default function MenuContent() {
           </ListItem>
         ))}
       </StyledList>
-      {/* <List dense>
-        {secondaryListItems.map((item, index) => (
-          <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List> */}
     </Stack>
   );
 }

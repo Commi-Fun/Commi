@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import RefreshIcon from '@mui/icons-material/Refresh';
@@ -25,7 +24,7 @@ const LeaderBoards = () => {
             <LeaderTable></LeaderTable>
             <Stack direction={'row'} gap={1}>
                 {
-                    Array.from({length: 3}).map((_, i) => (<LeaderIndividual />))
+                    Array.from({length: 3}).map((_, i) => (<LeaderIndividual key={i} />))
                 }
             </Stack>
         </Stack>

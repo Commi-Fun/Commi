@@ -42,6 +42,7 @@ const DetailHeader = () => {
                     </Typography>
                     {
                         mockTokenSrc.map((item, index) => <Avatar
+                            key={index}
                             sx={{width: '1rem', height: '1rem'}}
                             src={item.src}/>)
                     }

@@ -1,9 +1,6 @@
-import { createTheme, alpha, PaletteMode, Shadows } from '@mui/material/styles';
+import { createTheme, alpha, Shadows } from '@mui/material/styles';
 
 declare module '@mui/material/Paper' {
-  interface PaperPropsVariantOverrides {
-    highlighted: true;
-  }
 }
 declare module '@mui/material/styles' {
   interface ColorRange {
@@ -18,17 +15,9 @@ declare module '@mui/material/styles' {
     800: string;
     900: string;
   }
-
-  interface PaletteColor extends ColorRange {}
-
-  interface Palette {
-    baseShadow: string;
-  }
 }
 
 const defaultTheme = createTheme();
-
-const customShadows: Shadows = [...defaultTheme.shadows];
 
 export const brand = {
   50: 'hsl(210, 100%, 95%)',
@@ -314,7 +303,7 @@ export const shape = {
   borderRadius: 8,
 };
 
-// @ts-ignore
+//@ts-expect-error don't know
 const defaultShadows: Shadows = [
   'none',
   'var(--template-palette-baseShadow)',

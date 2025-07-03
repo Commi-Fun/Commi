@@ -4,32 +4,19 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Stack from "@mui/material/Stack";
-import ImageIcon from "@mui/icons-material/Image";
-import Accordion from "@mui/material/Accordion";
-import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Image from "next/image";
 import ArrowForwardIosIcon from "@mui/icons-material/KeyboardArrowRight";
 import { styled } from "@mui/material/styles";
 import Collapse from "@mui/material/Collapse";
 import { useState } from "react";
-import Box from "@mui/material/Box";
 import KeyboardArrowUp from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDown from '@mui/icons-material/KeyboardArrowDown';
 import Button from "@mui/material/Button";
 
-const mainListItems = [
-  { text: "Home" },
-  { text: "Analytics" },
-  { text: "Clients" },
-  { text: "Tasks" },
-];
-const StyledListItem = styled(ListItem)(({ theme }) => ({
+const StyledListItem = styled(ListItem)(() => ({
   "& .MuiButtonBase-root": {
     opacity: 1,
   },
