@@ -31,8 +31,8 @@ const JoinedCampaignList = () => {
                 </Typography>
                 <Button onClick={() => setOpen(!open)} size="small" sx={{p: 0, minWidth: '20px', height: '20px'}}>
                     {
-                        open ? <Image src={'/Chevron_down.svg'} width={24} height={24} alt={'chevron_down'}/> :
-                            <Image src={'/Chevron_up.svg'} width={24} height={24} alt={'chevron_up'}/>
+                        open ? <Image src={'/Chevron_Down.svg'} width={24} height={24} alt={'chevron_down'}/> :
+                            <Image src={'/Chevron_Up.svg'} width={24} height={24} alt={'chevron_up'}/>
                     }
                 </Button>
             </Stack>
