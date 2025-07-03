@@ -21,7 +21,7 @@ const mainListItems = [
       <Image
         width={24}
         height={24}
-        src={"/personVOiceActive.svg"}
+        src={"/personVoiceActive.svg"}
         alt="Capmpaign"
       />
     ),
@@ -57,10 +57,14 @@ const StyledList = styled(List)({
     background: `radial-gradient(circle at right center, #A3C958 0%, #325537 21%, #152026 36%, transparent 80%)`,
     backgroundColor: "transparent",
   },
+  "& .MuiButtonBase-root .MuiListItemIcon-root": {
+    minWidth: 'unset'
+  },
   "& .MuiListItemText-root .MuiListItemText-primary": {
     fontWeight: "600",
     fontSize: "1.125rem",
     color: "#ffffff",
+    marginLeft: "0.5rem"
   },
   "& .Mui-selected .MuiListItemText-root .MuiListItemText-primary": {
     color: customColors.main["Green01"],
