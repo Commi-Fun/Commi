@@ -26,7 +26,8 @@ const JoinedCampaignList = () => {
     return (
         <Stack sx={{py: 2}}>
             <Stack sx={{px: '1.25rem', py: 1}} direction="row" alignItems="center" justifyContent="space-between">
-                <Typography gutterBottom color={customColors.main.White} sx={{fontWeight: '500', fontSize: '1.25rem'}}>
+                <Typography color={customColors.main.White} alignItems={'center'}
+                            sx={{fontWeight: '500', fontSize: '1rem'}}>
                     Active Campaign
                 </Typography>
                 <Button onClick={() => setOpen(!open)} size="small" sx={{p: 0, minWidth: '20px', height: '20px'}}>

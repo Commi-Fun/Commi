@@ -63,6 +63,13 @@ export default function AppTheme(props: AppThemeProps) {
         shadows,
         shape,
         components: {
+            MuiButton: {
+                styleOverrides: {
+                    root: {
+                        textTransform: 'capitalize',
+                    }
+                }
+            },
             ...themeComponents,
         },
     }), [themeComponents]);

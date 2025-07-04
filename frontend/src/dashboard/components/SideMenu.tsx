@@ -11,8 +11,11 @@ import JoinedCampaignList from "./JoinedCampainList";
 import { customColors } from "@/shared-theme/themePrimitives";
 import SettingsIcon from "@mui/icons-material/Settings";
 import Image from "next/image";
+import {usePrivy} from "@privy-io/react-auth";
 
 export default function SideMenu() {
+    const {user} = usePrivy()
+    console.log(user)
   return (
     <Box
       sx={{
@@ -56,7 +59,7 @@ export default function SideMenu() {
                 fontSize: "1.125rem",
               }}
             >
-              Beta-Q
+                {user?.twitter?.name}
             </Typography>
             <SettingsIcon
               fontSize={"medium"}
@@ -70,7 +73,7 @@ export default function SideMenu() {
           </Stack>
 
           <Typography variant="caption" sx={{ color: "text.secondary" }}>
-            riley@email.com
+              {user?.email?.address}
           </Typography>
         </Box>
       </Stack>
