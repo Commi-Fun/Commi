@@ -70,6 +70,29 @@ export default function AppTheme(props: AppThemeProps) {
                     }
                 }
             },
+            MuiTextField: {
+                styleOverrides: {
+                    root: {
+                        '& .MuiOutlinedInput-root': {
+                            backgroundColor: '#19191A',
+                        },
+                    },
+                },
+            },
+            MuiSelect: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: '#19191A',
+                    },
+                },
+            },
+            MuiTextareaAutosize: {
+                styleOverrides: {
+                    root: {
+                        backgroundColor: '#19191A',
+                    },
+                },
+            },
             ...themeComponents,
         },
     }), [themeComponents]);
