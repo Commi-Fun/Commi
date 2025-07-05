@@ -86,13 +86,6 @@ export default function AppTheme(props: AppThemeProps) {
                     },
                 },
             },
-            MuiTextareaAutosize: {
-                styleOverrides: {
-                    root: {
-                        backgroundColor: '#19191A',
-                    },
-                },
-            },
             ...themeComponents,
         },
     }), [themeComponents]);

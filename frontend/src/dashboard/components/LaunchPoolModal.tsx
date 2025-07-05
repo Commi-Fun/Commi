@@ -17,12 +17,12 @@ import Close from '@/components/icons/Close';
 
 interface LaunchPoolModalProps {
     open: boolean;
-    onSubmit: (data: any) => void;
+    onSubmit: (data: Record<string, string | number>) => void;
     setOpen: (open: boolean) => void;
 }
 
 const style = {
-    position: 'absolute' as 'absolute',
+    position: 'absolute' as const,
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
@@ -78,7 +78,8 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                     <Stack spacing={3}>
                         <form.Field
                             name="walletAddress"
-                            children={(field) => (
+                        >
+                            {(field) => (
                                 <FormControl fullWidth>
                                     <InputLabel shrink htmlFor={field.name}>Wallet Address</InputLabel>
                                     <TextField
@@ -92,11 +93,12 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                                     />
                                 </FormControl>
                             )}
-                        />
+                        </form.Field>
 
                         <form.Field
                             name="token"
-                            children={(field) => (
+                        >
+                            {(field) => (
                                 <FormControl fullWidth>
                                     <InputLabel shrink id="token-select-label">Select Token</InputLabel>
                                     <Select
@@ -112,12 +114,13 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                                     </Select>
                                 </FormControl>
                             )}
-                        />
+                        </form.Field>
 
                         <Stack direction="row" spacing={2}>
                             <form.Field
                                 name="tokenAmount"
-                                children={(field) => (
+                            >
+                                {(field) => (
                                     <FormControl fullWidth>
                                         <InputLabel shrink htmlFor={field.name}>Token Amount</InputLabel>
                                         <TextField
@@ -132,10 +135,11 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                                         />
                                     </FormControl>
                                 )}
-                            />
+                            </form.Field>
                             <form.Field
                                 name="tokenValue"
-                                children={(field) => (
+                            >
+                                {(field) => (
                                     <FormControl fullWidth>
                                         <InputLabel shrink htmlFor={field.name}>Value (USD)</InputLabel>
                                         <TextField
@@ -150,12 +154,13 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                                         />
                                     </FormControl>
                                 )}
-                            />
+                            </form.Field>
                         </Stack>
 
                         <form.Field
                             name="duration"
-                            children={(field) => (
+                        >
+                            {(field) => (
                                 <FormControl fullWidth>
                                     <InputLabel shrink id="duration-select-label">Activity Duration</InputLabel>
                                     <Select
@@ -172,11 +177,12 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                                     </Select>
                                 </FormControl>
                             )}
-                        />
+                        </form.Field>
 
                         <form.Field
                             name="description"
-                            children={(field) => (
+                        >
+                            {(field) => (
                                 <FormControl fullWidth>
                                     <InputLabel shrink htmlFor={field.name}>Description</InputLabel>
                                     <TextareaAutosize
@@ -191,11 +197,12 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                                     />
                                 </FormControl>
                             )}
-                        />
+                        </form.Field>
 
                         <form.Field
                             name="communityLink"
-                            children={(field) => (
+                        >
+                            {(field) => (
                                 <FormControl fullWidth>
                                     <InputLabel shrink htmlFor={field.name}>Community Link</InputLabel>
                                     <TextField
@@ -209,11 +216,12 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                                     />
                                 </FormControl>
                             )}
-                        />
+                        </form.Field>
 
                         <form.Field
                             name="twitterLink"
-                            children={(field) => (
+                        >
+                            {(field) => (
                                 <FormControl fullWidth>
                                     <InputLabel shrink htmlFor={field.name}>Twitter Link</InputLabel>
                                     <TextField
@@ -227,7 +235,7 @@ export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolM
                                     />
                                 </FormControl>
                             )}
-                        />
+                        </form.Field>
 
                         <Button type="submit" variant="contained" color="primary" sx={{ mt: 2 }}>
                             Create Campaign

@@ -9,8 +9,6 @@ import AppTheme from "@/shared-theme/AppTheme";
 import Divider from "@mui/material/Divider";
 import {customColors} from "@/shared-theme/themePrimitives";
 import {Metadata} from "next";
-import {usePrivy} from "@privy-io/react-auth";
-import {useEffect} from "react";
 
 const xThemeComponents = {};
 
@@ -26,17 +24,17 @@ export default function DashboardLayout({
                                         }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const {ready, authenticated, login} = usePrivy();
-
-    useEffect(() => {
-        if (ready && !authenticated) {
-            login();
-        }
-    }, [ready, authenticated]);
-
-    if (!ready || !authenticated) {
-        return null;
-    }
+    // const {ready, authenticated, login} = usePrivy();
+    //
+    // useEffect(() => {
+    //     if (ready && !authenticated) {
+    //         login();
+    //     }
+    // }, [ready, authenticated]);
+    //
+    // if (!ready || !authenticated) {
+    //     return null;
+    // }
 
     return (
         <AppTheme themeComponents={xThemeComponents}>

@@ -6,6 +6,8 @@ import Search from './Search';
 import Button from '@mui/material/Button';
 import {styled} from "@mui/material/styles";
 import {customColors} from "@/shared-theme/themePrimitives";
+import {useState} from "react";
+import LaunchPoolModal from "@/dashboard/components/LaunchPoolModal";
 
 const RedButton = styled(Button)({
     backgroundColor: '#4d3b41',
@@ -22,31 +24,40 @@ const GreenButton = styled(Button)({
 })
 
 export default function Header() {
-  return (
-    <Stack
-      direction="row"
-      sx={{
-        display: { xs: 'none', md: 'flex' },
-        width: '100%',
-        maxWidth: { sm: '100%', md: '1700px' },
-        pt: 1.5,
-      }}
-      spacing={2}
-      justifyContent={'space-between'}
-      alignItems={'center'}
-    >
-        <Stack direction={'row'} gap={1}>
-            <RedButton>
-                Beta Join {`{Campaign Name}`}
-            </RedButton>
-            <GreenButton>
-                Zita Create {`{Campaign Name}`}
-            </GreenButton>
+    const [open, setOpen] = useState(false)
+    const onSubmit = (data: Record<string, string | number>) => {
+        console.log('data', data)
+        setOpen(false)
+    }
+
+    return (
+        <Stack
+            direction="row"
+            sx={{
+                display: {xs: 'none', md: 'flex'},
+                width: '100%',
+                maxWidth: {sm: '100%', md: '1700px'},
+                pt: 1.5,
+            }}
+            spacing={2}
+            justifyContent={'space-between'}
+            alignItems={'center'}
+        >
+            <Stack direction={'row'} gap={1}>
+                <RedButton>
+                    Beta Join {`{Campaign Name}`}
+                </RedButton>
+                <GreenButton>
+                    Zita Create {`{Campaign Name}`}
+                </GreenButton>
+            </Stack>
+            <Stack direction="row" sx={{gap: 1}}>
+                <Button variant="contained" size={"small"} startIcon={<AddIcon/>} sx={{borderRadius: '1.25rem'}}
+                        onClick={() => setOpen(true)}>Launch
+                    pool</Button>
+                <Search/>
+            </Stack>
+            <LaunchPoolModal onSubmit={onSubmit} open={open} setOpen={setOpen}/>
         </Stack>
-      <Stack direction="row" sx={{ gap: 1 }}>
-        <Button variant="contained" size={"small"} startIcon={<AddIcon />} sx={{borderRadius: '1.25rem'}}>Launch pool</Button>
-        <Search />
-      </Stack>
-    </Stack>
-  );
+    );
 }

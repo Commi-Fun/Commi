@@ -19,6 +19,7 @@
     "@mui/x-tree-view": "^8.5.3",
     "@privy-io/react-auth": "^2.17.2",
     "@react-spring/web": "^10.0.1",
+    "@tanstack/react-form": "^1.13.1",
     "Image": "link:@mui/icons-material/Image",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
