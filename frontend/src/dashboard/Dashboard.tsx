@@ -34,14 +34,13 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
                         spacing={2}
                         sx={{
                             alignItems: 'center',
-                            mx: 3,
                             pb: 5,
-                            mt: {xs: 8, md: 0},
+                            px: 3.75
                         }}
                     >
-                        <Header/>
-                        <Divider sx={{width: '100%'}}/>
-                        <MainGrid/>
+                        {/*<Header/>*/}
+                        {/*<Divider sx={{width: '100%'}}/>*/}
+                        {/*<MainGrid/>*/}
                     </Stack>
 
                 </Box>
