@@ -1,3 +1,4 @@
+'use client';
 import DetailHeader from "@/dashboard/detailComponents/DetailHeader";
 import Box from "@mui/material/Box";
 import LatestRunningCampaign from "@/dashboard/detailComponents/LatestRunningCampaign";

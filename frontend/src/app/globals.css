@@ -45,5 +45,6 @@ body {
 }
 
 .MuiTypography-root {
-  font-family: Nunito Sans, Nunito Sans Fallback;;
+  font-family: Nunito Sans, Nunito Sans Fallback;
+  color: '#F3FBFF';
 }

@@ -1,60 +1,105 @@
-import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import * as React from "react";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 import Box from "@mui/material/Box";
+import { styled } from "@mui/material/styles";
+import { customColors } from "@/shared-theme/themePrimitives";
 
 function createData(
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
+  name: number,
+  calories: string,
+  fat: string,
+  carbs: number,
+  protein: number
 ) {
-    return { name, calories, fat, carbs, protein };
+  return { name, calories, fat, carbs, protein };
 }
 
 const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
+  createData(1, "Beta-Q", "Beta0808-Q", 1129, 12.34),
+  createData(2, "Beta-Q", "Beta0808-Q", 1129, 12.34),
 ];
 
+const StyledHeadCell = styled(TableCell)(({ theme }) => ({
+  backgroundColor: customColors.green01["400"],
+  color: customColors.main.White,
+  fontWeight: "bold",
+  padding: "1px",
+  height: "38px",
+  fontSize: "1rem",
+  minHeight: 0,
+  borderBottom: "none",
+  backgroundClip: "content-box",
+}));
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  fontSize: "0.875rem",
+  color: customColors.blue["200"],
+  borderBottom: "none",
+  padding: "1px",
+  height: "35px",
+  backgroundClip: "content-box",
+}));
+
 export default function LeaderTable() {
-    return (
-        <TableContainer component={Box}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        <TableCell>排名</TableCell>
-                        <TableCell align="right">User name(Twitter)</TableCell>
-                        <TableCell align="right">Community</TableCell>
-                        <TableCell align="right">Score</TableCell>
-                        <TableCell align="right">Airdrop({`{Token Name}`})</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <TableRow
-                            key={row.name}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell component="th" scope="row">
-                                {row.name}
-                            </TableCell>
-                            <TableCell align="right">{row.calories}</TableCell>
-                            <TableCell align="right">{row.fat}</TableCell>
-                            <TableCell align="right">{row.carbs}</TableCell>
-                            <TableCell align="right">{row.protein}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
-    );
+  return (
+    <TableContainer component={Box} sx={{width: 'unset'}}>
+      <Table sx={{width: 'unset'}} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <StyledHeadCell
+              width={"64px"}
+              align="center"
+              sx={{ borderTopLeftRadius: "8px" }}
+            >
+              Rank
+            </StyledHeadCell>
+            <StyledHeadCell width={"148px"} align="center">
+              Twitter Handle
+            </StyledHeadCell>
+            <StyledHeadCell width={"160px"} align="center">
+              Community
+            </StyledHeadCell>
+            <StyledHeadCell width={"158px"} align="center">
+              Airdrop Token
+            </StyledHeadCell>
+            <StyledHeadCell
+              width={"100px"}
+              align="center"
+              sx={{ borderTopRightRadius: "8px" }}
+            >
+              Score
+            </StyledHeadCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {rows.map((row) => (
+            <TableRow
+              key={row.name}
+              sx={{
+                "&:nth-child(odd) td": {
+                  backgroundColor: customColors.blue["600"],
+                },
+                "&:nth-child(even) td": {
+                  backgroundColor: customColors.blue["1300"],
+                },
+              }}
+            >
+              <StyledTableCell align="center" width={"64px"} scope="row">
+                {row.name}
+              </StyledTableCell>
+              <StyledTableCell align="center">{row.calories}</StyledTableCell>
+              <StyledTableCell align="center">{row.fat}</StyledTableCell>
+              <StyledTableCell align="center">{row.carbs}</StyledTableCell>
+              <StyledTableCell align="center">{row.protein}</StyledTableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 }

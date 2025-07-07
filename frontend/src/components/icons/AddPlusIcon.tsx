@@ -1,3 +1,4 @@
+
 const AddPlus = () => {
   return (
     <svg
@@ -10,9 +11,9 @@ const AddPlus = () => {
       <path
         d="M6 12H12M12 12H18M12 12V18M12 12V6"
         stroke="#020F15"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
