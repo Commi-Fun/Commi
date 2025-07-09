@@ -44,7 +44,7 @@ const LeaderBoards = () => {
           </Typography>
         </Stack>
       </Stack>
-      <Stack direction={"row"} mt={2}>
+      <Stack direction={"row"} mt={2} gap={2}>
         <LeaderTable></LeaderTable>
         <Grid  container spacing={1} columns={10} sx={{flexGrow: 1}}>
           <Grid size={5}>

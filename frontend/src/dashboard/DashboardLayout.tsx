@@ -59,11 +59,10 @@ export default function DashboardLayout({
                             alignItems: "center",
                             pb: 5,
                             mt: {xs: 8, md: 0},
-                            px: 3.75
                         }}
                     >
                         <Header/>
-                        <Divider sx={{width: "100%"}}/>
+                        <Divider sx={{width: "100%"}} style={{marginTop: '10px'}}/>
                         {children}
                     </Stack>
                 </Box>

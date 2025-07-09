@@ -38,7 +38,8 @@ export default function Header() {
         display: { xs: "none", md: "flex" },
         width: "100%",
         maxWidth: { sm: "100%", md: "1700px" },
-        pt: 1.5,
+        py: 3,
+        px: 3.75
       }}
       spacing={2}
       justifyContent={"space-between"}

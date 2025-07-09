@@ -19,10 +19,7 @@ function createData(
   return { name, calories, fat, carbs, protein };
 }
 
-const rows = [
-  createData(1, "Beta-Q", "Beta0808-Q", 1129, 12.34),
-  createData(2, "Beta-Q", "Beta0808-Q", 1129, 12.34),
-];
+const rows = Array.from({ length: 10 }).map((_, index) => createData(index + 1, "Beta-Q", "Beta0808-Q", 1129, 12.34));
 
 const StyledHeadCell = styled(TableCell)(({ theme }) => ({
   backgroundColor: customColors.green01["400"],
