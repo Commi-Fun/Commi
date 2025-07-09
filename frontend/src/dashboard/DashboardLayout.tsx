@@ -10,8 +10,6 @@ import Divider from "@mui/material/Divider";
 import {customColors} from "@/shared-theme/themePrimitives";
 import {Metadata} from "next";
 
-const xThemeComponents = {};
-
 export const metadata: Metadata = {
     title: "Dashboard - My Campaigns",
     icons: {
@@ -37,7 +35,7 @@ export default function DashboardLayout({
     // }
 
     return (
-        <AppTheme themeComponents={xThemeComponents}>
+        <AppTheme>
             <CssBaseline/>
             <Box
                 sx={{
@@ -59,13 +57,12 @@ export default function DashboardLayout({
                         spacing={2}
                         sx={{
                             alignItems: "center",
-                            mx: 3,
                             pb: 5,
                             mt: {xs: 8, md: 0},
                         }}
                     >
                         <Header/>
-                        <Divider sx={{width: "100%"}}/>
+                        <Divider sx={{width: "100%"}} style={{marginTop: '10px'}}/>
                         {children}
                     </Stack>
                 </Box>
