@@ -19,6 +19,7 @@
     "@mui/x-tree-view": "^8.5.3",
     "@privy-io/react-auth": "^2.17.3",
     "@react-spring/web": "^10.0.1",
+    "@tanstack/react-form": "^1.14.1",
     "@tanstack/react-query": "^5.81.5",
     "Image": "link:@mui/icons-material/Image",
     "clsx": "^2.1.1",
@@ -46,7 +47,6 @@
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "neostandard": "^0.12.2",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
