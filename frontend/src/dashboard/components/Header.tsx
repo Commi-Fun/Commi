@@ -14,6 +14,7 @@ const RedButton = styled(Button)({
   color: customColors.red[800],
   fontSize: '1.125rem',
   height: '46px',
+  padding: '0 24px',
 })
 
 const GreenButton = styled(Button)({
@@ -21,6 +22,7 @@ const GreenButton = styled(Button)({
   color: customColors.green02['800'],
   fontSize: '1.125rem',
   height: '46px',
+  padding: '0 24px',
 })
 
 export default function Header() {
