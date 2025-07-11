@@ -12,8 +12,9 @@ import { customColors } from '@/shared-theme/themePrimitives'
 import SettingsIcon from '@mui/icons-material/Settings'
 import Image from 'next/image'
 import truncateAddress from '@/utils/truncateAddress'
-import Typo from '@/components/Typo'
+import Typo from '@/components/CommiTypo'
 import CommiButton from '@/components/CommiButton'
+import SignInModal from './SignInModal'
 
 const user = {
   twitter: {},
@@ -54,13 +55,20 @@ const ProfileInfo = () => {
 }
 
 const UnloginProfileInfo = () => {
+  const [openSignInModal, setOpenSignInModal] = React.useState(false)
+
   return (
     <Box sx={{ width: '100%' }}>
+      <SignInModal open={openSignInModal} handleClose={() => setOpenSignInModal(false)} />
       <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
         <Typo type="heading" color="white">
           Guest
         </Typo>
-        <CommiButton variant="outlined" size="small" theme="primary">
+        <CommiButton
+          variant="outlined"
+          size="small"
+          theme="primary"
+          onClick={() => setOpenSignInModal(true)}>
           Log in
         </CommiButton>
       </Stack>
@@ -68,7 +76,7 @@ const UnloginProfileInfo = () => {
   )
 }
 
-const isAuthenticated = true
+const isAuthenticated = false
 export default function SideMenu() {
   return (
     <Box

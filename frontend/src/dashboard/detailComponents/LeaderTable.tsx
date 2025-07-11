@@ -21,7 +21,7 @@ function createData(
 
 const rows = Array.from({ length: 10 }).map((_, index) => createData(index + 1, "Beta-Q", "Beta0808-Q", 1129, 12.34));
 
-const StyledHeadCell = styled(TableCell)(({ theme }) => ({
+const StyledHeadCell = styled(TableCell)(() => ({
   backgroundColor: customColors.green01["400"],
   color: customColors.main.White,
   fontWeight: "bold",
@@ -33,7 +33,7 @@ const StyledHeadCell = styled(TableCell)(({ theme }) => ({
   backgroundClip: "content-box",
 }));
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(() => ({
   fontSize: "0.875rem",
   color: customColors.blue["200"],
   borderBottom: "none",

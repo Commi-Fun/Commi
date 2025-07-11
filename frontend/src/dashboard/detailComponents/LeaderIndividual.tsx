@@ -1,21 +1,10 @@
 import Card from "@mui/material/Card";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
 
 interface Props {
   level: 1;
 }
 
-const LeaderIndividual = ({ level }: Props) => {
-
-  const widthAndHeight: { width: string; height: string } = { width: "50px", height: "50px" };
-
-//   if (level === 1) {
-//     widthAndHeight.width = "388px";
-//     widthAndHeight.height = "321px";
-//   }
-
+const LeaderIndividual = ({}: Props) => {
   return (
     <Card
       sx={{

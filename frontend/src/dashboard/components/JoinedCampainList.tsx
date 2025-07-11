@@ -101,7 +101,9 @@ const JoinedCampaignList = () => {
                   </Stack>
                 </Stack>
               </Stack>
-              <CommiButton type={'button-common-small'}>Claim</CommiButton>
+              <CommiButton size="small" variant="outlined">
+                Claim
+              </CommiButton>
             </ListItemButton>
           </StyledListItem>
         </List>

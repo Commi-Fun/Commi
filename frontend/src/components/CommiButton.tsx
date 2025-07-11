@@ -10,6 +10,10 @@ interface CommiButtonProps extends Omit<MuiButtonProps, 'variant' | 'size' | 'co
   theme?: 'primary' | 'secondary' | 'default'
 }
 
+const cusSx = {
+  justifyContent: 'center !important',
+}
+
 const CommiButton = ({
   children,
   size = 'medium',
@@ -27,6 +31,7 @@ const CommiButton = ({
       px: 1,
       fontWeight: '600',
       borderRadius: '60px',
+      justifyContent: 'center',
     }),
     ...(size === 'medium' &&
       {
@@ -78,7 +83,12 @@ const CommiButton = ({
   // --- End of placeholder ---
 
   // Combine all sx props into an array for robust merging
-  const finalSx = [sizeSx, themeSx, ...(Array.isArray(incomingSx) ? incomingSx : [incomingSx])]
+  const finalSx = [
+    sizeSx,
+    themeSx,
+    cusSx,
+    ...(Array.isArray(incomingSx) ? incomingSx : [incomingSx]),
+  ]
 
   return (
     <Button variant={variant} sx={finalSx} {...rest}>

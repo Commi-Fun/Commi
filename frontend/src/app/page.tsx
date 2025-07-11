@@ -1,8 +1,5 @@
 import MainGrid from "@/dashboard/components/MainGrid";
 import { Metadata } from "next";
-import { LoginButton } from "@/components/LoginButton";
-import { UserProfile } from "@/components/UserProfile";
-import { Box } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Commi",
