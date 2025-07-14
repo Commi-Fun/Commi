@@ -15,42 +15,91 @@ import truncateAddress from '@/utils/truncateAddress'
 import Typo from '@/components/CommiTypo'
 import CommiButton from '@/components/CommiButton'
 import SignInModal from './SignInModal'
-
-const user = {
-  twitter: {},
-  wallet: {
-    name: 'Riley Carter',
-    address: '0x1234567890abcdef1234567890abcdef12345678s',
-  },
-}
+import { useSession } from 'next-auth/react'
+import { CustomConnectModal } from '@/components/CustomConnectModal'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import { useAccount, useDisconnect } from 'wagmi'
 
 const ProfileInfo = () => {
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-        <Typography
-          variant="body2"
-          sx={{
-            fontWeight: 'bold',
-            fontSize: '1.125rem',
-          }}>
-          {user?.wallet?.name}
-        </Typography>
-        <SettingsIcon
-          fontSize={'medium'}
-          sx={{
-            position: 'absolute',
-            top: '6px',
-            right: '16px',
-            color: 'gray',
-          }}
-        />
-      </Stack>
+  const { data: session } = useSession()
+  const { address, isConnected } = useAccount()
+  const { disconnect } = useDisconnect()
 
-      <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-        {truncateAddress(user?.wallet?.address)}
-      </Typography>
-    </Box>
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const isMenuOpen = Boolean(anchorEl)
+  const [isConnectModalOpen, setConnectModalOpen] = React.useState(false)
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleConnectWallet = () => {
+    setConnectModalOpen(true)
+    handleMenuClose()
+  }
+
+  const handleDisconnect = () => {
+    disconnect()
+    handleMenuClose()
+  }
+
+  return (
+    <>
+      <CustomConnectModal open={isConnectModalOpen} onClose={() => setConnectModalOpen(false)} />
+      <Box sx={{ width: '100%' }}>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+          <Stack>
+            <Typography
+              variant="body2"
+              sx={{
+                fontWeight: 'bold',
+                fontSize: '1.125rem',
+              }}>
+              {session?.user?.name}
+            </Typography>
+            {isConnected && address && (
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                {truncateAddress(address)}
+              </Typography>
+            )}
+          </Stack>
+          <SettingsIcon
+            fontSize={'medium'}
+            sx={{
+              position: 'absolute',
+              top: '6px',
+              right: '16px',
+              color: 'gray',
+              cursor: 'pointer',
+            }}
+            onClick={handleMenuOpen}
+          />
+          <Menu
+            anchorEl={anchorEl}
+            open={isMenuOpen}
+            onClose={handleMenuClose}
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}>
+            {isConnected ? (
+              <MenuItem onClick={handleDisconnect}>Disconnect Wallet</MenuItem>
+            ) : (
+              <MenuItem onClick={handleConnectWallet}>Connect with wallet</MenuItem>
+            )}
+          </Menu>
+        </Stack>
+      </Box>
+    </>
   )
 }
 
@@ -76,8 +125,14 @@ const UnloginProfileInfo = () => {
   )
 }
 
-const isAuthenticated = false
 export default function SideMenu() {
+  const args = useSession()
+
+  const isAuthenticated = args.status === 'authenticated'
+  const userImage =
+    args.data?.user?.image ||
+    'https://images.steamusercontent.com/ugc/1637611602253477558/8D6958D1C1CF006D6D461206E0059C1FD4D00B2A/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true'
+
   return (
     <Box
       sx={{
@@ -112,7 +167,7 @@ export default function SideMenu() {
         paddingX={2}>
         <Avatar
           alt="Riley Carter"
-          src="https://images.steamusercontent.com/ugc/1637611602253477558/8D6958D1C1CF006D6D461206E0059C1FD4D00B2A/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true"
+          src={userImage}
           sx={{ width: 64, height: 64, border: '3px solid #fff' }}
         />
         {isAuthenticated ? <ProfileInfo /> : <UnloginProfileInfo />}

@@ -1,7 +1,7 @@
 import DashboardLayout from "@/dashboard/DashboardLayout";
 import React from "react";
 import { Web3Provider } from "@/components/Web3Provider";
-import { AuthProvider } from "@/context/AuthContext";
+import { NextAuthProvider } from "@/components/NextAuthProvider";
 
 // import { Nunito_Sans } from 'next/font/google';
 
@@ -22,9 +22,9 @@ const Layout: React.FC<MyComponentProps> = ({ children }) => {
     <html>
       <body className={'font-sans'}>
         <Web3Provider>
-          <AuthProvider>
+          <NextAuthProvider>
             <DashboardLayout>{children}</DashboardLayout>
-          </AuthProvider>
+          </NextAuthProvider>
         </Web3Provider>
       </body>
     </html>

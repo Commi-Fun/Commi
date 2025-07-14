@@ -8,6 +8,7 @@ interface CommiButtonProps extends Omit<MuiButtonProps, 'variant' | 'size' | 'co
   size?: 'small' | 'medium' | 'large'
   variant?: 'contained' | 'outlined'
   theme?: 'primary' | 'secondary' | 'default'
+  color?: string
 }
 
 const cusSx = {
@@ -18,6 +19,7 @@ const CommiButton = ({
   children,
   size = 'medium',
   variant = 'contained',
+  color,
   theme = 'primary',
   sx: incomingSx,
   ...rest
@@ -47,7 +49,11 @@ const CommiButton = ({
 
   const themeSx: SxProps<Theme> = {
     ...(theme === 'primary' && {
-      color: customColors.main.Green01,
+      color: color
+        ? color
+        : variant === 'contained'
+        ? customColors.main.Black
+        : customColors.main.Green01,
       borderColor: variant === 'outlined' ? `1px solid ${customColors.main.Green01}` : 'unset',
     }),
     // ...(theme === 'secondary' && {
