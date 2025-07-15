@@ -4,9 +4,12 @@
 import React from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { Box, Typography, Button, Paper } from '@mui/material';
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import { useWallet } from '@solana/wallet-adapter-react';
 
 export const UserProfile = () => {
   const { user, isAuthenticated } = useAuth();
+  const { publicKey } = useWallet();
 
   if (!isAuthenticated || !user) {
     return (
@@ -23,11 +26,19 @@ export const UserProfile = () => {
       </Typography>
       <Box>
         <Typography variant="body1">
-          <strong>Wallet:</strong> {user.walletAddress}
+          <strong>EVM Wallet:</strong> {user.walletAddress}
         </Typography>
+        {publicKey && (
+          <Typography variant="body1">
+            <strong>Solana Wallet:</strong> {publicKey.toBase58()}
+          </Typography>
+        )}
         <Typography variant="body1" sx={{ mt: 1 }}>
           <strong>Twitter:</strong> {user.twitterHandle || 'Not linked'}
         </Typography>
+      </Box>
+      <Box sx={{ mt: 2 }}>
+        <WalletMultiButton />
       </Box>
       <Box sx={{ mt: 2 }}>
         <Button 

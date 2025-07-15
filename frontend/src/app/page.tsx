@@ -1,12 +1,15 @@
-import MainGrid from "@/dashboard/components/MainGrid";
-import { Metadata } from "next";
+import MainGrid from '@/dashboard/components/MainGrid'
+import { Metadata } from 'next'
+import { UserProfile } from '@/components/UserProfile'
+import { LoginButton } from '@/components/LoginButton'
+import { Box } from '@mui/material'
 
 export const metadata: Metadata = {
-  title: "Commi",
+  title: 'Commi',
   icons: {
-    icon: "/logo.svg",
+    icon: '/logo.svg',
   },
-};
+}
 
 const Page = () => {
   return (
@@ -18,13 +21,13 @@ const Page = () => {
           justifyContent: "space-between",
           alignItems: "flex-start",
         }}
-      > */}
-      {/* <UserProfile /> */}
-      {/* <LoginButton /> */}
-      {/* </Box> */}
+      >
+        <UserProfile />
+        <LoginButton />
+      </Box> */}
       <MainGrid />
     </>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

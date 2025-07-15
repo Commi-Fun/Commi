@@ -38,8 +38,6 @@ const style = {
 export default function LaunchPoolModal({ open, onSubmit, setOpen }: LaunchPoolModalProps) {
   const account = useAccount()
 
-  console.log('Account:', account)
-
   const form = useForm({
     defaultValues: {
       walletAddress: '',

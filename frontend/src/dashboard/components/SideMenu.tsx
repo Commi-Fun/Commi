@@ -15,20 +15,26 @@ import truncateAddress from '@/utils/truncateAddress'
 import Typo from '@/components/CommiTypo'
 import CommiButton from '@/components/CommiButton'
 import SignInModal from './SignInModal'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { CustomConnectModal } from '@/components/CustomConnectModal'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import { useAccount, useDisconnect } from 'wagmi'
+import { cookieStorage, useAccount, useDisconnect } from 'wagmi'
+import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import ConnectWalletButton from './ConnectWalletButton'
+import { useWallet } from '@solana/wallet-adapter-react'
 
 const ProfileInfo = () => {
   const { data: session } = useSession()
-  const { address, isConnected } = useAccount()
+  // const { address, isConnected } = useAccount()
   const { disconnect } = useDisconnect()
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const isMenuOpen = Boolean(anchorEl)
   const [isConnectModalOpen, setConnectModalOpen] = React.useState(false)
+  const { connected, publicKey, ...rest } = useWallet()
+
+  console.log('rest', rest)
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -62,9 +68,9 @@ const ProfileInfo = () => {
               }}>
               {session?.user?.name}
             </Typography>
-            {isConnected && address && (
+            {cookieStorage && publicKey && (
               <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-                {truncateAddress(address)}
+                {truncateAddress(publicKey.toBase58())}
               </Typography>
             )}
           </Stack>
@@ -91,7 +97,7 @@ const ProfileInfo = () => {
               vertical: 'top',
               horizontal: 'right',
             }}>
-            {isConnected ? (
+            {connected ? (
               <MenuItem onClick={handleDisconnect}>Disconnect Wallet</MenuItem>
             ) : (
               <MenuItem onClick={handleConnectWallet}>Connect with wallet</MenuItem>
@@ -146,6 +152,15 @@ export default function SideMenu() {
         backgroundClip: 'padding-box',
         width: '266px',
       }}>
+      <CommiButton
+        size="small"
+        onClick={() => {
+          signOut()
+        }}>
+        log out
+      </CommiButton>
+      <CommiButton size="small">Connect Wallet</CommiButton>
+      <ConnectWalletButton></ConnectWalletButton>
       <Stack direction={'row'} alignItems={'end'} paddingX={2.5} py={3}>
         <Image src="/logo.svg" width={20} height={30} alt="logo"></Image>
         <Image src="/Commi.svg" width={76.8} height={17} alt="logo"></Image>

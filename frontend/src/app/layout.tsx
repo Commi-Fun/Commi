@@ -1,7 +1,10 @@
-import DashboardLayout from "@/dashboard/DashboardLayout";
-import React from "react";
-import { Web3Provider } from "@/components/Web3Provider";
-import { NextAuthProvider } from "@/components/NextAuthProvider";
+import DashboardLayout from '@/dashboard/DashboardLayout'
+import React from 'react'
+import { Web3Provider } from '@/components/Web3Provider'
+import { NextAuthProvider } from '@/components/NextAuthProvider'
+import { SolanaProvider } from '@/components/SolanaProvider'
+import '@solana/wallet-adapter-react-ui/styles.css'
+import { AuthProvider } from '@/context/AuthContext'
 
 // import { Nunito_Sans } from 'next/font/google';
 
@@ -14,21 +17,23 @@ import { NextAuthProvider } from "@/components/NextAuthProvider";
 // const ff = nunitoSans.className
 
 type MyComponentProps = React.PropsWithChildren<{
-  title: string;
-}>;
+  title: string
+}>
 
 const Layout: React.FC<MyComponentProps> = ({ children }) => {
   return (
     <html>
       <body className={'font-sans'}>
         <Web3Provider>
-          <NextAuthProvider>
-            <DashboardLayout>{children}</DashboardLayout>
-          </NextAuthProvider>
+          <SolanaProvider>
+            <NextAuthProvider>
+              <DashboardLayout>{children}</DashboardLayout>
+            </NextAuthProvider>
+          </SolanaProvider>
         </Web3Provider>
       </body>
     </html>
-  );
-};
+  )
+}
 
-export default Layout;
+export default Layout
