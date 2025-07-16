@@ -1,11 +1,8 @@
-import { customColors } from '@/shared-theme/themePrimitives'
 import { HTMLAttributes } from 'react'
 
-interface Props extends HTMLAttributes<HTMLElement> {
-  color?: string
-}
+interface Props extends HTMLAttributes<HTMLElement> {}
 
-const Close = ({ color = customColors.main.White, ...rest }: Props) => {
+export const CloseLgIcon = ({ ...rest }: Props) => {
   return (
     <i {...rest}>
       <svg
@@ -15,8 +12,8 @@ const Close = ({ color = customColors.main.White, ...rest }: Props) => {
         fill="none"
         xmlns="http://www.w3.org/2000/svg">
         <path
-          d="M18 18L12 12M12 12L6 6M12 12L18 6M12 12L6 18"
-          stroke={color}
+          d="M21 21L12 12M12 12L3 3M12 12L21.0001 3M12 12L3 21.0001"
+          stroke="#8B9193"
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -25,5 +22,3 @@ const Close = ({ color = customColors.main.White, ...rest }: Props) => {
     </i>
   )
 }
-
-export default Close

@@ -1,42 +1,42 @@
-import { customColors } from '@/shared-theme/themePrimitives'
 import { Typography, TypographyProps } from '@mui/material'
 import { SxProps, Theme } from '@mui/material/styles'
 
 interface TypographyOwnProps extends Omit<TypographyProps, 'color'> {
   children?: React.ReactNode
-  type?: 'body' | 'heading' | 'caption' | 'button' | 'alert2'
-  color?: 'primary' | 'secondary' | 'white' | 'black' | 'gray'
+  type?: 'title' | 'heading-h1' | 'button' | 'alert2' | 'content'
+  color?: string
+  weight?: 'bold' | 'semibold'
 }
 
 const CommiTypo = ({
   children,
-  type = 'body',
+  type = 'content',
   color = 'black',
   sx: incomingSx,
   ...rest
 }: TypographyOwnProps) => {
   const typeSx: SxProps<Theme> = {
-    ...(type === 'heading' && {
-      fontSize: '1.125rem',
-      fontWeight: 'bold',
-      color: 'primary.main',
+    ...(type === 'heading-h1' && {
+      fontSize: '1.5rem',
+      fontWeight: '800',
     }),
-    ...(type === 'body' && { fontSize: '1rem', fontWeight: 'normal' }),
-    ...(type === 'caption' && { fontSize: '0.875rem', fontWeight: 'normal' }),
+    ...(type === 'content' && { fontSize: '1rem' }),
+    ...(type === 'title' && { fontSize: '1.125rem' }),
     ...(type === 'button' && { fontSize: '1rem', fontWeight: 'bold' }),
-    ...(type === 'alert2' && { fontSize: '28px', fontWeight: '800' }),
+  }
+
+  const weightSx: SxProps<Theme> = {
+    ...(rest.weight === 'bold' && { fontWeight: 'bold' }),
+    ...(rest.weight === 'semibold' && { fontWeight: '600' }),
   }
 
   const colorSx: SxProps<Theme> = {
-    ...(color === 'primary' && { color: customColors.main.Green01 }),
-    ...(color === 'secondary' && { color: customColors.main.Green02 }),
-    ...(color === 'white' && { color: customColors.main.White }),
-    ...(color === 'black' && { color: customColors.main.Black }),
+    color,
   }
 
   return (
     <Typography
-      sx={[typeSx, colorSx, ...(Array.isArray(incomingSx) ? incomingSx : [incomingSx])]}
+      sx={[typeSx, colorSx, weightSx, ...(Array.isArray(incomingSx) ? incomingSx : [incomingSx])]}
       {...rest}>
       {children}
     </Typography>

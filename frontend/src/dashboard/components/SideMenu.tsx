@@ -23,6 +23,7 @@ import { cookieStorage, useAccount, useDisconnect } from 'wagmi'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import ConnectWalletButton from './ConnectWalletButton'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { LoginButton } from './LoginButton'
 
 const ProfileInfo = () => {
   const { data: session } = useSession()
@@ -116,16 +117,10 @@ const UnloginProfileInfo = () => {
     <Box sx={{ width: '100%' }}>
       <SignInModal open={openSignInModal} handleClose={() => setOpenSignInModal(false)} />
       <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
-        <Typo type="heading" color="white">
+        <Typo type="title" weight="bold" color="white">
           Guest
         </Typo>
-        <CommiButton
-          variant="outlined"
-          size="small"
-          theme="primary"
-          onClick={() => setOpenSignInModal(true)}>
-          Log in
-        </CommiButton>
+        <LoginButton />
       </Stack>
     </Box>
   )

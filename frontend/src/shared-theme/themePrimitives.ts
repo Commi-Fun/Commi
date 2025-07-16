@@ -1,23 +1,22 @@
-import { createTheme, alpha, Shadows } from '@mui/material/styles';
+import { createTheme, alpha, Shadows } from '@mui/material/styles'
 
-declare module '@mui/material/Paper' {
-}
+declare module '@mui/material/Paper' {}
 declare module '@mui/material/styles' {
   interface ColorRange {
-    50: string;
-    100: string;
-    200: string;
-    300: string;
-    400: string;
-    500: string;
-    600: string;
-    700: string;
-    800: string;
-    900: string;
+    50: string
+    100: string
+    200: string
+    300: string
+    400: string
+    500: string
+    600: string
+    700: string
+    800: string
+    900: string
   }
 }
 
-const defaultTheme = createTheme();
+const defaultTheme = createTheme()
 
 export const brand = {
   50: 'hsl(210, 100%, 95%)',
@@ -30,7 +29,7 @@ export const brand = {
   700: 'hsl(210, 100%, 35%)',
   800: 'hsl(210, 100%, 16%)',
   900: 'hsl(210, 100%, 21%)',
-};
+}
 
 export const gray = {
   50: 'hsl(220, 35%, 97%)',
@@ -43,7 +42,7 @@ export const gray = {
   700: 'hsl(220, 20%, 25%)',
   800: 'hsl(220, 30%, 6%)',
   900: 'hsl(220, 35%, 3%)',
-};
+}
 
 export const green = {
   50: 'hsl(120, 80%, 98%)',
@@ -56,7 +55,7 @@ export const green = {
   700: 'hsl(120, 75%, 16%)',
   800: 'hsl(120, 84%, 10%)',
   900: 'hsl(120, 87%, 6%)',
-};
+}
 
 export const orange = {
   50: 'hsl(45, 100%, 97%)',
@@ -69,7 +68,7 @@ export const orange = {
   700: 'hsl(45, 94%, 20%)',
   800: 'hsl(45, 95%, 16%)',
   900: 'hsl(45, 93%, 12%)',
-};
+}
 
 export const red = {
   50: 'hsl(0, 100%, 97%)',
@@ -82,7 +81,7 @@ export const red = {
   700: 'hsl(0, 94%, 18%)',
   800: 'hsl(0, 95%, 12%)',
   900: 'hsl(0, 93%, 6%)',
-};
+}
 
 export const customColors = {
   main: {
@@ -90,7 +89,7 @@ export const customColors = {
     Black: '#020F15',
     Red: '#F76472',
     Green02: '#078B5A',
-    Green01: '#C9F572'
+    Green01: '#C9F572',
   },
   green01: {
     [100]: '#14190B',
@@ -144,16 +143,16 @@ export const customColors = {
     [1000]: '#81CFF3',
     [1100]: '#D0EDFB',
     [1200]: '#172028', // secondary blue
-    [1300]: '#152026'
-  }
+    [1300]: '#152026',
+  },
 }
 
 export const colorSchemes = {
   dark: {
     palette: {
       primary: {
-        main: "#d0f685",
-        light: '#809b4d'
+        main: '#d0f685',
+        light: '#809b4d',
       },
       info: {
         contrastText: brand[300],
@@ -193,7 +192,7 @@ export const colorSchemes = {
         selected: alpha(gray[600], 0.3),
       },
       baseShadow:
-          'hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px',
+        'hsla(220, 30%, 5%, 0.7) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.8) 0px 8px 16px -5px',
     },
   },
   light: {
@@ -246,8 +245,7 @@ export const colorSchemes = {
         'hsla(220, 30%, 5%, 0.07) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.07) 0px 8px 16px -5px',
     },
   },
-
-};
+}
 
 export const typography = {
   fontFamily: 'Nunito Sans, Nunito Sans Fallback;',
@@ -297,16 +295,18 @@ export const typography = {
     fontSize: defaultTheme.typography.pxToRem(12),
     fontWeight: 400,
   },
-};
+}
 
 export const shape = {
   borderRadius: 8,
-};
+}
 
 //@ts-expect-error don't know
 const defaultShadows: Shadows = [
   'none',
   'var(--template-palette-baseShadow)',
   ...defaultTheme.shadows.slice(2),
-];
-export const shadows = defaultShadows;
+]
+export const shadows = defaultShadows
+
+export const primaryLinear = 'linear-gradient(to right, #48B98E 0%, #D1F791 100%)'

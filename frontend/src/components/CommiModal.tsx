@@ -3,6 +3,7 @@ import { Dialog, DialogTitle, DialogContent, IconButton } from '@mui/material'
 import CommiTypo from './CommiTypo'
 import Close from './icons/Close'
 import { customColors } from '@/shared-theme/themePrimitives'
+import { CloseLgIcon } from './icons/CloseLgIcon'
 
 interface CommiModalProps {
   open: boolean
@@ -14,8 +15,9 @@ interface CommiModalProps {
 
 const sizeStyles = {
   small: {
-    width: '408px',
-    height: '340px',
+    width: '440px',
+    height: '320px',
+    padding: '4px 0',
   },
   medium: {
     width: '640px',
@@ -34,6 +36,13 @@ export default function CommiModal({
   children,
   size = 'medium',
 }: CommiModalProps) {
+  const closeIconPosition =
+    size === 'small'
+      ? { right: 16, top: 20 }
+      : size === 'medium'
+      ? { right: 24, top: 24 }
+      : { right: 32, top: 32 }
+
   return (
     <Dialog
       open={open}
@@ -50,16 +59,11 @@ export default function CommiModal({
           </CommiTypo>
         </DialogTitle>
       )}
-      <IconButton
-        aria-label="close"
+      <CloseLgIcon
         onClick={onClose}
-        sx={{
-          position: 'absolute',
-          right: 24,
-          top: 24,
-        }}>
-        <Close color={customColors.blue[300]} />
-      </IconButton>
+        color={customColors.blue[300]}
+        style={{ position: 'absolute', cursor: 'pointer', ...closeIconPosition }}
+      />
       <DialogContent>{children}</DialogContent>
     </Dialog>
   )
