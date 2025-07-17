@@ -42,7 +42,7 @@ const CommiButton = ({
     ...(size === 'small' && {
       height: '24px',
       fontSize: '0.875rem',
-      px: 1,
+      px: 1.125,
       fontWeight: '600',
       borderRadius: '60px',
       justifyContent: 'center',
@@ -59,13 +59,17 @@ const CommiButton = ({
       }),
   }
 
-  const fontSx =
+  const fontSx: Record<string, string> =
     size === 'medium'
       ? {
           type: 'content' as const,
           weight: 'bold' as const,
         }
       : {}
+
+  if (variant === 'outlined') {
+    fontSx.color = customColors.main.Green01
+  }
 
   const cusSx: SxProps<Theme> = {
     justifyContent: 'center !important',

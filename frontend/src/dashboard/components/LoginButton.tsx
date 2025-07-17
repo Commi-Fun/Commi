@@ -4,6 +4,7 @@ import CommiTypo from '@/components/CommiTypo'
 import { XWithBorderIcon } from '@/components/icons/XWithBorderIcon'
 import { customColors, primaryLinear } from '@/shared-theme/themePrimitives'
 import { Box, Stack, styled } from '@mui/material'
+import { signIn } from 'next-auth/react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -19,6 +20,16 @@ const StyledStack = styled(Stack)(() => ({
 
 export const LoginButton = () => {
   const [openSignInModal, setOpenSignInModal] = React.useState(false)
+
+  const connectWithX = async () => {
+    try {
+      // Call NextAuth to sign in with the "x" provider
+      await signIn('x', { redirect: false })
+    } catch (error) {
+      console.error('Sign in with X failed:', error)
+      // Optionally, show an error message to the user
+    }
+  }
 
   return (
     <>
@@ -58,7 +69,11 @@ export const LoginButton = () => {
                   Twitter
                 </CommiTypo>
               </Stack>
-              <CommiButton theme="primaryLinear" size="medium" sx={{ width: '160px' }}>
+              <CommiButton
+                theme="primaryLinear"
+                size="medium"
+                sx={{ width: '160px' }}
+                onClick={connectWithX}>
                 Start
               </CommiButton>
             </StyledStack>

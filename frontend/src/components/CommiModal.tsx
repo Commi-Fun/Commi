@@ -21,7 +21,9 @@ const sizeStyles = {
   },
   medium: {
     width: '640px',
-    height: '656px',
+    height: 'fit-content',
+    minHeight: '400px',
+    maxHeight: '800px',
   },
   large: {
     width: '1208px',

@@ -24,6 +24,7 @@ import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import ConnectWalletButton from './ConnectWalletButton'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { LoginButton } from './LoginButton'
+import { UserSetting } from './UserSetting'
 
 const ProfileInfo = () => {
   const { data: session } = useSession()
@@ -34,8 +35,6 @@ const ProfileInfo = () => {
   const isMenuOpen = Boolean(anchorEl)
   const [isConnectModalOpen, setConnectModalOpen] = React.useState(false)
   const { connected, publicKey, ...rest } = useWallet()
-
-  console.log('rest', rest)
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -75,17 +74,7 @@ const ProfileInfo = () => {
               </Typography>
             )}
           </Stack>
-          <SettingsIcon
-            fontSize={'medium'}
-            sx={{
-              position: 'absolute',
-              top: '6px',
-              right: '16px',
-              color: 'gray',
-              cursor: 'pointer',
-            }}
-            onClick={handleMenuOpen}
-          />
+          <UserSetting />
           <Menu
             anchorEl={anchorEl}
             open={isMenuOpen}
@@ -129,6 +118,8 @@ const UnloginProfileInfo = () => {
 export default function SideMenu() {
   const args = useSession()
 
+  console.log('args', args)
+
   const isAuthenticated = args.status === 'authenticated'
   const userImage =
     args.data?.user?.image ||
@@ -147,15 +138,6 @@ export default function SideMenu() {
         backgroundClip: 'padding-box',
         width: '266px',
       }}>
-      <CommiButton
-        size="small"
-        onClick={() => {
-          signOut()
-        }}>
-        log out
-      </CommiButton>
-      <CommiButton size="small">Connect Wallet</CommiButton>
-      <ConnectWalletButton></ConnectWalletButton>
       <Stack direction={'row'} alignItems={'end'} paddingX={2.5} py={3}>
         <Image src="/logo.svg" width={20} height={30} alt="logo"></Image>
         <Image src="/Commi.svg" width={76.8} height={17} alt="logo"></Image>

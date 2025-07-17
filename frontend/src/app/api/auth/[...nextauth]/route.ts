@@ -13,14 +13,14 @@ export const nextAuthOptions: NextAuthOptions = {
       // ✨ 使用 profile 回调来标准化数据
       profile(profile) {
         // profile.data 包含了从 X API v2 返回的用户信息
-        const userProfile = profile.data;
+        const userProfile = profile.data
         // 我们在这里创建一个标准化的 user 对象
         return {
           id: userProfile.id, // 这是数字 ID
           name: userProfile.name, // 这是你的显示名称
           image: userProfile.profile_image_url, // 这是你的头像
-          x_handle: userProfile.username, // 这是你的 @ 用户名
-        };
+          username: userProfile.username, // 这是你的 @ 用户名
+        }
       },
     }),
     CredentialsProvider({
@@ -52,36 +52,37 @@ export const nextAuthOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    // ✨ 现在 jwt 回调变得更简单
     async jwt({ token, user }) {
-      // 首次登录时，user 对象是由上面 profile 回调创建的
+      // The user object is available on the first sign-in.
       if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.picture = user.image;
-        // 我们需要把自定义的 x_handle 添加到 token 中
-        if ('x_handle' in user) {
-            token.x_handle = user.x_handle;
+        token.id = user.id
+        token.name = user.name
+        token.picture = user.image
+        // Add the username from the user object (returned by the profile callback)
+        if (user.username) {
+          token.username = user.username
         }
       }
-      return token;
+      return token
     },
 
-    // ✨ session 回调也相应更新
-    async session({ session, token }: { session: any; token: any }) {
-      // 同时处理来自 X 和 Ethereum 的登录
-      session.user.id = token.id || token.sub;
-      session.user.name = token.name;
-      session.user.image = token.picture;
-      
-      if (token.x_handle) {
-        session.user.handle = token.x_handle;
-      } else {
-        // 如果是 Ethereum 登录, sub 存的是地址
-        session.address = token.sub;
+    async session({ session, token }) {
+      // The types for `session` and `token` are now inferred from the .d.ts file.
+      session.user.id = token.id
+      session.user.name = token.name
+      session.user.image = token.picture
+
+      // Pass the username from the token to the session
+      if (token.username) {
+        session.user.username = token.username
       }
 
-      return session;
+      // For Ethereum login, `sub` holds the address
+      if (!token.username) { // An easy way to distinguish from X login
+        session.address = token.sub
+      }
+
+      return session
     },
   },
 }
