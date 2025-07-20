@@ -1,5 +1,59 @@
 @import "tailwindcss";
 
+@theme {
+  --color-main-White: #F3FBFF;
+  --color-main-Black: #020F15;
+  --color-main-Red: #F76472;
+  --color-main-Green02: #078B5A;
+  --color-main-Green01: #C9F572;
+  --color-green01-100: #14190B;
+  --color-green01-200: #384520;
+  --color-green01-300: #5C7134;
+  --color-green01-400: #819D49;
+  --color-green01-500: #A5C95D;
+  --color-green01-600: #C9F572;
+  --color-green01-700: #D0F685;
+  --color-green01-800: #D7F897;
+  --color-green01-900: #DEF9AA;
+  --color-green01-1000: #E6FABD;
+  --color-green01-1100: #EDFCCF;
+  --color-green02-100: #022719;
+  --color-green02-200: #034029;
+  --color-green02-300: #03593A;
+  --color-green02-400: #05724A;
+  --color-green02-500: #058B5A;
+  --color-green02-600: #078B5A;
+  --color-green02-700: #0AC781;
+  --color-green02-800: #1CF4A3;
+  --color-green02-900: #57F7BB;
+  --color-green02-1000: #E6FABD;
+  --color-green02-1100: #CEFDEB;
+  --color-red-100: #190A0B;
+  --color-red-200: #451C20;
+  --color-red-300: #722E35;
+  --color-red-400: #9E4049;
+  --color-red-500: #CB525E;
+  --color-red-600: #F76472;
+  --color-red-700: #F87986;
+  --color-red-800: #F98E99;
+  --color-red-900: #FAA4AC;
+  --color-red-1000: #FBB9C0;
+  --color-red-1100: #FDCED3;
+  --color-blue-100: #E6E7E8;
+  --color-blue-200: #B8BCBD;
+  --color-blue-300: #8B9193;
+  --color-blue-400: #5D6569;
+  --color-blue-500: #303A3F;
+  --color-blue-600: #020F15;
+  --color-blue-700: #0A4865;
+  --color-blue-800: #1181B4;
+  --color-blue-900: #31B1EB;
+  --color-blue-1000: #81CFF3;
+  --color-blue-1100: #D0EDFB;
+  --color-blue-1200: #172028;
+  --color-blue-1300: #152026;
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;

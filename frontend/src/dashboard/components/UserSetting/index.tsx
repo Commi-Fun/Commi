@@ -6,9 +6,16 @@ import { ExitIcon } from '@/components/icons/ExitIcon'
 import { SettingIcon } from '@/components/icons/SettingIcon'
 import { WalletIcon } from '@/components/icons/WalletIcon'
 import { Avatar, Divider, Stack } from '@mui/material'
+import { WalletName } from '@solana/wallet-adapter-base'
+import { useWallet } from '@solana/wallet-adapter-react'
 import { sign } from 'crypto'
 import { signOut, useSession } from 'next-auth/react'
-import React from 'react'
+import React, { useMemo } from 'react'
+import { NoWallet } from './NoWallet'
+import { WalletList } from './WalletList'
+import ConnectWalletButton from '../ConnectWalletButton'
+import { useSolanaMultiWallet } from '@/hooks/useSolanaMultiWallet'
+import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 
 interface UserSettingProps {
   onClick: () => void
@@ -18,8 +25,13 @@ export const UserSetting = () => {
   const [open, setOpen] = React.useState(false)
   const { data } = useSession()
   const { image: userImage, name, username, ...rest } = data?.user || {}
+  const { connectedWallets } = useSolanaMultiWallet()
 
-  console.log('UserSetting data:', rest)
+  console.log('kkkkk', connectedWallets)
+
+  const { select, connect } = useWallet()
+
+  const phantomAdapter = useMemo(() => new PhantomWalletAdapter(), [])
 
   return (
     <>
@@ -52,19 +64,12 @@ export const UserSetting = () => {
             <CommiTypo type={'heading-alert3'} colorType="secondary">
               My Wallet
             </CommiTypo>
-            <CommiButton size={'small'} variant={'outlined'}>
-              Connect Wallet
-            </CommiButton>
+            <ConnectWalletButton />
           </Stack>
-          <Stack direction={'column'} justifyContent={'center'} alignItems={'center'} mt={6}>
-            <WalletIcon />
-            <CommiTypo type={'heading-h1'} colorType={'secondary'} mt={2}>
-              No Wallet Connected
-            </CommiTypo>
-            <CommiTypo type={'title'} colorType={'secondary-2'} mt={0.5}>
-              Connect a wallet to explore campaigns
-            </CommiTypo>
-          </Stack>
+          {/* <CommiButton onClick={() => phantomAdapter.disconnect()}>disconnect phantom</CommiButton> */}
+          <div className="py-[24px]">
+            <WalletList />
+          </div>
           <Stack mt={6}>
             <CommiDivider />
             <Stack

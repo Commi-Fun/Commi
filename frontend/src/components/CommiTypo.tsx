@@ -28,6 +28,7 @@ const CommiTypo = ({
     ...(type === 'button' && { fontSize: '1rem', fontWeight: 'bold' }),
     ...(type === 'heading-alert3' && { fontSize: '1.125rem', fontWeight: '800' }),
     ...(type === 'body' && { fontSize: '0.875rem' }),
+    ...(type === 'alert2' && { fontSize: '1.75rem', fontWeight: '800' }),
   }
 
   const weightSx: SxProps<Theme> = {

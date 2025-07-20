@@ -33,11 +33,7 @@ export const LoginButton = () => {
 
   return (
     <>
-      <CommiButton
-        variant="outlined"
-        size="small"
-        theme="primary"
-        onClick={() => setOpenSignInModal(true)}>
+      <CommiButton variant="outlined" size="small" onClick={() => setOpenSignInModal(true)}>
         Log in
       </CommiButton>
       <CommiModal open={openSignInModal} onClose={() => setOpenSignInModal(false)} size="small">
