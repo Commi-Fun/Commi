@@ -1,29 +1,24 @@
 'use client'
 import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
+const isLogin = false
 const Page = () => {
   const router = useRouter()
 
+  useEffect(() => {
+    if (isLogin) {
+      router.push('/invite/twoSteps')
+    }
+  }, [router])
+
   const handleGetNowClick = () => {
-    router.push('/invite/secondStep')
+    router.push('/invite/twoSteps')
   }
+
   return (
     <div className="min-h-screen relative overflow-hidden px-20 py-10">
-      <div className="flex items-center gap-3 mb-12">
-        <Image
-          src={'/inviteLogo.png'}
-          width={318}
-          height={120}
-          alt="Commi Logo"
-          quality={100}
-          priority
-          className="object-contain"
-        />
-      </div>
-
-      {/* Main Content */}
       <div className="px-6">
         <p className="stroke-black font-extrabold font-shadow-black text-white text-[56px]">
           NEXT-GEN TOKEN DISTRIBUTION
