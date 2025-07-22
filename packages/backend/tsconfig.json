@@ -8,14 +8,14 @@
     "declarationMap": true,
     "noEmit": false,
     "paths": {
-      "@commi-dashboard/db": ["../../packages/db/src"],
-      "@commi-dashboard/common": ["../../packages/common/src"]
+      "@commi-dashboard/db": ["../db/src"],
+      "@commi-dashboard/common": ["../common/src"]
     }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"],
   "references": [
-    { "path": "../../packages/db" },
-    { "path": "../../packages/common" }
+    { "path": "../db" },
+    { "path": "../common" }
   ]
 }

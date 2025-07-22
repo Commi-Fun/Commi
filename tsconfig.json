@@ -27,12 +27,12 @@
       "@commi-dashboard/mcp": ["./packages/mcp/src"]
     }
   },
-  "exclude": ["node_modules", "dist", "build", ".next", "out", "apps/web"],
+  "exclude": ["node_modules", "dist", "build", ".next", "out", "packages/web"],
   "references": [
     { "path": "./packages/db" },
     { "path": "./packages/common" },
     { "path": "./packages/ui" },
     { "path": "./packages/mcp" },
-    { "path": "./apps/backend" }
+    { "path": "./packages/backend" }
   ]
 }
