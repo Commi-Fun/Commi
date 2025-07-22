@@ -21,18 +21,18 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@commi-dashboard/db": ["../../packages/db/src"],
-      "@commi-dashboard/common": ["../../packages/common/src"],
-      "@commi-dashboard/ui": ["../../packages/ui/src"],
-      "@commi-dashboard/mcp": ["../../packages/mcp/src"]
+      "@commi-dashboard/db": ["../db/src"],
+      "@commi-dashboard/common": ["../common/src"],
+      "@commi-dashboard/ui": ["../ui/src"],
+      "@commi-dashboard/mcp": ["../mcp/src"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": ["node_modules"],
   "references": [
-    { "path": "../../packages/db" },
-    { "path": "../../packages/common" },
-    { "path": "../../packages/ui" },
-    { "path": "../../packages/mcp" }
+    { "path": "../db" },
+    { "path": "../common" },
+    { "path": "../ui" },
+    { "path": "../mcp" }
   ]
 }
