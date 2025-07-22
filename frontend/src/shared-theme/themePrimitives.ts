@@ -248,7 +248,7 @@ export const colorSchemes = {
 }
 
 export const typography = {
-  fontFamily: 'Nunito Sans, Nunito Sans Fallback;',
+  fontFamily: 'Nunito Sans',
   h1: {
     fontSize: defaultTheme.typography.pxToRem(48),
     fontWeight: 600,

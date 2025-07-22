@@ -74,9 +74,6 @@ const CommiButton = ({
   const cusSx: SxProps<Theme> = {
     justifyContent: 'center !important',
   }
-  if (color) {
-    cusSx.color = color
-  }
 
   const finalSx = [
     sizeSx,
@@ -87,7 +84,7 @@ const CommiButton = ({
 
   return (
     <Button variant={variant} sx={finalSx} {...rest}>
-      <CommiTypo {...fontSx}>{children}</CommiTypo>
+      <CommiTypo color={color}>{children}</CommiTypo>
     </Button>
   )
 }

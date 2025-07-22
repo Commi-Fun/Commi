@@ -1,4 +1,4 @@
-import './globals.css'
+import '../globals.css'
 import DashboardLayout from '@/dashboard/DashboardLayout'
 import React from 'react'
 import { Web3Provider } from '@/components/Web3Provider'
