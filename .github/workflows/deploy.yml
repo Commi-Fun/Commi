@@ -1,0 +1,227 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || (startsWith(github.ref, 'refs/tags/') && 'production' || 'staging') }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build backend
+        run: pnpm --filter @ai-airdrop/backend build
+      
+      - name: Deploy to staging
+        if: ${{ github.event.inputs.environment == 'staging' || (github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')) }}
+        run: |
+          echo "Deploying backend to staging..."
+          # Add your staging deployment script here
+          # e.g., deploy to Railway, Heroku, etc.
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          RAPIDAPI_KEY: ${{ secrets.STAGING_RAPIDAPI_KEY }}
+      
+      - name: Deploy to production
+        if: ${{ github.event.inputs.environment == 'production' || startsWith(github.ref, 'refs/tags/') }}
+        run: |
+          echo "Deploying backend to production..."
+          # Add your production deployment script here
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+          RAPIDAPI_KEY: ${{ secrets.PRODUCTION_RAPIDAPI_KEY }}
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || (startsWith(github.ref, 'refs/tags/') && 'production' || 'staging') }}
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build frontend
+        run: pnpm --filter @ai-airdrop/web build
+        env:
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_PRIVY_APP_ID: ${{ vars.NEXT_PUBLIC_PRIVY_APP_ID }}
+      
+      - name: Deploy to Vercel (staging)
+        if: ${{ github.event.inputs.environment == 'staging' || (github.ref == 'refs/heads/main' && !startsWith(github.ref, 'refs/tags/')) }}
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./apps/web
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+      
+      - name: Deploy to Vercel (production)
+        if: ${{ github.event.inputs.environment == 'production' || startsWith(github.ref, 'refs/tags/') }}
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          vercel-args: '--prod'
+          working-directory: ./apps/web
+          scope: ${{ secrets.VERCEL_ORG_ID }}
+
+  deploy-contracts-evm:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.environment == 'production' || startsWith(github.ref, 'refs/tags/') }}
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: |
+          cd contracts/evm
+          pnpm install --frozen-lockfile
+      
+      - name: Compile contracts
+        run: |
+          cd contracts/evm
+          pnpm build
+      
+      - name: Deploy to Ethereum Mainnet
+        run: |
+          cd contracts/evm
+          pnpm deploy:mainnet
+        env:
+          MAINNET_URL: ${{ secrets.MAINNET_URL }}
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          ETHERSCAN_API_KEY: ${{ secrets.ETHERSCAN_API_KEY }}
+      
+      - name: Deploy to Polygon
+        run: |
+          cd contracts/evm
+          pnpm deploy:polygon
+        env:
+          POLYGON_URL: ${{ secrets.POLYGON_URL }}
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          POLYGONSCAN_API_KEY: ${{ secrets.POLYGONSCAN_API_KEY }}
+      
+      - name: Deploy to Arbitrum
+        run: |
+          cd contracts/evm
+          pnpm deploy:arbitrum
+        env:
+          ARBITRUM_URL: ${{ secrets.ARBITRUM_URL }}
+          PRIVATE_KEY: ${{ secrets.DEPLOYER_PRIVATE_KEY }}
+          ARBISCAN_API_KEY: ${{ secrets.ARBISCAN_API_KEY }}
+
+  deploy-contracts-solana:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.environment == 'production' || startsWith(github.ref, 'refs/tags/') }}
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      
+      - name: Setup Solana CLI
+        uses: ./.github/actions/setup-solana
+        with:
+          solana-version: 1.17.0
+      
+      - name: Setup Anchor
+        uses: ./.github/actions/setup-anchor
+        with:
+          anchor-version: 0.29.0
+      
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            contracts/solana/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Build contracts
+        run: |
+          cd contracts/solana
+          anchor build
+      
+      - name: Deploy to Solana Mainnet
+        run: |
+          cd contracts/solana
+          echo "${{ secrets.SOLANA_DEPLOYER_KEY }}" > keypair.json
+          solana config set --keypair keypair.json
+          solana config set --url mainnet-beta
+          anchor deploy --provider.cluster mainnet
+        env:
+          ANCHOR_WALLET: keypair.json
+
+  notify:
+    needs: [deploy-backend, deploy-frontend]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify deployment status
+        uses: 8398a7/action-slack@v3
+        if: always()
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow

@@ -1,0 +1,32 @@
+name: 'Setup Anchor'
+description: 'Install and configure Anchor framework'
+inputs:
+  anchor-version:
+    description: 'Anchor version to install'
+    required: false
+    default: '0.29.0'
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache Anchor CLI
+      uses: actions/cache@v3
+      id: cache-anchor
+      with:
+        path: ~/.local/bin/anchor
+        key: anchor-${{ inputs.anchor-version }}-${{ runner.os }}
+    
+    - name: Install Anchor CLI
+      if: steps.cache-anchor.outputs.cache-hit != 'true'
+      run: |
+        npm install -g @coral-xyz/anchor-cli@${{ inputs.anchor-version }}
+        mkdir -p ~/.local/bin
+        ln -s $(which anchor) ~/.local/bin/anchor
+      shell: bash
+    
+    - name: Add Anchor to PATH
+      run: echo "$HOME/.local/bin" >> $GITHUB_PATH
+      shell: bash
+    
+    - name: Verify Anchor installation
+      run: anchor --version
+      shell: bash

@@ -1,0 +1,184 @@
+{
+  "result": {
+    "result": {
+      "__typename": "Community",
+      "is_member": false,
+      "name": "🟡Yellow Super Cycle",
+      "role": "NonMember",
+      "rest_id": "1926540916786921947",
+      "actions": {
+        "join_action_result": {
+          "__typename": "CommunityJoinAction"
+        },
+        "id": "Q29tbXVuaXR5QWN0aW9uczoxOTI2NTQwOTE2Nzg2OTIxOTQ3"
+      },
+      "description": "Make sure the super cycle happen on BNBCHAIN. YELLOW WAVE INCOMING. 🟡",
+      "creator_results": {
+        "result": {
+          "__typename": "User",
+          "id": "VXNlcjoxNjUxOTUyMzQyOTUzMDE3MzQ1",
+          "is_blue_verified": true,
+          "legacy": {
+            "screen_name": "YellowOnBSC"
+          },
+          "verification": {
+            "verified": false
+          }
+        },
+        "id": "VXNlclJlc3VsdHM6MTY1MTk1MjM0Mjk1MzAxNzM0NQ=="
+      },
+      "join_policy": "Open",
+      "created_at": 1748158122625,
+      "rules": [
+        {
+          "rest_id": "1926541285692702826",
+          "name": "🟡🟡🟡🟡🟡🟡🟡🟡🟡🟡",
+          "id": "Q29tbXVuaXR5UnVsZToxOTI2NTQxMjg1NjkyNzAyODI2"
+        }
+      ],
+      "custom_banner_media": {
+        "media_info": {
+          "__typename": "ApiImage",
+          "color_info": {
+            "palette": [
+              {
+                "rgb": {
+                  "red": 255,
+                  "green": 255,
+                  "blue": 0
+                },
+                "percentage": 100
+              }
+            ]
+          },
+          "original_img_url": "https://pbs.twimg.com/community_banner_img/1926619240150302720/FwUzJMr4?format=jpg&name=orig",
+          "original_img_width": 400,
+          "original_img_height": 160
+        },
+        "id": "QXBpTWVkaWE6DAATCgABGry5/cKXgAAAAA=="
+      },
+      "default_banner_media": {
+        "media_info": {
+          "__typename": "ApiImage",
+          "color_info": {
+            "palette": [
+              {
+                "rgb": {
+                  "red": 122,
+                  "green": 223,
+                  "blue": 237
+                },
+                "percentage": 73.9
+              },
+              {
+                "rgb": {
+                  "red": 254,
+                  "green": 220,
+                  "blue": 63
+                },
+                "percentage": 13.4
+              },
+              {
+                "rgb": {
+                  "red": 160,
+                  "green": 231,
+                  "blue": 253
+                },
+                "percentage": 3.63
+              },
+              {
+                "rgb": {
+                  "red": 241,
+                  "green": 225,
+                  "blue": 125
+                },
+                "percentage": 1.91
+              },
+              {
+                "rgb": {
+                  "red": 221,
+                  "green": 240,
+                  "blue": 208
+                },
+                "percentage": 1.61
+              }
+            ]
+          },
+          "original_img_url": "https://pbs.twimg.com/media/FECPklzVUAEYfqd.jpg",
+          "original_img_width": 1200,
+          "original_img_height": 480
+        },
+        "id": "QXBpTWVkaWE6DAABCgABFECPklzVUAEKAAITiFWq8lUQBAAA"
+      },
+      "members_facepile_results": [
+        {
+          "result": {
+            "__typename": "User",
+            "legacy": {
+              "profile_image_url_https": "https://pbs.twimg.com/profile_images/1932419475024060416/rySYf4Ir_normal.jpg"
+            },
+            "id": "VXNlcjoxNjUxOTUyMzQyOTUzMDE3MzQ1"
+          },
+          "id": "VXNlclJlc3VsdHM6MTY1MTk1MjM0Mjk1MzAxNzM0NQ=="
+        },
+        {
+          "result": {
+            "__typename": "User",
+            "legacy": {
+              "profile_image_url_https": "https://pbs.twimg.com/profile_images/1845981130040004608/gaJ8aQot_normal.jpg"
+            },
+            "id": "VXNlcjoxODQ1OTgxMDc2MTc2NjU0MzM3"
+          },
+          "id": "VXNlclJlc3VsdHM6MTg0NTk4MTA3NjE3NjY1NDMzNw=="
+        },
+        {
+          "result": {
+            "__typename": "User",
+            "legacy": {
+              "profile_image_url_https": "https://pbs.twimg.com/profile_images/1850409220233146368/cK-mBJoL_normal.jpg"
+            },
+            "id": "VXNlcjoxNTA3MDQzMjIwMDQzMjE4OTQ3"
+          },
+          "id": "VXNlclJlc3VsdHM6MTUwNzA0MzIyMDA0MzIxODk0Nw=="
+        },
+        {
+          "result": {
+            "__typename": "User",
+            "legacy": {
+              "profile_image_url_https": "https://pbs.twimg.com/profile_images/1930433444091441152/wd0NzZKj_normal.jpg"
+            },
+            "id": "VXNlcjoxODA3MjYyNDIwNzY5MDc5Mjk3"
+          },
+          "id": "VXNlclJlc3VsdHM6MTgwNzI2MjQyMDc2OTA3OTI5Nw=="
+        },
+        {
+          "result": {
+            "__typename": "User",
+            "legacy": {
+              "profile_image_url_https": "https://pbs.twimg.com/profile_images/1897505677842829312/fxxFxTC__normal.jpg"
+            },
+            "id": "VXNlcjoxNjk2NDI4ODUy"
+          },
+          "id": "VXNlclJlc3VsdHM6MTY5NjQyODg1Mg=="
+        }
+      ],
+      "member_count": 166,
+      "invites_result": {
+        "__typename": "CommunityInvitesUnavailable"
+      },
+      "join_requests_result": {
+        "__typename": "CommunityJoinRequestsUnavailable"
+      },
+      "primary_community_topic": {
+        "topic_name": "Cryptocurrency"
+      },
+      "is_nsfw": false,
+      "trending_hashtags_slice": {
+        "__typename": "CommunityHashtagSlice",
+        "items": []
+      },
+      "id": "Q29tbXVuaXR5OjE5MjY1NDA5MTY3ODY5MjE5NDc="
+    },
+    "id": "Q29tbXVuaXR5UmVzdWx0czoxOTI2NTQwOTE2Nzg2OTIxOTQ3"
+  }
+}
