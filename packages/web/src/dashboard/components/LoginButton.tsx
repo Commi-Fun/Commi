@@ -22,19 +22,19 @@ export const LoginButton = ({
   children,
   callbackUrl,
 }: {
-  children?: React.ReactNode
+  children?: React.ReactElement<{
+    onClick?: () => void
+  }>
   callbackUrl?: string
 }) => {
   const [openSignInModal, setOpenSignInModal] = React.useState(false)
 
   const connectWithX = async () => {
     try {
-      // Call NextAuth to sign in with the "x" provider
       const result = await signIn('x', { redirect: false, callbackUrl })
       console.log('Sign in with X result:', result)
     } catch (error) {
       console.error('Sign in with X failed:', error)
-      // Optionally, show an error message to the user
     }
   }
 
@@ -89,7 +89,9 @@ export const LoginButton = ({
                 theme="primaryLinear"
                 size="medium"
                 sx={{ width: '160px' }}
-                onClick={connectWithX}>
+                onClick={connectWithX}
+                color={customColors.main.Black}
+                weight="bold">
                 Start
               </CommiButton>
             </StyledStack>

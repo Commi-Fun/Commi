@@ -1,5 +1,5 @@
 @import 'tailwindcss';
-@import '../styles/fonts.css';
+/* @import '../styles/fonts.css'; */
 
 @theme {
   --color-main-White: #f3fbff;

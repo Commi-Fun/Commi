@@ -1,18 +1,18 @@
-import AppTheme from '@/shared-theme/AppTheme'
+import AppTheme from '@/shared-theme/AppTheme';
 
-import React from 'react'
-import { Header } from '../components/Header'
-import Image from 'next/image'
+import React from 'react';
+import { Header } from '../components/Header';
+import Image from 'next/image';
 
 export const metadata = {
   title: 'You are invited!',
   description: 'A special invitation.',
-}
+};
 
 export default function InviteLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className="flex items-center gap-3 mb-12 pt-10 pl-20">
+      <div className="flex items-center gap-3 pt-10 pl-20">
         <Image
           src={'/inviteLogo.png'}
           width={317.67}
@@ -24,7 +24,7 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
         />
       </div>
       {/* Layer 1: 右下角圆形背景 - 最底层 */}
-      <div className="fixed bottom-0 right-0 w-244 h-244 bg-green01-900 rounded-full z-10 -mb-52 -mr-31.75"></div>
+      <div className="absolute -bottom-52 -right-31.75 w-244 h-244 bg-green01-900 rounded-full z-10 "></div>
 
       {/* <div className="fixed inset-0 pointer-events-none z-20">
           <div className="absolute top-20 right-20 w-16 h-16 bg-blue-400 rounded-full shadow-lg animate-float"></div>
@@ -43,11 +43,11 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
         </div> */}
 
       {/* Layer 3: 大型 Logo 背景 - 最高层背景元素 */}
-      <div className="fixed bottom-0 right-0 z-30 pointer-events-none mr-40">
+      <div className="absolute bottom-0 right-40 z-30 pointer-events-none">
         <Image src={'/images/commiCup.png'} alt="" width={400} height={680} />
       </div>
 
-      <main className="relative z-40">{children}</main>
+      {children}
     </>
-  )
+  );
 }
