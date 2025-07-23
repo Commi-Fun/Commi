@@ -1,0 +1,268 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      packages: ${{ steps.changes.outputs.packages }}
+      apps: ${{ steps.changes.outputs.apps }}
+      contracts-solana: ${{ steps.changes.outputs.contracts-solana }}
+      contracts-evm: ${{ steps.changes.outputs.contracts-evm }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            packages:
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-workspace.yaml'
+            apps:
+              - 'apps/**'
+              - 'packages/**'
+            contracts-solana:
+              - 'contracts/solana/**'
+            contracts-evm:
+              - 'contracts/evm/**'
+
+  lint-and-typecheck:
+    needs: changes
+    if: needs.changes.outputs.packages == 'true' || needs.changes.outputs.apps == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Lint
+        run: pnpm lint
+      
+      - name: Type check
+        run: pnpm build
+
+  test-packages:
+    needs: changes
+    if: needs.changes.outputs.packages == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Test packages
+        run: pnpm test
+
+  test-backend:
+    needs: changes
+    if: needs.changes.outputs.apps == 'true'
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ai_airdrop_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Generate Prisma client
+        run: pnpm db:generate
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_airdrop_test
+      
+      - name: Run database migrations
+        run: pnpm db:push
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_airdrop_test
+      
+      - name: Test backend
+        run: pnpm --filter @ai-airdrop/backend test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/ai_airdrop_test
+
+  test-frontend:
+    needs: changes
+    if: needs.changes.outputs.apps == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      
+      - name: Build frontend
+        run: pnpm --filter @ai-airdrop/web build
+        env:
+          SKIP_ENV_VALIDATION: true
+
+  test-solana-contracts:
+    needs: changes
+    if: needs.changes.outputs.contracts-solana == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+      
+      - name: Setup Solana CLI
+        uses: ./.github/actions/setup-solana
+        with:
+          solana-version: 1.17.0
+      
+      - name: Setup Anchor
+        uses: ./.github/actions/setup-anchor
+        with:
+          anchor-version: 0.29.0
+      
+      - name: Cache Rust dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            contracts/solana/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      
+      - name: Build Solana contracts
+        run: |
+          cd contracts/solana
+          anchor build
+      
+      - name: Test Solana contracts
+        run: |
+          cd contracts/solana
+          anchor test
+
+  test-evm-contracts:
+    needs: changes
+    if: needs.changes.outputs.contracts-evm == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      
+      - name: Install dependencies
+        run: |
+          cd contracts/evm
+          pnpm install --frozen-lockfile
+      
+      - name: Compile contracts
+        run: |
+          cd contracts/evm
+          pnpm build
+      
+      - name: Test contracts
+        run: |
+          cd contracts/evm
+          pnpm test
+      
+      - name: Check contract size
+        run: |
+          cd contracts/evm
+          pnpm hardhat size-contracts
+
+  security-audit:
+    needs: changes
+    if: needs.changes.outputs.contracts-evm == 'true' || needs.changes.outputs.contracts-solana == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Run Slither for EVM contracts
+        if: needs.changes.outputs.contracts-evm == 'true'
+        uses: crytic/slither-action@v0.3.0
+        with:
+          node-version: 18
+          sarif: results.sarif
+          slither-args: --filter-paths "node_modules|test" --exclude naming-convention,external-function,low-level-calls
+          target: contracts/evm
+      
+      - name: Upload SARIF file
+        if: needs.changes.outputs.contracts-evm == 'true'
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: results.sarif

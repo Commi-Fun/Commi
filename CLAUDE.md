@@ -4,71 +4,70 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a dashboard system that collects data from registered Twitter users, stores and updates the information in MongoDB, calculates valid tweets' influence and distributes NFT rewards through solana. The project uses RapidAPI's Twitter241 service to fetch data and provides TypeScript interfaces for structured data handling.
+This is **commi-dashboard**, a community dashboard system that collects data from registered Twitter users, stores and updates the information using Prisma with PostgreSQL, calculates valid tweets' influence and distributes NFT rewards through Solana. The project uses RapidAPI's Twitter241 service to fetch data and provides TypeScript interfaces for structured data handling.
 
-## Architecture
+## Monorepo Architecture
 
-### Backend Structure (`/backend`)
-- **Crawler module** (`/crawler`): Core data fetching logic
-  - `x_type.ts`: TypeScript interfaces for all Twitter data structures (XCommunity, XTweet, XUser, etc.)
-  - `x_community.ts`: Functions to fetch community details, tweets, replies, reposts, and quotes. It is temporarily disabled.
-  - `x_users.ts`: Functions to fetch user information and user tweets with filtering by ticker symbols
-- **Reward module** (`/reward`): Handles NFT rewards distribution
-  - `nft.ts`: Functions to distribute NFTs based on tweet influence
-  - `solana.ts`: Solana blockchain interaction for NFT transactions
-- **Database module** (`/db`): MongoDB integration
-  - `mongdb.ts`: Database connection and basic CRUD operations
-  - `setup.ts`: Database initialization and index creation
-- `index.ts`: Main application entry point (currently empty)
+This project is organized as a pnpm monorepo with all modules under the `/packages` directory:
 
-### Blockchain Structure (`/blockchain`)
-- **solana**: Contains Solana-related code for NFT distribution
-  - `nft.ts`: Functions to interact with the Solana blockchain for NFT transactions
-  - `solana.ts`: Additional Solana utilities and configurations
+### Packages (`/packages`)
+- **web** (`@commi-dashboard/web`): Next.js frontend dashboard for community data visualization
+- **backend** (`@commi-dashboard/backend`): Node.js server handling crawlers, schedulers, and API endpoints
+  - **Crawler module** (`/src/crawler`): Core data fetching logic
+    - `x_users.ts`: Functions to fetch user information and user tweets with filtering by ticker symbols
+    - `x_community.ts`: Functions to fetch community details, tweets, replies, reposts, and quotes (temporarily disabled)
+  - **Reward module** (`/src/reward`): Handles NFT rewards distribution
+    - `nft.ts`: Functions to distribute NFTs based on tweet influence
+    - `solana.ts`: Solana blockchain interaction for NFT transactions
+- **db** (`@commi-dashboard/db`): Prisma client and database schema with PostgreSQL
+- **common** (`@commi-dashboard/common`): Shared TypeScript interfaces and types for Twitter data structures (XCommunity, XTweet, XUser, etc.)
+- **ui** (`@commi-dashboard/ui`): Shared React/MUI components for consistent UI across applications
+- **mcp** (`@commi-dashboard/mcp`): Model Context Protocol for real-time WebSocket communication
 
-### Frontend Structure (`/frontend`)
-- Currently not implemented, but intended for a user interface to visualize the collected data and manage user interactions.
+### Smart Contracts (`/contracts`)
+- **solana** (`@commi-dashboard/contracts-solana`): Anchor-based Solana smart contracts for NFT distribution
+- **evm** (`@commi-dashboard/contracts-evm`): Hardhat-based EVM smart contracts for multi-chain support
 
 
 
 ### Data Flow
-1. User data is collected with `fetchUser()`, filtering tweets by ticker symbols and time ranges in a preset interval
-2. Extract latest user tweets from mongoDB and compare with new data
-3. Calculate tweet influence using `calculateInfluence()` in `reward/nft.ts`
-4. Distribute NFTs based on influence using `distributeNFT()` in `reward/nft.ts`
-5. Store all data in MongoDB using structured TypeScript interfaces
+1. User data is collected with `fetchUser()` in `packages/backend/src/crawler/x_users.ts`, filtering tweets by ticker symbols and time ranges in a preset interval
+2. Extract latest user tweets from PostgreSQL via Prisma and compare with new data
+3. Calculate tweet influence using `calculateInfluence()` in `packages/backend/src/reward/nft.ts`
+4. Distribute NFTs based on influence using `distributeNFT()` in `packages/backend/src/reward/nft.ts`
+5. Store all data in PostgreSQL using Prisma ORM and structured TypeScript interfaces from `@commi-dashboard/common`
 
 ## Development Commands
 
-### Build and Run
+### Monorepo Setup
 ```bash
-cd backend
-npm install
+# Install dependencies for all packages
+pnpm install
 
-# Copy environment configuration
-cp .env.example .env
-# Edit .env with your configuration
+# Development mode (all apps in parallel)
+pnpm dev
 
-# Initialize database (run MongoDB first)
-npm run db:setup
+# Build all packages
+pnpm build
 
-# Build TypeScript
-npm run build
+# Run specific app
+pnpm web        # Start Next.js frontend
+pnpm backend    # Start Node.js backend
 ```
 
 ### Database Setup
-- MongoDB must be running on `localhost:27017` (or configure MONGODB_URI)
-- Database name: `ai_airdrop` (configurable via DB_NAME)
-- Run setup script: `npm run db:setup`
-- For production: `npm run db:setup:prod`
-- Verify setup: `npm run db:verify`
+- PostgreSQL database with Prisma ORM
+- Database schema defined in `packages/db/prisma/schema.prisma`
+- Run migrations: `pnpm db:migrate`
+- Push schema changes: `pnpm db:push`
+- Generate Prisma client: `pnpm db:generate`
 
-#### Database Collections:
-- `users`: Twitter user profiles with engagement metrics
-- `tweets`: Tweet data with influence scores and ticker symbols
-- `communities`: Twitter community information
-- `nft_distributions`: NFT distribution records and transaction status
-- `system_config`: Application configuration parameters
+#### Database Tables:
+- `User`: Twitter user profiles with engagement metrics
+- `Tweet`: Tweet data with influence scores and ticker symbols  
+- `NFTDistribution`: NFT distribution records and transaction status
+- `SystemConfig`: Application configuration parameters
+- `CrawlerLog`: Logging for crawler operations
 
 ## API Integration
 
@@ -81,11 +80,16 @@ The project uses RapidAPI's Twitter241 service with endpoints for:
 
 ## Key Data Structures
 
+Defined in `@commi-dashboard/common`:
 - `XTweet`: Tweet with engagement metrics and nested replies/reposts/quotes
 - `XUser`: User profile with filtered tweet collection
+- `XCommunity`: Twitter community information and metadata
 - All interfaces support media (photos only), verification status, and engagement metrics
 
-## Database Schema
+## Prisma Database Schema
 
-- Community snapshots with unique index on `id` and `timestamp`
-- Supports time-series data collection for tracking changes over time
+Located in `packages/db/prisma/schema.prisma`:
+- User, Tweet, and NFTDistribution tables with proper relationships
+- Indexed fields for optimal query performance
+- Support for time-series data collection and tracking changes over time
+- Enum types for distribution status and blockchain networks

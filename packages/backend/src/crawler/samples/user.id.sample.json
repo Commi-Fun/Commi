@@ -1,0 +1,106 @@
+{
+  "result": {
+    "data": {
+      "user": {
+        "result": {
+          "__typename": "User",
+          "id": "VXNlcjoxMzU1OTcwMDkwNzU2MzA0ODk2",
+          "rest_id": "1355970090756304896",
+          "affiliates_highlighted_label": {},
+          "avatar": {
+            "image_url": "https://pbs.twimg.com/profile_images/1931599657551212544/MAr_HwHR_normal.jpg"
+          },
+          "core": {
+            "created_at": "Sun Jan 31 20:04:10 +0000 2021",
+            "name": "骚骚",
+            "screen_name": "iamronniemm"
+          },
+          "dm_permissions": {
+            "can_dm": true
+          },
+          "has_graduated_access": true,
+          "is_blue_verified": true,
+          "legacy": {
+            "default_profile": true,
+            "default_profile_image": false,
+            "description": "｜币圈第二法师｜看心情起象，月入百倍（精神上的）｜Builder💎｜是神经病，你要骂我先看看你有几个妈",
+            "entities": {
+              "description": {
+                "urls": []
+              }
+            },
+            "fast_followers_count": 0,
+            "favourites_count": 611,
+            "followers_count": 752,
+            "friends_count": 509,
+            "has_custom_timelines": true,
+            "is_translator": false,
+            "listed_count": 1,
+            "media_count": 730,
+            "normal_followers_count": 752,
+            "pinned_tweet_ids_str": [
+              "1936416136603816244"
+            ],
+            "possibly_sensitive": false,
+            "profile_banner_url": "https://pbs.twimg.com/profile_banners/1355970090756304896/1747352293",
+            "profile_interstitial_type": "",
+            "statuses_count": 1847,
+            "translator_type": "none",
+            "want_retweets": false,
+            "withheld_in_countries": []
+          },
+          "location": {
+            "location": "0.01Km"
+          },
+          "media_permissions": {
+            "can_media_tag": false
+          },
+          "parody_commentary_fan_label": "Parody",
+          "profile_image_shape": "Circle",
+          "privacy": {
+            "protected": false
+          },
+          "relationship_perspectives": {
+            "following": false
+          },
+          "tipjar_settings": {
+            "is_enabled": true
+          },
+          "verification": {
+            "verified": false
+          },
+          "legacy_extended_profile": {},
+          "is_profile_translatable": true,
+          "has_hidden_subscriptions_on_profile": false,
+          "verification_info": {
+            "is_identity_verified": false,
+            "reason": {
+              "description": {
+                "text": "This account is verified. Learn more",
+                "entities": [
+                  {
+                    "from_index": 26,
+                    "to_index": 36,
+                    "ref": {
+                      "url": "https://help.twitter.com/managing-your-account/about-twitter-verified-accounts",
+                      "url_type": "ExternalUrl"
+                    }
+                  }
+                ]
+              },
+              "verified_since_msec": "1747069482138"
+            }
+          },
+          "highlights_info": {
+            "can_highlight_tweets": true,
+            "highlighted_tweets": "17"
+          },
+          "user_seed_tweet_count": 0,
+          "premium_gifting_eligible": false,
+          "business_account": {},
+          "creator_subscriptions_count": 0
+        }
+      }
+    }
+  }
+}

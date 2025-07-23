@@ -1,0 +1,38 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"],
+      "@commi-dashboard/db": ["../db/src"],
+      "@commi-dashboard/common": ["../common/src"],
+      "@commi-dashboard/ui": ["../ui/src"],
+      "@commi-dashboard/mcp": ["../mcp/src"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "exclude": ["node_modules"],
+  "references": [
+    { "path": "../db" },
+    { "path": "../common" },
+    { "path": "../ui" },
+    { "path": "../mcp" }
+  ]
+}

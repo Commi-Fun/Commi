@@ -1,0 +1,202 @@
+{
+  "cursor": {
+    "bottom": "HBaswdOCwe358zIAAA==",
+    "top": "HCaa84Wwuu7/8zIAAA=="
+  },
+  "result": {
+    "timeline": {
+      "instructions": [
+        {
+          "type": "TimelineAddEntries",
+          "entries": [
+            {
+              "entryId": "user-1461171579652833282",
+              "sortIndex": "1834090646843997389",
+              "content": {
+                "entryType": "TimelineTimelineItem",
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "itemType": "TimelineUser",
+                  "__typename": "TimelineUser",
+                  "user_results": {
+                    "result": {
+                      "__typename": "User",
+                      "id": "VXNlcjoxNDYxMTcxNTc5NjUyODMzMjgy",
+                      "rest_id": "1461171579652833282",
+                      "affiliates_highlighted_label": {},
+                      "has_graduated_access": true,
+                      "is_blue_verified": false,
+                      "profile_image_shape": "Circle",
+                      "legacy": {
+                        "can_dm": true,
+                        "can_media_tag": true,
+                        "created_at": "Thu Nov 18 03:17:15 +0000 2021",
+                        "default_profile": true,
+                        "default_profile_image": false,
+                        "description": "没有感情的交易员",
+                        "entities": {
+                          "description": {
+                            "urls": []
+                          },
+                          "url": {
+                            "urls": [
+                              {
+                                "display_url": "japandebaba.com",
+                                "expanded_url": "http://www.japandebaba.com",
+                                "url": "https://t.co/QEnQMRMUQI",
+                                "indices": [
+                                  0,
+                                  23
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "fast_followers_count": 0,
+                        "favourites_count": 9470,
+                        "followers_count": 1236,
+                        "friends_count": 1161,
+                        "has_custom_timelines": true,
+                        "is_translator": false,
+                        "listed_count": 3,
+                        "location": "Guangdong",
+                        "media_count": 572,
+                        "name": "F❤️U_CZ",
+                        "normal_followers_count": 1236,
+                        "pinned_tweet_ids_str": [
+                          "1896524985264726482"
+                        ],
+                        "possibly_sensitive": false,
+                        "profile_banner_url": "https://pbs.twimg.com/profile_banners/1461171579652833282/1745505016",
+                        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1927013713699102720/amw3MShy_normal.jpg",
+                        "profile_interstitial_type": "",
+                        "screen_name": "cnmd_elon",
+                        "statuses_count": 4608,
+                        "translator_type": "none",
+                        "url": "https://t.co/QEnQMRMUQI",
+                        "verified": false,
+                        "want_retweets": false,
+                        "withheld_in_countries": []
+                      },
+                      "professional": {
+                        "rest_id": "1461505100044972032",
+                        "professional_type": "Creator",
+                        "category": [
+                          {
+                            "id": 192,
+                            "name": "Financial Services",
+                            "icon_name": ""
+                          }
+                        ]
+                      },
+                      "tipjar_settings": {
+                        "is_enabled": true,
+                        "bitcoin_handle": "3PHDt9PjqjHWYoq4VPBqYeco1DeHVy1Qe3",
+                        "ethereum_handle": "0xea3eD92d75E9469186b00dc95fD641c41D32eCCA"
+                      }
+                    }
+                  },
+                  "userDisplayType": "User"
+                }
+              }
+            },
+            {
+              "entryId": "user-1770745937888935937",
+              "sortIndex": "1834077436416520278",
+              "content": {
+                "entryType": "TimelineTimelineItem",
+                "__typename": "TimelineTimelineItem",
+                "itemContent": {
+                  "itemType": "TimelineUser",
+                  "__typename": "TimelineUser",
+                  "user_results": {
+                    "result": {
+                      "__typename": "User",
+                      "id": "VXNlcjoxNzcwNzQ1OTM3ODg4OTM1OTM3",
+                      "rest_id": "1770745937888935937",
+                      "affiliates_highlighted_label": {},
+                      "has_graduated_access": true,
+                      "is_blue_verified": false,
+                      "profile_image_shape": "Circle",
+                      "legacy": {
+                        "can_dm": false,
+                        "can_media_tag": true,
+                        "created_at": "Thu Mar 21 09:35:13 +0000 2024",
+                        "default_profile": true,
+                        "default_profile_image": false,
+                        "description": "Y-cult：https://t.co/gxnRLjxt6Y CA：0x0292280a1a45cbc01b7311137f4017c3fb014444",
+                        "entities": {
+                          "description": {
+                            "urls": [
+                              {
+                                "display_url": "t.me/YCLUT_BSC",
+                                "expanded_url": "https://t.me/YCLUT_BSC",
+                                "url": "https://t.co/gxnRLjxt6Y",
+                                "indices": [
+                                  7,
+                                  30
+                                ]
+                              }
+                            ]
+                          }
+                        },
+                        "fast_followers_count": 0,
+                        "favourites_count": 3460,
+                        "followers_count": 84,
+                        "friends_count": 110,
+                        "has_custom_timelines": false,
+                        "is_translator": false,
+                        "listed_count": 0,
+                        "location": "",
+                        "media_count": 73,
+                        "name": "山高路远🟡🟡🟡Y（elloew）",
+                        "normal_followers_count": 84,
+                        "pinned_tweet_ids_str": [],
+                        "possibly_sensitive": false,
+                        "profile_image_url_https": "https://pbs.twimg.com/profile_images/1930841298787049472/IPrUgJj9_normal.jpg",
+                        "profile_interstitial_type": "",
+                        "screen_name": "crayyzijy",
+                        "statuses_count": 823,
+                        "translator_type": "none",
+                        "verified": false,
+                        "want_retweets": false,
+                        "withheld_in_countries": []
+                      },
+                      "tipjar_settings": {}
+                    }
+                  },
+                  "userDisplayType": "User"
+                }
+              }
+            },
+            {
+              "entryId": "cursor-top-1834090646843997390",
+              "sortIndex": "1834090646843997390",
+              "content": {
+                "entryType": "TimelineTimelineCursor",
+                "__typename": "TimelineTimelineCursor",
+                "value": "HCaa84Wwuu7/8zIAAA==",
+                "cursorType": "Top"
+              }
+            },
+            {
+              "entryId": "cursor-bottom-1834077436416520277",
+              "sortIndex": "1834077436416520277",
+              "content": {
+                "entryType": "TimelineTimelineCursor",
+                "__typename": "TimelineTimelineCursor",
+                "value": "HBaswdOCwe358zIAAA==",
+                "cursorType": "Bottom",
+                "stopOnEmptyResponse": true
+              }
+            }
+          ]
+        }
+      ],
+      "responseObjects": {
+        "feedbackActions": [],
+        "immediateReactions": []
+      }
+    }
+  }
+}

@@ -1,0 +1,38 @@
+name: 'Setup Solana CLI'
+description: 'Install and configure Solana CLI'
+inputs:
+  solana-version:
+    description: 'Solana CLI version to install'
+    required: false
+    default: '1.17.0'
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache Solana CLI
+      uses: actions/cache@v3
+      id: cache-solana
+      with:
+        path: ~/.local/share/solana
+        key: solana-${{ inputs.solana-version }}-${{ runner.os }}
+    
+    - name: Install Solana CLI
+      if: steps.cache-solana.outputs.cache-hit != 'true'
+      run: |
+        sh -c "$(curl -sSfL https://release.solana.com/v${{ inputs.solana-version }}/install)"
+        echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+      shell: bash
+    
+    - name: Add Solana to PATH
+      if: steps.cache-solana.outputs.cache-hit == 'true'
+      run: echo "$HOME/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+      shell: bash
+    
+    - name: Generate keypair
+      run: solana-keygen new --no-bip39-passphrase --silent --outfile ~/.config/solana/id.json
+      shell: bash
+    
+    - name: Set config
+      run: |
+        solana config set --keypair ~/.config/solana/id.json
+        solana config set --url localhost
+      shell: bash

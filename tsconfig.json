@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "composite": true,
+    "incremental": true,
+    "baseUrl": ".",
+    "paths": {
+      "@commi-dashboard/db": ["./packages/db/src"],
+      "@commi-dashboard/common": ["./packages/common/src"],
+      "@commi-dashboard/ui": ["./packages/ui/src"],
+      "@commi-dashboard/mcp": ["./packages/mcp/src"]
+    }
+  },
+  "exclude": ["node_modules", "dist", "build", ".next", "out", "packages/web"],
+  "references": [
+    { "path": "./packages/db" },
+    { "path": "./packages/common" },
+    { "path": "./packages/ui" },
+    { "path": "./packages/mcp" },
+    { "path": "./packages/backend" }
+  ]
+}
