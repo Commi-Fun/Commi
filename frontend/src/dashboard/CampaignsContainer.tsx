@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid'
 import * as React from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
+import { signOut } from 'next-auth/react'
 
 const mockCampaignData = Array.from({ length: 4 }).map(() => ({
   address: 'EFMFaSsdgsdgewerwreump',
@@ -32,6 +33,7 @@ const CampaignsContainer = () => {
 
   return (
     <Box>
+      <button onClick={() => signOut()}>sign out</button>
       <Stack
         direction={'row'}
         alignItems={'center'}

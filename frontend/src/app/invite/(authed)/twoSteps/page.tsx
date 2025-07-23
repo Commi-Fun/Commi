@@ -1,6 +1,7 @@
 import CopyIcon from '@/components/icons/CopyIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
 import { customColors } from '@/shared-theme/themePrimitives'
+import { useSession } from 'next-auth/react'
 
 const Page = () => {
   return (
