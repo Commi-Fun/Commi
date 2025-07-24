@@ -1,26 +1,16 @@
-"use client";
-import * as React from "react";
-import { ThemeProvider, createTheme, alpha } from "@mui/material/styles";
-import type { ThemeOptions } from "@mui/material/styles";
-import {
-  typography,
-  shadows,
-  shape,
-  brand,
-  orange,
-  red,
-  green,
-  gray,
-} from "./themePrimitives";
-import { customColors } from "@/shared-theme/themePrimitives";
-import MuiSearch from "./themeComponents/MuiSearch";
+'use client'
+import * as React from 'react'
+import { ThemeProvider, createTheme, alpha } from '@mui/material/styles'
+import { typography, shadows, shape, brand, orange, red, green, gray } from './themePrimitives'
+import { customColors } from '@/shared-theme/themePrimitives'
+import MuiSearch from './themeComponents/MuiSearch'
 
 interface AppThemeProps {
-  children: React.ReactNode;
+  children: React.ReactNode
   /**
    * This is for the docs site. You can ignore it or remove it.
    */
-  disableCustomTheme?: boolean;
+  disableCustomTheme?: boolean
 }
 
 const themeComponents = {
@@ -30,17 +20,25 @@ const themeComponents = {
       root: { color: customColors.main.White },
     },
   },
-};
+  MuiDialog: {
+    styleOverrides: {
+      paper: {
+        backgroundColor: customColors.blue['500'],
+        boxShadow: `inset 0px 0px 0px 1px ${customColors.blue['400']}`,
+      },
+    },
+  },
+}
 
 export default function AppTheme(props: AppThemeProps) {
-  const { children } = props;
+  const { children } = props
   const theme = React.useMemo(
     () =>
       createTheme({
         palette: {
           primary: {
-            main: "#d0f685",
-            light: "#809b4d",
+            main: '#d0f685',
+            light: '#809b4d',
           },
           info: {
             contrastText: brand[300],
@@ -69,10 +67,10 @@ export default function AppTheme(props: AppThemeProps) {
           divider: alpha(gray[700], 0.6),
           background: {
             default: gray[900],
-            paper: "hsl(220, 30%, 7%)",
+            paper: 'hsl(220, 30%, 7%)',
           },
           text: {
-            primary: "hsl(0, 0%, 100%)",
+            primary: 'hsl(0, 0%, 100%)',
             secondary: gray[400],
           },
           action: {
@@ -87,22 +85,22 @@ export default function AppTheme(props: AppThemeProps) {
           MuiButton: {
             styleOverrides: {
               root: {
-                textTransform: "capitalize",
+                textTransform: 'capitalize',
               },
               outlined: {
                 borderColor: customColors.main.Green01,
                 fontWeight: 700,
-                fontSize: "1rem",
-                height: "2.5rem",
-                lineHeight: "2.5rem",
-                borderRadius: "1.25rem",
+                fontSize: '1rem',
+                height: '2.5rem',
+                lineHeight: '2.5rem',
+                borderRadius: '1.25rem',
               },
             },
           },
           MuiSelect: {
             styleOverrides: {
               root: {
-                backgroundColor: "#19191A",
+                backgroundColor: '#19191A',
               },
             },
           },
@@ -110,11 +108,11 @@ export default function AppTheme(props: AppThemeProps) {
           ...themeComponents,
         },
       }),
-    []
-  );
+    [],
+  )
   return (
-    <ThemeProvider theme={theme} defaultMode={"dark"} disableTransitionOnChange>
+    <ThemeProvider theme={theme} defaultMode={'dark'} disableTransitionOnChange>
       {children}
     </ThemeProvider>
-  );
+  )
 }

@@ -1,8 +1,5 @@
 import * as React from 'react';
-import FormControl from '@mui/material/FormControl';
-import InputAdornment from '@mui/material/InputAdornment';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import {customColors} from "@/shared-theme/themePrimitives";
 import SearchIcon from "@/components/icons/SearchIcon";
 

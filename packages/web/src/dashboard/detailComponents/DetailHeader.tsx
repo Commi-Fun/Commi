@@ -1,8 +1,6 @@
 import Stack from "@mui/material/Stack";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import ChevronRightRoundedIcon from "@/components/icons/ChevronRightMD";
@@ -11,17 +9,7 @@ import X from "@/components/icons/X";
 import Users from "@/components/icons/Users";
 import CopyIcon from "@/components/icons/CopyIcon";
 
-const mockTokenSrc = [
-  {
-    src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-Rf0ukJKUzQ28IPO8kqlkHXOpvB-OQl3f6Q&s",
-  },
-  {
-    src: "",
-  },
-  {
-    src: "https://i.namu.wiki/i/V2fxixCG-QESg0yhz_XC7zDn140e8r9GvUiwcM-5N2m24nDwDk0oqMHYEj0zslW3u5Yim1qgPmCB1DeChNclKg.webp",
-  },
-];
+
 
 const members = [
   {

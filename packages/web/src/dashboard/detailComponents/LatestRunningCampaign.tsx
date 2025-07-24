@@ -1,10 +1,6 @@
 import {customColors} from "@/shared-theme/themePrimitives";
 import Paper from '@mui/material/Paper';
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import AddIcon from '@mui/icons-material/Add';
-import Avatar from "@mui/material/Avatar";
 import * as React from "react";
 
 const LatestRunningCampaign = () => {

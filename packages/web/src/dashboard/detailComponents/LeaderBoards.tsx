@@ -1,6 +1,5 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import RefreshIcon from "@mui/icons-material/Refresh";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import LeaderTable from "@/dashboard/detailComponents/LeaderTable";
 import LeaderIndividual from "@/dashboard/detailComponents/LeaderIndividual";
