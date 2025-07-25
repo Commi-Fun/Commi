@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { prisma } from '@commi-dashboard/db';
 
 export type TwitterUser = {
   id: string;
@@ -29,4 +30,13 @@ export async function getMe(accessToken: string): Promise<TwitterUser | null> {
   } catch (error) {
     throw new Error('Failed to verify Twitter credentials: ' + (error instanceof Error ? error.message : 'Unknown error'));
   }
+}
+
+// Tweet repository functions
+export async function createTweet(data: any) {
+  return prisma.tweet.create({ data });
+}
+
+export async function bulkCreateTweets(data: any) {
+  await prisma.tweet.createMany({ data });
 } 

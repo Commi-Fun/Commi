@@ -1,8 +1,10 @@
 {
-    "compilerOptions": {
+  "compilerOptions": {
     "target": "ES2022",
     "module": "esnext",
-    "lib": ["ES2022"],
+    "lib": [
+      "ES2022"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -21,11 +23,21 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@commi-dashboard/db": ["./packages/db/src"],
-      "@commi-dashboard/common": ["./packages/common/src"],
-      "@commi-dashboard/ui": ["./packages/ui/src"],
-      "@commi-dashboard/mcp": ["./packages/mcp/src"],
-      "@/*": ["packages/web/src/*"]
+      "@commi-dashboard/backend": [
+        "./packages/backend/src"
+      ],
+      "@commi-dashboard/db": [
+        "./packages/db/src"
+      ],
+      "@commi-dashboard/common": [
+        "./packages/common/src"
+      ],
+      "@commi-dashboard/mcp": [
+        "./packages/mcp/src"
+      ],
+      "@commi-dashboard/web": [
+        "packages/web/src/*"
+      ]
     }
   },
 }

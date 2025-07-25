@@ -1,10 +1,10 @@
 import { NextRequest } from 'next/server';
-import * as twitterService from '../../_lib/services/twitterService';
-import * as userService from '../../_lib/services/userService';
-import * as authService from '../../_lib/services/authService';
-import { withErrorHandler } from '../../_lib/utils/withErrorHandler';
-import { success, error } from '../../_lib/utils/response';
-import { UserDTO } from '../../_lib/types/dto';
+import * as twitterService from '@/lib/services/twitterService';
+import * as userService from '@/lib/services/userService';
+import * as authService from '@/lib/services/authService';
+import { withErrorHandler } from '@/lib/utils/withErrorHandler';
+import { success, error } from '@/lib/utils/response';
+import { UserDTO } from '@/types/dto';
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const body = await req.json();

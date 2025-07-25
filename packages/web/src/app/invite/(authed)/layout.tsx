@@ -1,8 +1,8 @@
 'use client'
 import AppTheme from '@/shared-theme/AppTheme'
 import Image from 'next/image'
-import '../../globals.css'
-import '../invite.css'
+import '@/app/globals.css'
+import '@/app/invite/invite.css'
 import { useSession } from 'next-auth/react'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

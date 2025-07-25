@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import * as authService from '../services/authService';
+import * as authService from '@/lib/services/authService';
 
 export function getUserFromRequest(req: NextRequest) {
   const authHeader = req.headers.get('authorization');

@@ -1,4 +1,4 @@
-import { prisma } from 'packages/db/src/index';
+import { prisma } from '@commi-dashboard/db';
 
 export async function createCampaign(data: any) {
   return prisma.campaign.create({ data });

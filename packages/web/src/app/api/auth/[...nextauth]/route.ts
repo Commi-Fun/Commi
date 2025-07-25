@@ -1,7 +1,7 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import TwitterProvider from 'next-auth/providers/twitter'
-import { prisma } from 'packages/db/src/index'
+import { prisma } from '@commi-dashboard/db'
 import { SiweMessage } from 'siwe'
 
 export const nextAuthOptions: NextAuthOptions = {

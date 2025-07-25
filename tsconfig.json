@@ -3,11 +3,20 @@
   "files": [],
   "include": [],
   "references": [
-    { "path": "./packages/db" },
-    { "path": "./packages/common" },
-    { "path": "./packages/ui" },
-    { "path": "./packages/mcp" },
-    { "path": "./packages/backend" },
-    { "path": "./packages/web" }
+    {
+      "path": "./packages/db"
+    },
+    {
+      "path": "./packages/common"
+    },
+    {
+      "path": "./packages/mcp"
+    },
+    {
+      "path": "./packages/backend"
+    },
+    {
+      "path": "./packages/web"
+    }
   ]
 }
