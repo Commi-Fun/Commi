@@ -1,5 +1,5 @@
 import { prisma } from 'packages/db/src/index';
-import { UserDomain } from 'packages/web/src/api/models/domain'
+import { UserDomain } from '../types/domain'
 
 export async function createUser(data: UserDomain) {
   return prisma.user.create({

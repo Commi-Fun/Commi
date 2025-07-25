@@ -1,4 +1,4 @@
-import { prisma } from '../../../../../../../db/src/index';
+import { prisma } from 'packages/db/src/index';
 
 export async function createCampaign(data: any) {
   return prisma.campaign.create({ data });

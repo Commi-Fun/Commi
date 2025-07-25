@@ -1,6 +1,6 @@
 import { PrismaTransaction, getTransactionClient } from 'packages/db/src/index';
 import { nanoid } from 'nanoid';
-import { WhitelistDomain } from 'packages/web/src/api/models/domain'
+import { WhitelistDomain } from '../types/domain'
 
 export enum WhitelistStatus {
   REGISTERED = "REGISTERED",

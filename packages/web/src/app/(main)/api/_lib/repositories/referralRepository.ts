@@ -1,5 +1,5 @@
 import { prisma, PrismaTransaction } from 'packages/db/src/index';
-import { ReferralDomain } from 'packages/web/src/api/models/domain'
+import { ReferralDomain } from '../types/domain'
 
 export async function createReferral(tx: PrismaTransaction, data: ReferralDomain) {
   return prisma.referral.create({

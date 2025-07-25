@@ -2,8 +2,8 @@ import { Whitelist } from 'packages/db/generated/prisma/client';
 import { prisma } from 'packages/db/src/index';
 import * as whitelistRepository from '../repositories/whitelistRepository';
 import * as referralRepository from '../repositories/referralRepository';
-import { UserDTO } from 'packages/web/src/api/models/dto'
-import { WhitelistDomain, ReferralDomain } from 'packages/web/src/api/models/domain'
+import { UserDTO } from '../types/dto'
+import { WhitelistDomain, ReferralDomain } from '../types/domain'
 
 export async function getWhitelist(twitterId: string) {
   const whitelist = await whitelistRepository.findWhitelistByTwitterId(prisma, twitterId);

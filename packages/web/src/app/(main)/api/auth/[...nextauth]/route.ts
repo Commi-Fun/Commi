@@ -71,14 +71,14 @@ export const nextAuthOptions: NextAuthOptions = {
           },
           update: {
             profileImageUrl: user.image,
-            name: user.name,
+            name: user.name as string,
             username: user.username,
           },
           create: {
             twitterId: user.id,
             profileImageUrl: user.image,
-            name: user.name,
-            username: user.username,
+            name: user.name as string,
+            username: user.username as string,
           }
          });
       }

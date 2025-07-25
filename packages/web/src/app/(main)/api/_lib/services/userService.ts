@@ -1,5 +1,5 @@
-import { UserDTO } from 'packages/web/src/api/models/dto'
-import { UserDomain } from 'packages/web/src/api/models/domain'
+import { UserDTO } from '../types/dto'
+import { UserDomain } from '../types/domain'
 import * as userRepository from '../repositories/userRepository';
 
 export async function createUser(user: UserDTO) {
