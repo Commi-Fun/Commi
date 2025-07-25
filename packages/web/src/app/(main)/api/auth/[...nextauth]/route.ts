@@ -1,7 +1,11 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import TwitterProvider from 'next-auth/providers/twitter'
+import { PrismaService } from 'packages/db/src/prisma_service'
 import { SiweMessage } from 'siwe'
+
+// Initialize PrismaService properly
+const prisma = new PrismaService();
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -62,6 +66,24 @@ export const nextAuthOptions: NextAuthOptions = {
         if (user.username) {
           token.username = user.username
         }
+
+        // update user info
+        await prisma.user.upsert({ 
+          where: {
+            twitterId: user.id,
+          },
+          update: {
+            profileImageUrl: user.image,
+            name: user.name,
+            username: user.username,
+          },
+          create: {
+            twitterId: user.id,
+            profileImageUrl: user.image,
+            name: user.name,
+            username: user.username,
+          }
+         });
       }
       return token
     },
