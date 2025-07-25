@@ -1,7 +1,10 @@
+import CheckBig from '@/components/icons/CheckBig'
 import CopyIcon from '@/components/icons/CopyIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { useSession } from 'next-auth/react'
+
+const firstStepAuthed = true
 
 const Page = () => {
   return (
@@ -25,9 +28,15 @@ const Page = () => {
         <div className="absolute left-1.5 top-0 bottom-0 w-1 bg-green01-900 rounded-full"></div>
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
-            <span
-              style={{ borderWidth: '2px' }}
-              className="rounded-full border-solid border-main-Black w-4 h-4"></span>
+            {firstStepAuthed ? (
+              <div className="w-6 h-6 bg-main-Green01 rounded-full flex items-center justify-center">
+                <CheckBig className="text-main-Black text-[1.125rem]" />
+              </div>
+            ) : (
+              <span
+                style={{ borderWidth: '2px' }}
+                className="w-6 h-6 rounded-full border-solid border-main-Black w-4 h-4"></span>
+            )}
             <span className="font-bold text-[1.125rem]">Post to Join</span>
           </div>
           <button className="normal-button bg-main-Black text-main-Green01">Post</button>
@@ -36,7 +45,7 @@ const Page = () => {
           <div className="flex items-center gap-4">
             <span
               style={{ borderWidth: '2px' }}
-              className="rounded-full border-solid border-main-Black w-4 h-4"></span>
+              className="w-6 h-6 rounded-full border-solid border-main-Black w-4 h-4"></span>
             <span className="font-bold text-[1.125rem]">Invite 1 friend to get access</span>
           </div>
           <CopyIcon className="text-green01-200 cursor-pointer" />
