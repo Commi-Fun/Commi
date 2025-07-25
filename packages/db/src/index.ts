@@ -1,5 +1,5 @@
-export * from '../generated';
-export { Prisma, PrismaClient } from '../generated';
+export * from '../generated/prisma/client';
+export { Prisma, PrismaClient } from '../generated/prisma/client';
 
 // Re-export useful Prisma types
 export type {
@@ -10,10 +10,10 @@ export type {
   CrawlerLog,
   DistributionStatus,
   Blockchain
-} from '../generated';
+} from '../generated/prisma/client';
 
 // Export Prisma client instance (to be used as singleton)
-import { PrismaClient } from '../generated';
+import { PrismaClient } from '../generated/prisma/client';
 
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
