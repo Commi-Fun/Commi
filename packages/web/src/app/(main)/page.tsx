@@ -14,17 +14,6 @@ export const metadata: Metadata = {
 const Page = () => {
   return (
     <>
-      {/* <Box
-        sx={{
-          p: 2,
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "flex-start",
-        }}
-      >
-        <UserProfile />
-        <LoginButton />
-      </Box> */}
       <MainGrid />
     </>
   )

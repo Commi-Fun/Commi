@@ -8,7 +8,7 @@ export interface ConnectedSolanaWallet {
   icon: string
 }
 
-interface WalletState {
+export interface WalletState {
   connectedWallets: Array<ConnectedSolanaWallet>
   activeWalletName: WalletName | null
   actions: {
@@ -32,12 +32,17 @@ export const useWalletStore = create<WalletState>()(
           }))
         },
         removeWallet: walletName => {
-          const ccc = get().connectedWallets
-          const foundIndex = ccc.findIndex(item => item.name === walletName)
-          if (!foundIndex) return
-          ccc.splice(foundIndex, 1)
+          const currentWallets = get().connectedWallets
+          const foundIndex = currentWallets.findIndex(item => item.name === walletName)
+          if (foundIndex === -1) return // -1 means not found, 0 is a valid index
+
+          const updatedWallets = currentWallets.filter(wallet => wallet.name !== walletName)
+          const currentActive = get().activeWalletName
+
           set({
-            connectedWallets: [...ccc],
+            connectedWallets: updatedWallets,
+            // If we're removing the active wallet, clear the active wallet
+            activeWalletName: currentActive === walletName ? null : currentActive,
           })
         },
         setActiveWalletName: walletName => set({ activeWalletName: walletName }),

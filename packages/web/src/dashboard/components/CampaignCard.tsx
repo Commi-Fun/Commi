@@ -6,9 +6,9 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 import { gray, customColors } from '@/shared-theme/themePrimitives'
 import Button from '@mui/material/Button'
 import Users from '@/components/icons/Users'
-import X from '@/components/icons/X'
 import ExternalLinkIcon from '@/components/icons/ExternalLinkIcon'
 import Box from '@mui/material/Box'
+import { XIcon } from '@/components/icons/XIcon'
 
 function truncateMiddle(text: string): string {
   return text.slice(0, 5) + '...' + text.slice(-3)
@@ -44,7 +44,7 @@ const CampaignCard = ({ address, members }: Props) => {
             <Typography fontSize={'1.125rem'} fontWeight={'bold'} pr={0.5}>
               Token name
             </Typography>
-            <X />
+            <XIcon color={customColors.blue[500]} />
             <Users />
             <Typography
               sx={{
