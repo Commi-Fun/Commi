@@ -12,9 +12,9 @@ const CheckBig = (props: IconType) => {
       <path
         d="M3 9.64978L6.71231 13.3621L14.6679 5.40723"
         stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   )
