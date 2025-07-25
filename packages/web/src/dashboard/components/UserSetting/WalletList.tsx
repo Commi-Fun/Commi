@@ -6,10 +6,6 @@ import { useSolanaMultiWallet } from '@/hooks/useSolanaMultiWallet'
 import truncateAddress from '@/utils/truncateAddress'
 import Image from 'next/image'
 
-type WalletListProps = {
-  connectedWallets: Record<string, ConnectedSolanaWallet>
-}
-
 export const WalletList = () => {
   const { connectedWallets } = useSolanaMultiWallet()
 

@@ -1,16 +1,15 @@
-import { Button, ButtonProps as MuiButtonProps } from '@mui/material';
-import { SxProps, Theme } from '@mui/material/styles';
-import { customColors, primaryLinear } from '@/shared-theme/themePrimitives';
-import CommiTypo from './CommiTypo';
+import { Button, ButtonProps as MuiButtonProps } from '@mui/material'
+import { SxProps, Theme } from '@mui/material/styles'
+import { customColors, primaryLinear } from '@/shared-theme/themePrimitives'
+import CommiTypo from './CommiTypo'
 
-// Define the custom props for our CommiButton
 interface CommiButtonProps extends Omit<MuiButtonProps, 'variant' | 'size' | 'color'> {
-  children: React.ReactNode;
-  size?: 'small' | 'medium' | 'large';
-  variant?: 'contained' | 'outlined';
-  theme?: 'primary' | 'primaryLinear' | 'default';
-  color?: string;
-  weight?: 'bold' | 'semibold';
+  children: React.ReactNode
+  size?: 'small' | 'medium' | 'large'
+  variant?: 'contained' | 'outlined'
+  theme?: 'primary' | 'primaryLinear' | 'default'
+  color?: string
+  weight?: 'bold' | 'semibold'
 }
 
 const themeSx = {
@@ -26,7 +25,7 @@ const themeSx = {
     backgroundColor: 'unset',
     color: customColors.main.White,
   },
-};
+}
 
 const CommiButton = ({
   children,
@@ -38,8 +37,6 @@ const CommiButton = ({
   theme = 'default',
   ...rest
 }: CommiButtonProps) => {
-  // --- Placeholder for your custom styles ---
-  // You can fill in the specific values here based on the props.
   const sizeSx: SxProps<Theme> = {
     ...(size === 'small' && {
       height: '24px',
@@ -59,7 +56,7 @@ const CommiButton = ({
         // height: '48px',
         // fontSize: '1.125rem',
       }),
-  };
+  }
 
   const fontSx: Record<string, string> =
     size === 'medium'
@@ -67,22 +64,22 @@ const CommiButton = ({
           type: 'content' as const,
           weight: 'bold' as const,
         }
-      : {};
+      : {}
 
   if (variant === 'outlined') {
-    fontSx.color = customColors.main.Green01;
+    fontSx.color = customColors.main.Green01
   }
 
   const cusSx: SxProps<Theme> = {
     justifyContent: 'center !important',
-  };
+  }
 
   const finalSx = [
     sizeSx,
     themeSx[theme] || {},
     cusSx,
     ...(Array.isArray(incomingSx) ? incomingSx : [incomingSx]),
-  ];
+  ]
 
   return (
     <Button variant={variant} sx={finalSx} {...rest}>
@@ -90,7 +87,7 @@ const CommiButton = ({
         {children}
       </CommiTypo>
     </Button>
-  );
-};
+  )
+}
 
-export default CommiButton;
+export default CommiButton

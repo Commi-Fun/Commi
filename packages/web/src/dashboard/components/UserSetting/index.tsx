@@ -27,8 +27,6 @@ export const UserSetting = () => {
   const { image: userImage, name, username, ...rest } = data?.user || {}
   const { connectedWallets } = useSolanaMultiWallet()
 
-  console.log('kkkkk', connectedWallets)
-
   const { select, connect } = useWallet()
 
   const phantomAdapter = useMemo(() => new PhantomWalletAdapter(), [])

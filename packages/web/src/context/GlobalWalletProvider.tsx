@@ -3,12 +3,12 @@
 
 import React, { createContext, useContext, useEffect, useRef } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
-import { useWalletStore, ConnectedSolanaWallet } from '@/store/walletStore'
+import { useWalletStore, ConnectedSolanaWallet, WalletState } from '@/store/walletStore'
 
 // Create a context to hold the store's state and actions
-const GlobalWalletContext = createContext(useWalletStore.getState());
+const GlobalWalletContext = createContext<WalletState>(useWalletStore.getState())
 
-export const useGlobalWallet = () => {
+export const useGlobalWallet = (): WalletState => {
   return useContext(GlobalWalletContext)
 }
 
@@ -34,22 +34,19 @@ export const GlobalWalletProvider = ({ children }: { children: React.ReactNode }
         icon: wallet.adapter.icon,
       }
       // Add to the store only if it's not already there
-      if (!store.connectedWallets[newWallet.name]) {
+      const existingWallet = store.connectedWallets.find(w => w.name === newWallet.name)
+      if (!existingWallet) {
         store.actions.addWallet(newWallet)
       } else {
         // If it is already there, just make sure it's active
         store.actions.setActiveWalletName(newWallet.name)
       }
-      
+
       setTimeout(() => {
         isHandlingConnection.current = false
       }, 100) // a small delay to prevent race conditions
     }
   }, [connected, publicKey, wallet, store.actions, store.connectedWallets])
 
-  return (
-    <GlobalWalletContext.Provider value={store}>
-      {children}
-    </GlobalWalletContext.Provider>
-  )
+  return <GlobalWalletContext.Provider value={store}>{children}</GlobalWalletContext.Provider>
 }

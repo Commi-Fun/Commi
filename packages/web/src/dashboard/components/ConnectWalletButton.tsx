@@ -76,24 +76,22 @@ export default function ConnectWalletButton() {
 
   const handleItemClick = (wallet: Wallet) => {
     const walletName = wallet.adapter.name
-    if (connectedWallets[walletName]) {
-      // If already connected, just set it as active
-      setActiveWallet(walletName)
-    } else {
-      connectWallet(walletName)
-    }
-    // setOpen(false)
+    // if (connectedWallets[walletName]) {
+    //   setActiveWallet(walletName)
+    // } else {
+    //   connectWallet(walletName)
+    // }
   }
 
-  const getWalletStatus = (walletName: WalletName): 'connected' | 'active' | 'disconnected' => {
-    if (activeWallet?.name === walletName) {
-      return 'active'
-    }
-    if (connectedWallets[walletName]) {
-      return 'connected'
-    }
-    return 'disconnected'
-  }
+  // const getWalletStatus = (walletName: WalletName): 'connected' | 'active' | 'disconnected' => {
+  //   if (activeWallet?.name === walletName) {
+  //     return 'active'
+  //   }
+  //   if (connectedWallets[walletName]) {
+  //     return 'connected'
+  //   }
+  //   return 'disconnected'
+  // }
 
   return (
     <>
@@ -106,7 +104,7 @@ export default function ConnectWalletButton() {
                 key={wallet.adapter.name}
                 wallet={wallet}
                 onClick={() => handleItemClick(wallet)}
-                status={getWalletStatus(wallet.adapter.name)}
+                status={'connected'}
               />
             ))}
         </Stack>
