@@ -20,12 +20,31 @@
         "name": "next"
       }
     ],
+    "paths": {
+      "@lib/services/*": [
+        "src/app/api/_lib/services/*"
+      ],
+      "@lib/repositories/*": [
+        "src/app/api/_lib/repositories/*"
+      ],
+      "@lib/types/*": [
+        "src/app/(main)/api/_lib/types/*"
+      ],
+      "@lib/utils/*": [
+        "src/app/api/_lib/utils/*"
+      ],
+      "@lib/prisma": [
+        "src/app/api/_lib/prisma/client.ts"
+      ]
+    }
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "src/app/api/_lib/**/*",
+    "src/app/(main)/api/_lib/types"
   ],
   "exclude": [
     "node_modules",

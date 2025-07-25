@@ -9,7 +9,7 @@ export type {
   SystemConfig,
   CrawlerLog,
   DistributionStatus,
-  Blockchain
+  Blockchain,
 } from '../generated/prisma/client';
 
 // Export Prisma client instance (to be used as singleton)
@@ -24,5 +24,14 @@ export const prisma =
   new PrismaClient({
     log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   });
+
+export type PrismaTransaction = Omit<
+  PrismaClient,
+  '$connect' | '$disconnect' | '$on' | '$transaction' | '$use' | '$extends'
+>;
+
+export function getTransactionClient(tx: PrismaTransaction): PrismaTransaction {
+  return tx as unknown as PrismaTransaction;
+}
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

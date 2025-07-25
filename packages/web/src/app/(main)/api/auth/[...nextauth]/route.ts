@@ -1,11 +1,8 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import TwitterProvider from 'next-auth/providers/twitter'
-import { PrismaService } from 'packages/db/src/prisma_service'
+import { prisma } from 'packages/db/src/index'
 import { SiweMessage } from 'siwe'
-
-// Initialize PrismaService properly
-const prisma = new PrismaService();
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
