@@ -5,7 +5,7 @@ module.exports = {
   testMatch: ['**/__tests__/**/*.test.ts'],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    '^@commi-dashboard/db/(.*)$': '<rootDir>/../db/src/$1',
+    '^@commi-dashboard/db/(.*)$': '<rootDir>/../db/$1',
     '^@commi-dashboard/common/(.*)$': '<rootDir>/../common/src/$1'
   },
   transform: {

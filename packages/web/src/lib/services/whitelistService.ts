@@ -48,8 +48,8 @@ export async function findWhitelistByReferralCode(tx: PrismaTransaction, code: s
 }
 
 // Service functions
-export async function getWhitelist(userId: number) {
-  const whitelist = await prisma.whitelist.findUnique({ where: { userId } });
+export async function getWhitelist(twitterId: string) {
+  const whitelist = await prisma.whitelist.findUnique({ where: { twitterId } });
   
   if (whitelist != null) {
     const whitelistDomain: WhitelistDomain = {

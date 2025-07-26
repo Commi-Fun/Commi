@@ -30,7 +30,6 @@ export async function parseResponse(response: Response) {
   return {
     data,
     status: response.status,
-    success: data.success
   };
 }
 

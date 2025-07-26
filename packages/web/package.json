@@ -11,7 +11,7 @@
     "test": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-$DATABASE_URL} jest",
     "test:watch": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-$DATABASE_URL} jest --watch",
     "test:coverage": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-$DATABASE_URL} jest --coverage",
-    "test:whitelist": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-$DATABASE_URL} jest src/app/api/__tests__/whitelist"
+    "test:whitelist": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-$DATABASE_URL} jest --silent=false src/app/api/__tests__/whitelist"
   },
   "dependencies": {
     "@commi-dashboard/common": "workspace:*",

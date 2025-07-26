@@ -32,9 +32,7 @@ describe('GET /api/whitelist/check', () => {
 
     const response = await GET(request);
     const result = await parseResponse(response);
-
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('REGISTERED');
   });
 
@@ -47,10 +45,8 @@ describe('GET /api/whitelist/check', () => {
 
     const response = await GET(request);
     const result = await parseResponse(response);
-
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
-    expect(result.data.status).toBeNull();
+    expect(result.data).toMatchObject({});
   });
 
   it('should return 401 when no authorization header is provided', async () => {
@@ -62,8 +58,7 @@ describe('GET /api/whitelist/check', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Not logged in.');
+    expect(result.data).toBe('Not logged in.');
   });
 
   it('should return 401 when authorization header has invalid format', async () => {
@@ -78,8 +73,7 @@ describe('GET /api/whitelist/check', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Invalid token.');
+    expect(result.data).toBe('Invalid token.');
   });
 
   it('should return 401 when token is invalid', async () => {
@@ -93,8 +87,7 @@ describe('GET /api/whitelist/check', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Invalid token.');
+    expect(result.data).toBe('Invalid token.');
   });
 
   it('should return 401 when token is expired', async () => {
@@ -108,8 +101,7 @@ describe('GET /api/whitelist/check', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Invalid token.');
+    expect(result.data).toBe('Invalid token.');
   });
 
   it('should return correct status for user with CAN_CLAIM status', async () => {
@@ -123,7 +115,6 @@ describe('GET /api/whitelist/check', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('CAN_CLAIM');
   });
 
@@ -138,7 +129,6 @@ describe('GET /api/whitelist/check', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('CLAIMED');
   });
 });

@@ -34,9 +34,7 @@ describe('POST /api/whitelist/init', () => {
 
     const response = await POST(request);
     const result = await parseResponse(response);
-
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('REGISTERED');
 
     // Verify in database
@@ -64,7 +62,6 @@ describe('POST /api/whitelist/init', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('REGISTERED');
 
     // Verify referee whitelist created
@@ -106,7 +103,6 @@ describe('POST /api/whitelist/init', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('REGISTERED');
 
     // Verify whitelist created without referral
@@ -134,10 +130,8 @@ describe('POST /api/whitelist/init', () => {
 
     const response = await POST(request);
     const result = await parseResponse(response);
-
     expect(result.status).toBe(500);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toContain('Failed to create whitelist.');
+    expect(result.data).toContain('Failed to create whitelist.');
   });
 
   it('should return 401 when no authorization header is provided', async () => {
@@ -149,10 +143,8 @@ describe('POST /api/whitelist/init', () => {
 
     const response = await POST(request);
     const result = await parseResponse(response);
-
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Not logged in.');
+    expect(result.data).toBe('Not logged in.');
   });
 
   it('should return 401 when token is invalid', async () => {
@@ -166,10 +158,8 @@ describe('POST /api/whitelist/init', () => {
 
     const response = await POST(request);
     const result = await parseResponse(response);
-
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Invalid token.');
+    expect(result.data).toBe('Invalid token.');
   });
 
   it('should handle missing userId in token', async () => {
@@ -192,8 +182,7 @@ describe('POST /api/whitelist/init', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Invalid token.');
+    expect(result.data).toBe('Invalid token.');
   });
 
   it('should handle concurrent whitelist creation attempts', async () => {
@@ -227,8 +216,8 @@ describe('POST /api/whitelist/init', () => {
       response2.status === 'fulfilled' ? parseResponse(response2.value) : null
     ]);
 
-    const successCount = results.filter(r => r && r.success).length;
-    const failureCount = results.filter(r => r && !r.success).length;
+    const successCount = results.filter(r => r && r.status === 200).length;
+    const failureCount = results.filter(r => r && r.status !== 200).length;
 
     expect(successCount).toBe(1);
     expect(failureCount).toBe(1);

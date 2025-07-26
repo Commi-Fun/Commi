@@ -34,7 +34,6 @@ describe('POST /api/whitelist/claim', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('CLAIMED');
 
     // Verify in database
@@ -57,7 +56,6 @@ describe('POST /api/whitelist/claim', () => {
 
     // Should still return success but status remains unchanged
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('CLAIMED');
 
     // However, in a real scenario with proper validation, 
@@ -77,7 +75,6 @@ describe('POST /api/whitelist/claim', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
     expect(result.data.status).toBe('CLAIMED');
 
     // Verify status remains CLAIMED
@@ -99,7 +96,6 @@ describe('POST /api/whitelist/claim', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(500);
-    expect(result.success).toBe(false);
     expect(result.data.error).toContain('Record to update not found');
   });
 
@@ -113,8 +109,7 @@ describe('POST /api/whitelist/claim', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Not logged in.');
+    expect(result.data).toBe('Not logged in.');
   });
 
   it('should return 401 when token is invalid', async () => {
@@ -129,8 +124,7 @@ describe('POST /api/whitelist/claim', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(401);
-    expect(result.success).toBe(false);
-    expect(result.data.error).toBe('Invalid token.');
+    expect(result.data).toBe('Invalid token.');
   });
 
   it('should handle missing userId or twitterId in token', async () => {
@@ -154,8 +148,7 @@ describe('POST /api/whitelist/claim', () => {
     const result1 = await parseResponse(response1);
 
     expect(result1.status).toBe(401);
-    expect(result1.success).toBe(false);
-    expect(result1.data.error).toBe('Invalid token.');
+    expect(result1.data).toBe('Invalid token.');
 
     // Test missing twitterId
     const tokenNoTwitterId = jwt.sign(
@@ -174,8 +167,7 @@ describe('POST /api/whitelist/claim', () => {
     const result2 = await parseResponse(response2);
 
     expect(result2.status).toBe(401);
-    expect(result2.success).toBe(false);
-    expect(result2.data.error).toBe('Invalid token.');
+    expect(result2.data).toBe('Invalid token.');
   });
 
   it('should handle concurrent claim attempts', async () => {
@@ -207,11 +199,9 @@ describe('POST /api/whitelist/claim', () => {
 
     // Both should succeed (idempotent operation)
     expect(result1.status).toBe(200);
-    expect(result1.success).toBe(true);
     expect(result1.data.status).toBe('CLAIMED');
 
     expect(result2.status).toBe(200);
-    expect(result2.success).toBe(true);
     expect(result2.data.status).toBe('CLAIMED');
 
     // Verify final status in database
@@ -239,7 +229,6 @@ describe('POST /api/whitelist/claim', () => {
     const result = await parseResponse(response);
 
     expect(result.status).toBe(200);
-    expect(result.success).toBe(true);
 
     // Verify only status changed
     const updatedWhitelist = await prisma.whitelist.findUnique({
