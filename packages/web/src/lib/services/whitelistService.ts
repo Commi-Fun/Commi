@@ -68,6 +68,11 @@ export async function getWhitelist(userId: number) {
 export async function createWhitelistForUser(data: UserDTO, referralCode?: string) {
   let referrer: Whitelist | null = null;
   return await prisma.$transaction(async (tx) => {
+    // Prevent referral from registered user
+    const referee = await findWhitelistByTwitterId(tx, data.twitterId);
+    if (referee !== null) {
+      throw new Error('User already registered');
+    }
     if (referralCode) {
       referrer = await findWhitelistByReferralCode(tx, referralCode);
     }
@@ -100,10 +105,7 @@ export async function createWhitelistForUser(data: UserDTO, referralCode?: strin
     };
     const whitelistResult = await createWhitelist(tx, whitelistDomain);
     if (!whitelistResult) throw new Error('Failed to create whitelist');
-    return {
-      user: { userId: whitelistResult.userId, twitterId: whitelistResult.twitterId },
-      status: whitelistResult.status,
-    };
+    return whitelistDomain;
   });
 }
 
