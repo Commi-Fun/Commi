@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "start:invite": "ACTIVE_HOME_PAGE=invite next build && next start",
+    "start:invite": "next build && ACTIVE_HOME_PAGE=invite next start",
     "lint": "next lint",
     "test": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-$DATABASE_URL} jest",
     "test:watch": "TEST_DATABASE_URL=${TEST_DATABASE_URL:-$DATABASE_URL} jest --watch",
