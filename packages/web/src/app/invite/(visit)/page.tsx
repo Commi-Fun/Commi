@@ -1,20 +1,19 @@
-'use client';
-import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight';
-import { LoginButton } from '@/dashboard/components/LoginButton';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+'use client'
+import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
+import { LoginButton } from '@/dashboard/components/LoginButton'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
 const Page = () => {
-  const router = useRouter();
-  const { status } = useSession();
+  const router = useRouter()
+  const { status } = useSession()
 
   useEffect(() => {
-    console.log('status22', status);
     if (status === 'authenticated') {
-      router.push('/invite/twoSteps');
+      router.push('/invite/twoSteps')
     }
-  }, [router, status]);
+  }, [router, status])
 
   return (
     <div className="relative overflow-hidden mt-35 ml-25">
@@ -36,7 +35,7 @@ const Page = () => {
         </LoginButton>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

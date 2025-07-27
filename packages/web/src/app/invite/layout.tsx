@@ -8,29 +8,20 @@ import { Nunito } from 'next/font/google'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Commi',
-  description: '',
-  openGraph: {
-    title: 'Commi',
-    description: '',
-    url: 'https://commi.fun',
-    siteName: 'Commi',
-    images: [
-      {
-        url: 'https://yourdomain.com/og-image.jpg', // 1200x630px 推荐
-        width: 1200,
-        height: 630,
-        alt: '项目预览图',
-      },
-    ],
-    locale: 'zh_CN',
-    type: 'website',
+  title: 'Commi - Join the Airdrop Early!',
+  description:
+    "🧃Airdrop season's coming. Join Commi early and get whitelisted now or regret later!",
+  icons: {
+    icon: '/logo.ico',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Commi - 你的项目标题',
-    description: '项目描述',
-    images: ['https://yourdomain.com/twitter-image.jpg'], // 1200x600px 推荐
+    title: 'Commi - Join the Airdrop Early!',
+    description:
+      "🧃Airdrop season's coming. Join Commi early and get whitelisted now or regret later!",
+    images: ['/images/commiCup.png'], // 需要在 public 文件夹中添加这个图片
+    creator: '@commidotfun',
+    site: '@commidotfun',
   },
 }
 

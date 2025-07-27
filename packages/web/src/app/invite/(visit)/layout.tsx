@@ -103,23 +103,23 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
     <div
       className={'w-screen h-screen transition-colors duration-300 bg-green01-500 overflow-hidden'}
       style={{ backgroundColor: hoveredMeme ? hoveredMeme.themeColor : undefined }}>
-      <div className="flex items-center gap-3 pt-10 pl-20">
-        <Image
-          src={'/inviteLogo.png'}
-          width={317.67}
-          height={119}
-          alt="Commi Logo"
-          quality={100}
-          priority
-          className="object-contain"
-        />
+      <div className="pt-2.5 pl-4.5 g:pt-10 lg:pl-20 ">
+        <div className="flex  relative gap-3 w-29 lg:w-79 h-fit aspect-[2.67/1] overflow-hidden">
+          <Image
+            src={'/inviteLogo.png'}
+            fill
+            alt="Commi Logo"
+            className="object-contain"
+            sizes="(max-width: 1024px) 117.45px, 317.37px"
+          />
+        </div>
       </div>
 
-      <div className="absolute inset-0 z-50">
+      <div className="hidden lg:block absolute inset-0 z-50 pointer-events-none">
         {memes.map((meme, index) => (
           <Image
             key={index}
-            className={`${index === hoveredIndex ? '' : 'blur-sm'} ${meme.className} cursor-pointer`}
+            className={`${index === hoveredIndex ? '' : 'blur-sm'} ${meme.className} cursor-pointer pointer-events-auto`}
             src={meme.headSrc}
             style={{ maxHeight: '80%' }}
             width={meme.headSize}

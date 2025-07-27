@@ -1,16 +1,19 @@
 'use client'
+import CommiButton from '@/components/CommiButton'
 import CheckBig from '@/components/icons/CheckBig'
 import CopyIcon from '@/components/icons/CopyIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
 import { customColors } from '@/shared-theme/themePrimitives'
-import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-
-const firstStepAuthed = true
 
 const Page = () => {
   const [copied, setCopied] = useState(false)
   const [isSpinning, setIsSpinning] = useState(false)
+  const router = useRouter()
+
+  const [, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
+  const verified = true
 
   const copyText =
     "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later:..."
@@ -25,11 +28,36 @@ const Page = () => {
     }
   }
 
-  const handleCheck = () => {
+  const handleCheck = async () => {
     if (isSpinning) return // 防止重复点击
     setIsSpinning(true)
-    setTimeout(() => setIsSpinning(false), 1000) // 1秒后停止旋转
+    const result = await fetch('/api/whitelist/check')
+    const data = await result.json()
+    setStatus(data.data.status)
+    setIsSpinning(false)
   }
+
+  const claim = async () => {
+    const result = await fetch('/api/whitelist/claim', {
+      method: 'POST',
+    })
+    await result.json()
+    router.push('/invite/finish')
+  }
+
+  const handlePostToTwitter = () => {
+    const tweetText =
+      "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later!"
+    const websiteUrl = window.location.origin
+    const hashtags = 'Commi,Airdrop,Crypto'
+
+    // 构建 Twitter Intent URL
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(websiteUrl)}&hashtags=${encodeURIComponent(hashtags)}`
+
+    // 在新窗口中打开 Twitter
+    window.open(twitterUrl, '_blank', 'width=550,height=420')
+  }
+
   return (
     <div className="w-[930px] absolute right-24.5">
       <p className="text-[72px] text-main-Black font-extrabold font-shadow-white">2 STEPS</p>
@@ -38,25 +66,25 @@ const Page = () => {
       </p>
       <div className="flex items-center justify-between w-full mt-30">
         <div className="flex items-center gap-4">
-          <span className="w-4 h-4 rounded-full bg-green02-600"></span>
+          <span className="w-4 h-4 rounded-full bg-main-Green04"></span>
           <span className="text-2xl font-extrabold text-main-Black">Complete Tasks</span>
         </div>
         <div className="flex items-center gap-2 cursor-pointer" onClick={handleCheck}>
           <RedoIcon
             color={customColors.green01[200]}
             fontSize={28}
-            className={`transition-transform duration-1000 ${isSpinning ? 'animate-spin' : ''}`}
-            style={isSpinning ? { animationIterationCount: '1' } : {}}
+            className={`${isSpinning ? 'animate-spin' : ''}`}
           />
           <span className="text-green01-200 text-[24px] font-bold">Check</span>
         </div>
       </div>
 
       <div className="h-[360px] py-15.5 relative pl-11">
-        <div className="absolute left-1.5 top-0 bottom-0 w-1 bg-green01-900 rounded-full"></div>
+        <div
+          className={`absolute left-1.5 top-0 bottom-0 w-1 ${verified ? 'bg-main-Green04' : 'bg-green01-900'} rounded-full`}></div>
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
-            {firstStepAuthed ? (
+            {verified ? (
               <div className="w-6 h-6 bg-main-Green01 rounded-full flex items-center justify-center">
                 <CheckBig className="text-main-Black text-[1.125rem]" />
               </div>
@@ -65,15 +93,25 @@ const Page = () => {
                 style={{ borderWidth: '2px' }}
                 className="w-6 h-6 rounded-full border-solid border-main-Black w-4 h-4"></span>
             )}
-            <span className="font-bold text-[1.125rem]">Post to Join</span>
+            <span className="font-bold text-[1.125rem] cursor-pointer">Post to Join</span>
           </div>
-          <button className="normal-button bg-main-Black text-main-Green01">Post</button>
+          <button
+            className="normal-button bg-main-Black text-main-Green01"
+            onClick={handlePostToTwitter}>
+            Post
+          </button>
         </div>
         <div className="flex justify-between mt-9">
           <div className="flex items-center gap-4">
-            <span
-              style={{ borderWidth: '2px' }}
-              className="w-6 h-6 rounded-full border-solid border-main-Black w-4 h-4"></span>
+            {verified ? (
+              <div className="w-6 h-6 bg-main-Green01 rounded-full flex items-center justify-center">
+                <CheckBig className="text-main-Black text-[1.125rem]" />
+              </div>
+            ) : (
+              <span
+                style={{ borderWidth: '2px' }}
+                className="w-6 h-6 rounded-full border-solid border-main-Black w-4 h-4"></span>
+            )}
             <span className="font-bold text-[1.125rem]">Invite 1 friend to get access</span>
           </div>
           <CopyIcon
@@ -87,9 +125,23 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="flex items-center gap-4">
-        <span className="w-4 h-4 rounded-full bg-green01-1000"></span>
-        <span className="text-2xl font-extrabold text-main-Black">Get Whitelist</span>
+      <div className="flex items-center justify-between">
+        <div className="flex gap-4 items-center">
+          <span
+            className={`w-4 h-4 rounded-full ${verified ? 'bg-main-Green04' : 'bg-green01-1000'}`}></span>
+          <span className="text-2xl font-extrabold text-main-Black">Get Whitelist</span>
+        </div>
+
+        {verified && (
+          <CommiButton
+            size="medium"
+            theme="primaryLinear"
+            color={customColors.main.Black}
+            onClick={claim}
+            weight="bold">
+            Calim
+          </CommiButton>
+        )}
       </div>
     </div>
   )

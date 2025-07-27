@@ -50,6 +50,7 @@ const CommiButton = ({
       height: '40px',
       borderRadius: '20px',
       fontSize: '1rem',
+      minWidth: '120px',
     }),
     ...(size === 'large' &&
       {

@@ -90,6 +90,8 @@ export const customColors = {
     Red: '#F76472',
     Green02: '#078B5A',
     Green01: '#C9F572',
+    Green03: '#C9F572',
+    Green04: '#078B5A',
   },
   green01: {
     [100]: '#14190B',

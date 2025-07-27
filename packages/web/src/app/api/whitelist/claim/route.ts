@@ -1,19 +1,15 @@
-import { NextRequest } from 'next/server';
-import * as whitelistService from '@/lib/services/whitelistService';
-import { withErrorHandler } from '@/lib/utils/withErrorHandler';
-import { success, error } from '@/lib/utils/response';
-import { getUserFromRequest } from '@/lib/utils/getUserFromRequest'
+import * as whitelistService from '@/lib/services/whitelistService'
+import { withErrorHandler } from '@/lib/utils/withErrorHandler'
+import { success, error } from '@/lib/utils/response'
+import { getServerSession } from 'next-auth'
+import { nextAuthOptions } from '../../auth/[...nextauth]/route'
 
-export const POST = withErrorHandler(async (req: NextRequest) => {
-  const authHeader = req.headers.get('authorization');
-  if (!authHeader) {
-    return error('Not logged in.', 401);
+export const POST = withErrorHandler(async () => {
+  const session = await getServerSession(nextAuthOptions)
+  if (!session) {
+    return error('Invalid token.', 401)
   }
-  const user = await getUserFromRequest(req);
-  if (!user) {
-    return error('Invalid token.', 401);
-  }
-  const userDto = { userId: user.id, twitterId: user.twitterId };
-  const result = await whitelistService.claimWhitelist(userDto);
-  return success(result);
-}); 
+  const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
+  const result = await whitelistService.claimWhitelist(userDto as never)
+  return success(result)
+})

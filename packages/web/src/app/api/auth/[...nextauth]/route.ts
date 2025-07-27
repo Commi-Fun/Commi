@@ -1,8 +1,6 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
-import CredentialsProvider from 'next-auth/providers/credentials'
 import TwitterProvider from 'next-auth/providers/twitter'
 import { prisma } from '@commi-dashboard/db'
-import { SiweMessage } from 'siwe'
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -11,40 +9,18 @@ export const nextAuthOptions: NextAuthOptions = {
       clientId: process.env.X_CLIENT_ID as string,
       clientSecret: process.env.X_CLIENT_SECRET as string,
       version: '2.0',
-      // ✨ 使用 profile 回调来标准化数据
       profile(profile) {
-        // profile.data 包含了从 X API v2 返回的用户信息
         const userProfile = profile.data
-        // 我们在这里创建一个标准化的 user 对象
-        return {
-          id: userProfile.id, // 这是数字 ID
-          name: userProfile.name, // 这是你的显示名称
-          image: userProfile.profile_image_url, // 这是你的头像
-          username: userProfile.username, // 这是你的 @ 用户名
+        const standardizedUser = {
+          id: userProfile.id,
+          twitterId: userProfile.id,
+          name: userProfile.name,
+          image: userProfile.profile_image_url,
+          username: userProfile.username,
+          email: userProfile.email,
         }
-      },
-    }),
-    CredentialsProvider({
-      // ... 你的 CredentialsProvider 配置保持不变
-      name: 'Ethereum',
-      credentials: {
-        message: { label: 'Message', type: 'text', placeholder: '0x0' },
-        signature: { label: 'Signature', type: 'text', placeholder: '0x0' },
-      },
-      async authorize(credentials) {
-        try {
-          const siwe = new SiweMessage(JSON.parse(credentials?.message || '{}'))
-          const result = await siwe.verify({
-            signature: credentials?.signature || '',
-          })
-          if (result.success) {
-            return { id: siwe.address }
-          }
-          return null
-        } catch (e) {
-          console.error(e)
-          return null
-        }
+
+        return standardizedUser
       },
     }),
   ],
@@ -53,21 +29,14 @@ export const nextAuthOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user }) {
-      // The user object is available on the first sign-in.
-      if (user) {
-        token.id = user.id
-        token.name = user.name
-        token.picture = user.image
-        // Add the username from the user object (returned by the profile callback)
-        if (user.username) {
-          token.username = user.username
-        }
+    async signIn({ user }) {
+      try {
+        const twitterId = user.id
 
-        // update user info
-        await prisma.user.upsert({ 
+        // 将用户信息存入数据库
+        const dbUser = await prisma.user.upsert({
           where: {
-            twitterId: token.id,
+            twitterId: twitterId,
           },
           update: {
             profileImageUrl: user.image || undefined,
@@ -75,30 +44,62 @@ export const nextAuthOptions: NextAuthOptions = {
             handle: user.username || 'unknown',
           },
           create: {
-            twitterId: token.id,
+            twitterId: twitterId,
             profileImageUrl: user.image || undefined,
             name: user.name || 'Unknown',
             handle: user.username || 'unknown',
-          }
-         });
+          },
+        })
+
+        // 创建 whitelist
+        await prisma.whitelist.upsert({
+          where: {
+            twitterId: dbUser.twitterId,
+          },
+          update: {},
+          create: {
+            userId: dbUser.id,
+            twitterId: dbUser.twitterId,
+            referralCode: '',
+            status: 'REGISTERED',
+          },
+        })
+
+        user.userId = dbUser.id.toString()
+
+        return true // 允许登录
+      } catch (error) {
+        return false // 拒绝登录
       }
+    },
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id // Twitter ID
+        token.twitterId = user.id // Twitter ID
+        token.userId = user.userId
+        token.name = user.name
+        token.picture = user.image
+        token.testtest = 'heiheih'
+        if (user.username) {
+          token.username = user.username
+        }
+      }
+
       return token
     },
 
     async session({ session, token }) {
-      // The types for `session` and `token` are now inferred from the .d.ts file.
+      // 设置 session 数据
       session.user.id = token.id
+      session.user.twitterId = token.id // 保留 Twitter ID
+      session.user.userId = token.userId // 从数据库获取的 ID
       session.user.name = token.name
       session.user.image = token.picture
 
       // Pass the username from the token to the session
       if (token.username) {
         session.user.username = token.username
-      }
-
-      // For Ethereum login, `sub` holds the address
-      if (!token.username) { // An easy way to distinguish from X login
-        session.address = token.sub
       }
 
       return session
