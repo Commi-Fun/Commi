@@ -1,46 +1,22 @@
 import { NextRequest } from 'next/server';
 
 import * as whitelistService from '@/lib/services/whitelistService';
-<<<<<<< HEAD
 import { withErrorHandler } from '@/lib/utils/withErrorHandler';
 import { success, error } from '@/lib/utils/response';
 import { getUserFromRequest } from '@/lib/utils/getUserFromRequest'
-=======
-import * as authService from '@/lib/services/authService';
-import { withErrorHandler } from '@/lib/utils/withErrorHandler';
-import { success, error } from '@/lib/utils/response';
->>>>>>> dev
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const authHeader = req.headers.get('authorization');
   if (!authHeader) {
     return error('Not logged in.', 401);
   }
-<<<<<<< HEAD
-  const user = getUserFromRequest(req);
+  const user = await getUserFromRequest(req);
   if (!user) {
-=======
-  const token = authHeader.split(' ')[1];
-  const payload = authService.verifyToken(token);
-  if (!payload || typeof payload !== 'object' ||!payload.userId || !payload.twitterId) {
->>>>>>> dev
     return error('Invalid token.', 401);
   }
   const body = await req.json();
   const { referralCode } = body;
-<<<<<<< HEAD
-  const userDto = { twitterId: user.twitterId };
+  const userDto = { userId: user.id, twitterId: user.twitterId };
   const whitelist = await whitelistService.createWhitelistForUser(userDto, referralCode);
   return success({ status: whitelist?.status });
-=======
-  const userDto = { userId: payload.userId, twitterId: payload.twitterId };
-  
-  try {
-    const whitelist = await whitelistService.createWhitelistForUser(userDto, referralCode);
-    return success({ status: whitelist.status });
-  } catch (unknown) {
-    console.error("Error: ", unknown);
-    return error('Failed to create whitelist.', 500);
-  }
->>>>>>> dev
 }); 

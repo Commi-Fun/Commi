@@ -104,8 +104,10 @@ export async function createWhitelistForUser(data: UserDTO, referralCode?: strin
       referralCode,
       status: WhitelistStatus.REGISTERED,
     };
+    console.log("data: ", data)
     const whitelistResult = await createWhitelist(tx, whitelistDomain);
     if (!whitelistResult) throw new Error('Failed to create whitelist');
+    console.log("finish insert")
     return whitelistDomain;
   });
 }
