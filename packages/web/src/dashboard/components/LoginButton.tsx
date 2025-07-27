@@ -4,7 +4,7 @@ import CommiTypo from '@/components/CommiTypo'
 import { XWithBorderIcon } from '@/components/icons/XWithBorderIcon'
 import { customColors, primaryLinear } from '@/shared-theme/themePrimitives'
 import { Box, Stack, styled } from '@mui/material'
-import { signIn } from 'next-auth/react'
+import { signIn, signOut } from 'next-auth/react'
 import Image from 'next/image'
 import React from 'react'
 
@@ -57,6 +57,7 @@ export const LoginButton = ({
       {renderButton()}
 
       <CommiModal open={openSignInModal} onClose={() => setOpenSignInModal(false)} size="small">
+        <button onClick={signOut}>log out</button>
         <Stack direction={'column'} alignItems="center" justifyContent="center" spacing={2}>
           <Image alt="" width={180} height={60} src={'/images/commiLogoAndFont.png'} />
           <CommiTypo color="white" type="heading-h1">
