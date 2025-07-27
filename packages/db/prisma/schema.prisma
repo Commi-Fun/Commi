@@ -15,54 +15,53 @@ datasource db {
 }
 
 model User {
-  id                Int   @id @default(autoincrement())
-  twitterId         String   @unique @db.VarChar(20)
-  username          String   @unique @db.VarChar(20)
-  name              String
-  profileImageUrl   String?
-  verified          Boolean  @default(false)
-  description       String?
-  followersCount    Int      @default(0)
-  followingCount    Int      @default(0)
-  tweetsCount       Int      @default(0)
-  listedCount       Int      @default(0)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  twitterId       Int      @unique
+  handle          String   @unique @db.VarChar(20)
+  name            String
+  profileImageUrl String?
+  verified        Boolean  @default(false)
+  description     String?
+  followersCount  Int      @default(0)
+  followingCount  Int      @default(0)
+  tweetsCount     Int      @default(0)
+  listedCount     Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  tweets            Tweet[]
-  nftDistributions  NFTDistribution[]
+  tweets           Tweet[]
+  nftDistributions NFTDistribution[]
 
-  @@index([username])
   @@index([createdAt])
 }
 
 model Tweet {
-  id                Int   @id @default(autoincrement())
-  tweetId           String   @unique @db.VarChar(20)
-  text              String
-  userId            Int
-  user              User     @relation(fields: [userId], references: [id])
-  createdAt         DateTime
-  retweetCount      Int      @default(0)
-  replyCount        Int      @default(0)
-  likeCount         Int      @default(0)
-  quoteCount        Int      @default(0)
-  viewCount         Int      @default(0)
-  bookmarkCount     Int      @default(0)
-  isRetweet         Boolean  @default(false)
-  isQuote           Boolean  @default(false)
-  isReply           Boolean  @default(false)
-  hasMedia          Boolean  @default(false)
-  tickerSymbols     String[] // Array of ticker symbols mentioned
-  influenceScore    Float?   // Calculated influence score
-  fetchedAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  tweetId        String   @unique @db.VarChar(20)
+  text           String
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  createdAt      DateTime
+  retweetCount   Int      @default(0)
+  replyCount     Int      @default(0)
+  likeCount      Int      @default(0)
+  quoteCount     Int      @default(0)
+  viewCount      Int      @default(0)
+  bookmarkCount  Int      @default(0)
+  isRetweet      Boolean  @default(false)
+  isQuote        Boolean  @default(false)
+  isReply        Boolean  @default(false)
+  hasMedia       Boolean  @default(false)
+  tickerSymbols  String[] // Array of ticker symbols mentioned
+  influenceScore Float? // Calculated influence score
+  fetchedAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  parentTweetId     Int?
-  parentTweet       Tweet?   @relation("TweetReplies", fields: [parentTweetId], references: [id])
-  replies           Tweet[]  @relation("TweetReplies")
+  parentTweetId Int?
+  parentTweet   Tweet?  @relation("TweetReplies", fields: [parentTweetId], references: [id])
+  replies       Tweet[] @relation("TweetReplies")
 
-  nftDistributions  NFTDistribution[]
+  nftDistributions NFTDistribution[]
 
   @@index([userId])
   @@index([createdAt])
@@ -71,20 +70,20 @@ model Tweet {
 }
 
 model NFTDistribution {
-  id                Int   @id @default(autoincrement())
-  userId            Int
-  user              User     @relation(fields: [userId], references: [id])
-  tweetId           Int
-  tweet             Tweet    @relation(fields: [tweetId], references: [id])
-  nftTokenId        String?
-  transactionHash   String?
-  walletAddress     String
-  amount            Int      @default(1)
-  status            DistributionStatus @default(PENDING)
-  blockchain        Blockchain @default(SOLANA)
-  error             String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id              Int                @id @default(autoincrement())
+  userId          Int
+  user            User               @relation(fields: [userId], references: [id])
+  tweetId         Int
+  tweet           Tweet              @relation(fields: [tweetId], references: [id])
+  nftTokenId      String?
+  transactionHash String?
+  walletAddress   String
+  amount          Int                @default(1)
+  status          DistributionStatus @default(PENDING)
+  blockchain      Blockchain         @default(SOLANA)
+  error           String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 
   @@unique([userId, tweetId])
   @@index([status])
@@ -93,23 +92,23 @@ model NFTDistribution {
 }
 
 model SystemConfig {
-  id                Int   @id @default(autoincrement())
-  key               String   @unique
-  value             Json
-  description       String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       Json
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model CrawlerLog {
-  id                Int   @id @default(autoincrement())
-  type              String   // "user_fetch", "tweet_fetch", "community_fetch"
-  status            String   // "success", "error", "partial"
-  message           String?
-  metadata          Json?    // Additional data like counts, errors, etc.
-  startedAt         DateTime
-  completedAt       DateTime?
-  createdAt         DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  type        String // "user_fetch", "tweet_fetch", "community_fetch"
+  status      String // "success", "error", "partial"
+  message     String?
+  metadata    Json? // Additional data like counts, errors, etc.
+  startedAt   DateTime
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
 
   @@index([type])
   @@index([status])
@@ -199,17 +198,17 @@ model Participation {
 model Whitelist {
   id           Int    @id @default(autoincrement())
   userId       Int    @unique
-  twitterId    String @unique @db.VarChar(20)
+  twitterId    Int    @unique
   referralCode String @unique
   status       String @default("registered") @db.VarChar(15) // 'registered', 'can_claim', 'claimed'
 }
 
 model Referral {
-  id                Int    @id @default(autoincrement())
+  id                Int @id @default(autoincrement())
   referrerId        Int
-  referrerTwitterId String @db.VarChar(20)
+  referrerTwitterId Int
   refereeId         Int
-  refereeTwitterId  String @db.VarChar(20)
+  refereeTwitterId  Int
 
   @@unique([referrerId, refereeId])
 }

@@ -1,7 +1,8 @@
 import { NextRequest } from 'next/server';
 import * as authService from '@/lib/services/authService';
+import { prisma } from '@commi-dashboard/db';
 
-export function getUserFromRequest(req: NextRequest) {
+export async function getUserFromRequest(req: NextRequest) {
   const authHeader = req.headers.get('authorization');
   if (!authHeader) return null;
   const token = authHeader.split(' ')[1];
@@ -9,10 +10,15 @@ export function getUserFromRequest(req: NextRequest) {
   if (
     !payload ||
     typeof payload !== 'object' ||
-    !('userId' in payload) ||
-    !('twitterId' in payload)
+    !('id' in payload)
   ) {
     return null;
   }
-  return { userId: (payload as any).userId, twitterId: (payload as any).twitterId };
+
+  const user = await prisma.user.findUnique({ where: { twitterId: (payload as any).id} });
+  if (!user) {
+    return null
+  }
+  
+  return { id: user.id, twitterId: user.twitterId };
 } 

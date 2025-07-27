@@ -17,7 +17,7 @@ export async function createWhitelist(tx: PrismaTransaction, data: WhitelistDoma
   return client.whitelist.create({
     data: {
       userId: data.user.userId as number,
-      twitterId: data.user.twitterId as string,
+      twitterId: data.user.twitterId as number,
       referralCode: nanoid(6),
       status: data.status,
     },
@@ -31,13 +31,13 @@ export async function updateWhitelist(tx: PrismaTransaction, data: WhitelistDoma
       userId: data.user.userId as number,
     },
     data: {
-      twitterId: data.user.twitterId as string,
+      twitterId: data.user.twitterId,
       status: data.status,
     },
   });
 }
 
-export async function findWhitelistByTwitterId(tx: PrismaTransaction, twitterId: string) {
+export async function findWhitelistByTwitterId(tx: PrismaTransaction, twitterId: number) {
   const client = getTransactionClient(tx);
   return client.whitelist.findUnique({ where: { twitterId } });
 }
@@ -48,8 +48,8 @@ export async function findWhitelistByReferralCode(tx: PrismaTransaction, code: s
 }
 
 // Service functions
-export async function getWhitelist(twitterId: string) {
-  const whitelist = await prisma.whitelist.findUnique({ where: { twitterId } });
+export async function getWhitelist(twitterId: number) {
+  const whitelist = await prisma.whitelist.findUnique({ where: { twitterId: twitterId } });
   
   if (whitelist != null) {
     const whitelistDomain: WhitelistDomain = {
@@ -66,6 +66,7 @@ export async function getWhitelist(twitterId: string) {
 }
 
 export async function createWhitelistForUser(data: UserDTO, referralCode?: string) {
+
   let referrer: Whitelist | null = null;
   return await prisma.$transaction(async (tx) => {
     // Prevent referral from registered user
@@ -119,11 +120,42 @@ export async function claimWhitelist(data: UserDTO) {
   };
   return prisma.whitelist.update({
     where: {
-      userId: data.userId as number,
+      userId: data.userId,
     },
     data: {
-      twitterId: data.twitterId as string,
+      twitterId: data.twitterId,
       status: whitelistDomain.status,
     },
   });
 } 
+
+export async function listReferees(twitterId: number) {
+  const referrals = await prisma.referral.findMany({ 
+    where: { referrerTwitterId: twitterId } 
+  });
+  
+  if (referrals.length === 0) {
+    return [];
+  }
+  
+  // Extract referee Twitter IDs from referrals
+  const refereeTwitterIds = referrals.map(referral => referral.refereeTwitterId);
+  
+  // Get referee user info from User table
+  const referees = await prisma.user.findMany({ 
+    where: { 
+      twitterId: { in: refereeTwitterIds } 
+    } 
+  });
+  
+  // Map to UserDTO format
+  const result = referees.map(referee => ({
+    userId: referee.id,
+    twitterId: referee.twitterId,
+    name: referee.name,
+    handle: referee.handle,
+    profileImageUrl: referee.profileImageUrl,
+  }));
+  
+  return result;
+}
