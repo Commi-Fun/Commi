@@ -3,7 +3,7 @@ import CopyIcon from '@/components/icons/CopyIcon'
 import { OkxIcon } from '@/components/icons/walletIcons/OkxIcon'
 import { InteractiveBox } from '@/components/InteractiveBox'
 import { useSolanaMultiWallet } from '@/hooks/useSolanaMultiWallet'
-import truncateAddress from '@/utils/truncateAddress'
+import truncateAddress from '@/lib/utils/truncateAddress'
 import Image from 'next/image'
 
 export const WalletList = () => {

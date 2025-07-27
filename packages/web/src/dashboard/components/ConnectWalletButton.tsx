@@ -7,7 +7,7 @@ import { Stack } from '@mui/material'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { ArrayRightMd } from '@/components/icons/ArrayRightMd'
 import Image from 'next/image'
-import truncateAddress from '@/utils/truncateAddress'
+import truncateAddress from '@/lib/utils/truncateAddress'
 import { useSolanaMultiWallet } from '@/hooks/useSolanaMultiWallet'
 import { WalletName } from '@solana/wallet-adapter-base'
 
