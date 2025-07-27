@@ -16,13 +16,13 @@ const Page = () => {
   const verified = true
 
   const copyText =
-    "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later:..."
+    "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later: https://commi.fun"
 
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(copyText)
       setCopied(true)
-      setTimeout(() => setCopied(false), 2000) // 2秒后重置状态
+      setTimeout(() => setCopied(false), 1000) // 2秒后重置状态
     } catch (err) {
       console.error('复制失败:', err)
     }
