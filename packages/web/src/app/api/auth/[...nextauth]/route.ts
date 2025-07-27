@@ -67,7 +67,7 @@ export const nextAuthOptions: NextAuthOptions = {
         // update user info
         await prisma.user.upsert({ 
           where: {
-            twitterId: parseInt(token.id),
+            twitterId: token.id,
           },
           update: {
             profileImageUrl: user.image || undefined,
@@ -75,7 +75,7 @@ export const nextAuthOptions: NextAuthOptions = {
             handle: user.username || 'unknown',
           },
           create: {
-            twitterId: parseInt(user.id),
+            twitterId: token.id,
             profileImageUrl: user.image || undefined,
             name: user.name || 'Unknown',
             handle: user.username || 'unknown',

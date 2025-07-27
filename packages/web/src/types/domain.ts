@@ -1,8 +1,8 @@
 export interface UserDomain {
     userId?: number;
-    twitterId?: number;
+    twitterId?: string;
     name?: string;
-    username?: string;
+    handle?: string;
     profileImageUrl?: string;
 }
 
@@ -14,7 +14,7 @@ export interface WhitelistDomain {
 
 export interface ReferralDomain {
     referrerId: number;
-    referrerTwitterId: number;
+    referrerTwitterId: string;
     refereeId: number;
-    refereeTwitterId: number;
+    refereeTwitterId: string;
 }

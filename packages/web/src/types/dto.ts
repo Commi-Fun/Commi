@@ -1,8 +1,8 @@
 export interface UserDTO {
     userId?: number;
-    twitterId: number;
+    twitterId: string;
     name?: string;
-    username?: string;
+    handle?: string;
     profileImageUrl?: string;
 }
 

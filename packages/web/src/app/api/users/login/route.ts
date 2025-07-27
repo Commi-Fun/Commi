@@ -20,8 +20,8 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   // Create/update userInfo
   const userDto: UserDTO = {
     twitterId: twitterUser.id,
-    name: twitterUser.name,
-    username: twitterUser.screenName,
+    name: twitterUser.screenName,
+    handle: twitterUser.name,
     profileImageUrl: twitterUser.avatar,
   };
   const user = await userService.createUser(userDto);

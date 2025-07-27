@@ -17,7 +17,7 @@ export async function createWhitelist(tx: PrismaTransaction, data: WhitelistDoma
   return client.whitelist.create({
     data: {
       userId: data.user.userId as number,
-      twitterId: data.user.twitterId as number,
+      twitterId: data.user.twitterId as string,
       referralCode: nanoid(6),
       status: data.status,
     },
@@ -37,7 +37,7 @@ export async function updateWhitelist(tx: PrismaTransaction, data: WhitelistDoma
   });
 }
 
-export async function findWhitelistByTwitterId(tx: PrismaTransaction, twitterId: number) {
+export async function findWhitelistByTwitterId(tx: PrismaTransaction, twitterId: string) {
   const client = getTransactionClient(tx);
   return client.whitelist.findUnique({ where: { twitterId } });
 }
@@ -48,7 +48,7 @@ export async function findWhitelistByReferralCode(tx: PrismaTransaction, code: s
 }
 
 // Service functions
-export async function getWhitelist(twitterId: number) {
+export async function getWhitelist(twitterId: string) {
   const whitelist = await prisma.whitelist.findUnique({ where: { twitterId: twitterId } });
   
   if (whitelist != null) {
@@ -131,7 +131,7 @@ export async function claimWhitelist(data: UserDTO) {
   });
 } 
 
-export async function listReferees(twitterId: number) {
+export async function listReferees(twitterId: string) {
   const referrals = await prisma.referral.findMany({ 
     where: { referrerTwitterId: twitterId } 
   });

@@ -7,7 +7,7 @@ export async function createUserInDb(data: UserDomain) {
   return prisma.user.create({
     data: {
       twitterId: data.twitterId as string,
-      username: data.username as string,
+      handle: data.handle as string,
       name: data.name as string,
       profileImageUrl: data.profileImageUrl,
     },
@@ -21,7 +21,7 @@ export async function updateUserInDb(data: UserDomain) {
       twitterId: data.twitterId,
       profileImageUrl: data.profileImageUrl,
       name: data.name,
-      username: data.username,
+      handle: data.handle ,
     },
   });
 }
@@ -32,13 +32,13 @@ export async function upsertUser(data: UserDomain) {
     update: {
       profileImageUrl: data.profileImageUrl,
       name: data.name,
-      username: data.username,
+      handle: data.handle,
     },
     create: {
       twitterId: data.twitterId as string,
       profileImageUrl: data.profileImageUrl,
       name: data.name as string,
-      username: data.username as string,
+      handle: data.handle as string,
     },
   });
 }
@@ -53,7 +53,7 @@ export async function createUser(user: UserDTO) {
     userId: user.userId,
     twitterId: user.twitterId,
     name: user.name,
-    username: user.username,
+    handle: user.handle,
     profileImageUrl: user.profileImageUrl,
   };
   return upsertUser(userDomain);
@@ -70,6 +70,6 @@ export async function updateUser(user: UserDTO) {
   }
   if (user.profileImageUrl) userDomain.profileImageUrl = user.profileImageUrl;
   if (user.name) userDomain.name = user.name;
-  if (user.username) userDomain.username = user.username;
+  if (user.handle) userDomain.handle = user.handle;
   return updateUserInDb(userDomain);
 }
