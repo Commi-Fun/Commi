@@ -23,6 +23,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
     const whitelist = await whitelistService.createWhitelistForUser(userDto, referralCode);
     return success({ status: whitelist.status });
   } catch (unknown) {
+    console.error("Error: ", unknown);
     return error('Failed to create whitelist.', 500);
   }
 }); 
