@@ -12,7 +12,9 @@ export const metadata: Metadata = {
   description:
     "🧃Airdrop season's coming. Join Commi early and get whitelisted now or regret later!",
   icons: {
-    icon: '/logo.ico',
+    icon: '/logo.svg', // 临时使用现有的 logo.svg
+    shortcut: '/logo.svg',
+    apple: '/inviteLogo.png', // 使用现有的 inviteLogo.png
   },
   twitter: {
     card: 'summary_large_image',

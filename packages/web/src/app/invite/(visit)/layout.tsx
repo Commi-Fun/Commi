@@ -103,7 +103,7 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
     <div
       className={'w-screen h-screen transition-colors duration-300 bg-green01-500 overflow-hidden'}
       style={{ backgroundColor: hoveredMeme ? hoveredMeme.themeColor : undefined }}>
-      <div className="pt-2.5 pl-4.5 g:pt-10 lg:pl-20 ">
+      <div className="pt-2.5 pl-4.5 lg:pt-10 lg:pl-20 ">
         <div className="flex  relative gap-3 w-29 lg:w-79 h-fit aspect-[2.67/1] overflow-hidden">
           <Image
             src={'/inviteLogo.png'}
