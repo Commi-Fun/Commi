@@ -48,13 +48,11 @@ const Page = () => {
   const handlePostToTwitter = () => {
     const tweetText =
       "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later!"
-    const websiteUrl = window.location.origin
+    const websiteUrl = 'https://commi.fun'
     const hashtags = 'Commi,Airdrop,Crypto'
 
-    // 构建 Twitter Intent URL
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(websiteUrl)}&hashtags=${encodeURIComponent(hashtags)}`
 
-    // 在新窗口中打开 Twitter
     window.open(twitterUrl, '_blank', 'width=550,height=420')
   }
 

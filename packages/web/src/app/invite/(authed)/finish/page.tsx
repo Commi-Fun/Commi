@@ -2,11 +2,23 @@
 import CopyIcon from '@/components/icons/CopyIcon'
 import { Popover } from '@mui/material'
 import Image from 'next/image'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+const copyText =
+  "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later: https://commi.fun"
 
 const Page = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
   const [invitedFriends, setInvitedFriends] = React.useState<object[]>([{}, {}, {}, {}, {}])
+  const [copied, setCopied] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/whitelist/referees').then(res => {
+      res.json().then(data => {
+        console.log(data)
+      })
+    })
+  }, [])
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     if (invitedFriends.length === 0) {
@@ -17,6 +29,16 @@ const Page = () => {
 
   const handlePopoverClose = () => {
     setAnchorEl(null)
+  }
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(copyText)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1000) // 2秒后重置状态
+    } catch (err) {
+      console.error('复制失败:', err)
+    }
   }
 
   const open = Boolean(anchorEl)
@@ -32,7 +54,10 @@ const Page = () => {
 
       <div className="flex justify-between items-center mt-20">
         <span className="font-bold text-main-Black text-[1.125rem]">Copy Invite Link</span>
-        <CopyIcon className="text-green01-200 cursor-pointer" />
+        <CopyIcon
+          className={`cursor-pointer transition-colors ${copied ? 'text-main-Green01' : 'text-green01-200'}`}
+          onClick={handleCopy}
+        />
       </div>
       <div className="mt-4 bg-green01-800 p-6 rounded-2xl text-[1.125rem]">
         🧃Airdrop season’s coming. I’m in Commi @commidotfun early — whitelist now or regret

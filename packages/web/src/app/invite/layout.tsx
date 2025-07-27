@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     title: 'Commi - Join the Airdrop Early!',
     description:
       "🧃Airdrop season's coming. Join Commi early and get whitelisted now or regret later!",
-    images: ['/images/commiCup.png'], // 需要在 public 文件夹中添加这个图片
+    images: ['/images/twitterDisplay.png'], // 需要在 public 文件夹中添加这个图片
     creator: '@commidotfun',
     site: '@commidotfun',
   },
