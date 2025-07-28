@@ -13,6 +13,6 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   const body = await req.json()
   const { referralCode } = body
   const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
-  const whitelist = await whitelistService.createWhitelistForUser(userDto as never, referralCode)
-  return success({ status: whitelist?.status })
+  const result = await whitelistService.refer(userDto as never, referralCode)
+  return success(result)
 })

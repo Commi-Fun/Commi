@@ -8,7 +8,8 @@ import { console } from 'inspector'
 
 export enum WhitelistStatus {
   REGISTERED = 'REGISTERED',
-  CAN_CLAIM = 'CAN_CLAIM',
+  POSTED = 'POSTED',
+  REFERRED = 'REFERRED',
   CLAIMED = 'CLAIMED',
 }
 
@@ -66,66 +67,63 @@ export async function getWhitelist(twitterId: string) {
   return null
 }
 
-export async function createWhitelistForUser(data: UserDTO, referralCode?: string) {
-  let referrer: Whitelist | null = null
-  return await prisma.$transaction(async tx => {
-    // Prevent referral from registered user
-    const referee = await findWhitelistByTwitterId(tx, data.twitterId)
-    if (referee !== null) {
-      throw new Error('User already registered')
-    }
-    if (referralCode) {
-      referrer = await findWhitelistByReferralCode(tx, referralCode)
-    }
-    if (referrer !== null) {
-      const referralDomain: ReferralDomain = {
-        referrerId: referrer.userId,
-        referrerTwitterId: referrer.twitterId,
-        refereeId: data.userId as number,
-        refereeTwitterId: data.twitterId,
-      }
-      const referralResult = await referralService.createReferral(tx, referralDomain)
-      if (!referralResult) throw new Error('Failed to create referral')
-      if (referrer.status === WhitelistStatus.REGISTERED) {
-        const updateResult = await tx.whitelist.update({
-          where: {
-            userId: referrer.userId,
-            status: WhitelistStatus.REGISTERED,
-          },
-          data: {
-            status: WhitelistStatus.CAN_CLAIM,
-          },
-        })
-        if (!updateResult) throw new Error('Failed to update referrer whitelist')
-      }
-    }
-    const whitelistDomain: WhitelistDomain = {
-      user: {
-        userId: data.userId,
-        twitterId: data.twitterId,
-      },
-      referralCode,
+export async function post(data: UserDTO) {
+  return prisma.whitelist.update({
+    where: {
+      userId: data.userId,
+      twitterId: data.twitterId,
       status: WhitelistStatus.REGISTERED,
+    },
+    data: {
+      status: WhitelistStatus.POSTED,
     }
-    const whitelistResult = await createWhitelist(tx, whitelistDomain)
-    if (!whitelistResult) throw new Error('Failed to create whitelist')
-    return whitelistDomain
+  })
+}
+
+export async function refer(data: UserDTO, referralCode?: string) {
+  if (!referralCode) {
+    throw new Error('Invalid referral code');
+  }
+  return await prisma.$transaction(async tx => {
+    const referrer = await findWhitelistByReferralCode(tx, referralCode)
+    if (!referrer) {
+      throw new Error("Referrer not found")
+    }
+    const referralDomain: ReferralDomain = {
+      referrerId: referrer.userId,
+      referrerTwitterId: referrer.twitterId,
+      refereeId: data.userId as number,
+      refereeTwitterId: data.twitterId,
+    }
+    const referralResult = await referralService.createReferral(tx, referralDomain)
+    if (!referralResult) throw new Error('Failed to create referral')
+    if (referrer.status === WhitelistStatus.REGISTERED || referrer.status === WhitelistStatus.POSTED) {
+      const updateResult = await tx.whitelist.update({
+        where: {
+          userId: referrer.userId,
+          status: referrer.status,
+        },
+        data: {
+          status: WhitelistStatus.REFERRED,
+        },
+      })
+      if (!updateResult) throw new Error('Failed to update referrer whitelist')
+    }
   })
 }
 
 export async function claimWhitelist(data: UserDTO) {
-  console.log('sssss', data)
-  const canClaim = await prisma.whitelist.findUnique({
+  const whitelist = await prisma.whitelist.findUnique({
     where: {
       userId: data.userId,
       twitterId: data.twitterId,
     }
   })
-  if (canClaim == null) {
+  if (whitelist == null) {
     throw new Error('Not permitted to claim')
-  }else if (canClaim.status === WhitelistStatus.REGISTERED) {
+  }else if (whitelist.status === WhitelistStatus.REGISTERED || whitelist.status === WhitelistStatus.POSTED) {
     throw new Error('Not permitted to claim')
-  }else if (canClaim.status === WhitelistStatus.CLAIMED) {
+  }else if (whitelist.status === WhitelistStatus.CLAIMED) {
     throw new Error('Already claimed')
   }
   const whitelistDomain: WhitelistDomain = {

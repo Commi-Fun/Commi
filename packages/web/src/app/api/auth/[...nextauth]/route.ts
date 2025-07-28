@@ -1,6 +1,8 @@
 import NextAuth, { type NextAuthOptions } from 'next-auth'
 import TwitterProvider from 'next-auth/providers/twitter'
 import { prisma } from '@commi-dashboard/db'
+import { nanoid } from 'nanoid'
+import { WhitelistStatus } from '@/lib/services/whitelistService'
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -50,6 +52,21 @@ export const nextAuthOptions: NextAuthOptions = {
             handle: user.username || 'unknown',
           },
         })
+
+        // 创建 whitelist
+        await prisma.whitelist.upsert({
+          where: {
+            twitterId: dbUser.twitterId,
+          },
+          update: {},
+          create: {
+            userId: dbUser.id,
+            twitterId: dbUser.twitterId,
+            referralCode: nanoid(6),
+            status: WhitelistStatus.REGISTERED,
+          },
+        })
+
         user.userId = dbUser.id.toString()
 
         return true // 允许登录

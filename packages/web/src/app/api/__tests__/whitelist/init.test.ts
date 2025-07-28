@@ -1,4 +1,4 @@
-import { POST } from '@/app/api/whitelist/init/route';
+import { POST } from '@/app/api/whitelist/post/route';
 import {
   setupTestDatabase,
   teardownTestDatabase,
