@@ -50,21 +50,6 @@ export const nextAuthOptions: NextAuthOptions = {
             handle: user.username || 'unknown',
           },
         })
-
-        // 创建 whitelist
-        await prisma.whitelist.upsert({
-          where: {
-            twitterId: dbUser.twitterId,
-          },
-          update: {},
-          create: {
-            userId: dbUser.id,
-            twitterId: dbUser.twitterId,
-            referralCode: '',
-            status: 'REGISTERED',
-          },
-        })
-
         user.userId = dbUser.id.toString()
 
         return true // 允许登录

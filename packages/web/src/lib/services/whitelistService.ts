@@ -86,15 +86,18 @@ export async function createWhitelistForUser(data: UserDTO, referralCode?: strin
       }
       const referralResult = await referralService.createReferral(tx, referralDomain)
       if (!referralResult) throw new Error('Failed to create referral')
-      const whitelistDomain: WhitelistDomain = {
-        user: {
-          userId: referrer.userId,
-          twitterId: referrer.twitterId,
-        },
-        status: WhitelistStatus.CAN_CLAIM,
+      if (referrer.status === WhitelistStatus.REGISTERED) {
+        const updateResult = await tx.whitelist.update({
+          where: {
+            userId: referrer.userId,
+            status: WhitelistStatus.REGISTERED,
+          },
+          data: {
+            status: WhitelistStatus.CAN_CLAIM,
+          },
+        })
+        if (!updateResult) throw new Error('Failed to update referrer whitelist')
       }
-      const updateResult = await updateWhitelist(tx, whitelistDomain)
-      if (!updateResult) throw new Error('Failed to update referrer whitelist')
     }
     const whitelistDomain: WhitelistDomain = {
       user: {
@@ -104,16 +107,27 @@ export async function createWhitelistForUser(data: UserDTO, referralCode?: strin
       referralCode,
       status: WhitelistStatus.REGISTERED,
     }
-    console.log('data: ', data)
     const whitelistResult = await createWhitelist(tx, whitelistDomain)
     if (!whitelistResult) throw new Error('Failed to create whitelist')
-    console.log('finish insert')
     return whitelistDomain
   })
 }
 
 export async function claimWhitelist(data: UserDTO) {
   console.log('sssss', data)
+  const canClaim = await prisma.whitelist.findUnique({
+    where: {
+      userId: data.userId,
+      twitterId: data.twitterId,
+    }
+  })
+  if (canClaim == null) {
+    throw new Error('Not permitted to claim')
+  }else if (canClaim.status === WhitelistStatus.REGISTERED) {
+    throw new Error('Not permitted to claim')
+  }else if (canClaim.status === WhitelistStatus.CLAIMED) {
+    throw new Error('Already claimed')
+  }
   const whitelistDomain: WhitelistDomain = {
     user: {
       userId: data.userId,
