@@ -11,6 +11,10 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
     return error('Unauthorized', 401)
   }
   const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
-  const whitelist = await whitelistService.post(userDto as never)
-  return success({ status: whitelist?.status })
+  const result = await whitelistService.post(userDto as never)
+  if (!result.success) {
+    return error(result.error || 'Failed to post', 500)
+  }
+  
+  return success(result.data)
 })

@@ -14,5 +14,9 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   const { referralCode } = body
   const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
   const result = await whitelistService.refer(userDto as never, referralCode)
-  return success(result)
+  if (!result.success) {
+    return error(result.error || 'Failed to refer', 500)
+  }
+  
+  return success(result.data)
 })

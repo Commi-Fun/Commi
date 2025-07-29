@@ -11,5 +11,10 @@ export const POST = withErrorHandler(async () => {
   }
   const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
   const result = await whitelistService.claimWhitelist(userDto as never)
-  return success(result)
+  
+  if (!result.success) {
+    return error(result.error || 'Failed to claim', 500)
+  }
+  
+  return success(result.data)
 })

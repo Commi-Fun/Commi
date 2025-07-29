@@ -8,6 +8,10 @@ export const GET = withErrorHandler(async () => {
   if (!session) {
     return error('Unauthorized', 401)
   }
-  const referees = await whitelistService.listReferees(session.user.twitterId)
-  return success({ data: referees })
+  const result = await whitelistService.listReferees(session.user.twitterId)
+  if (!result.success) {
+    return error(result.error || 'Failed to get referees', 500)
+  }
+  
+  return success(result.data)
 })
