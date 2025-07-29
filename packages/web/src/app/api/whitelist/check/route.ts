@@ -12,10 +12,10 @@ export const GET = withErrorHandler(async () => {
   }
 
   const result = await whitelistService.getWhitelist(sessionInfo.user.twitterId)
-  
+
   if (!result.success) {
     return error(result.error || 'Failed to get whitelist', 500)
   }
-  
+
   return success(result.data)
 })
