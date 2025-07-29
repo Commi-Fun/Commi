@@ -22,13 +22,11 @@ body {
 
 .button-transparent {
   border-radius: 24px;
-  height: 58px;
-  line-height: 58px;
   box-shadow: 5px 5px 0 #000;
   border: 1px solid #000;
   padding: 0 24px;
-  font-size: 28px;
   font-weight: 800;
+  padding: 10px 24px;
 }
 
 .normal-button {
@@ -39,4 +37,35 @@ body {
   justify-content: center;
   font-weight: bold;
   border-radius: 80px;
+}
+
+/* 漂浮动画 */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
+.float-animation:nth-child(2n) {
+  animation-delay: -1s;
+}
+
+.float-animation:nth-child(3n) {
+  animation-delay: -2s;
+}
+
+.float-animation:nth-child(4n) {
+  animation-delay: -0.5s;
+}
+
+.float-animation:nth-child(5n) {
+  animation-delay: -1.5s;
 }

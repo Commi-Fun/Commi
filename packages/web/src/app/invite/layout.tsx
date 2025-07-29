@@ -8,6 +8,7 @@ import { Nunito } from 'next/font/google'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://commi.fun'),
   title: 'Commi - Join the Airdrop Early!',
   description:
     "🧃Airdrop season's coming. Join Commi early and get whitelisted now or regret later!",
@@ -36,7 +37,7 @@ const nunito = Nunito({
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en" className={nunito.variable}>
-      <body className={`${nunito.className} relative overflow-hidden min-h-screen w-screen`}>
+      <body className={`${nunito.className} w-screen min-h-screen`}>
         <NextAuthProvider>
           <AppTheme>{children}</AppTheme>
         </NextAuthProvider>

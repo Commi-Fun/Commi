@@ -67,26 +67,24 @@ const CommiButton = ({
         }
       : {}
 
-  if (variant === 'outlined') {
-    fontSx.color = customColors.main.Green01
-  }
-
   const cusSx: SxProps<Theme> = {
     justifyContent: 'center !important',
   }
 
-  const finalSx = [
-    sizeSx,
-    themeSx[theme] || {},
-    cusSx,
-    ...(Array.isArray(incomingSx) ? incomingSx : [incomingSx]),
-  ]
+  const colorSx = { ...(themeSx[theme] || {}) }
+
+  if (variant === 'outlined') {
+    colorSx.color = customColors.main.Green01
+  }
+
+  const finalSx = [sizeSx, colorSx, cusSx]
+  if (incomingSx) {
+    finalSx.push(incomingSx as never)
+  }
 
   return (
     <Button variant={variant} sx={finalSx} {...rest}>
-      <CommiTypo color={color} weight={weight}>
-        {children}
-      </CommiTypo>
+      {children}
     </Button>
   )
 }

@@ -1,24 +1,18 @@
 'use client'
 import CopyIcon from '@/components/icons/CopyIcon'
+import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
 import { Popover } from '@mui/material'
+import { useSession } from 'next-auth/react'
 import Image from 'next/image'
 import React, { useEffect, useState } from 'react'
-
-const copyText =
-  "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later: https://commi.fun"
 
 const Page = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
   const [invitedFriends, setInvitedFriends] = React.useState<object[]>([{}, {}, {}, {}, {}])
   const [copied, setCopied] = useState(false)
+  const { data } = useSession()
 
-  useEffect(() => {
-    fetch('/api/whitelist/referees').then(res => {
-      res.json().then(data => {
-        console.log(data)
-      })
-    })
-  }, [])
+  const copyText = `🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later: https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     if (invitedFriends.length === 0) {
@@ -43,7 +37,7 @@ const Page = () => {
 
   const open = Boolean(anchorEl)
   return (
-    <div className="w-225 absolute right-22.5">
+    <div className="">
       <p className="text-[72px] text-main-Black font-extrabold font-shadow-white">BOOST YOUR</p>
       <p className="text-[#fbff00] text-[72px] font-extrabold font-shadow-black">AIRDROP REWARDS</p>
 

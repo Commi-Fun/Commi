@@ -8,6 +8,7 @@ declare module 'next-auth' {
       twitterId: string
       username?: string
       userId?: string
+      referralCode?: string
     } & DefaultSession['user']
   }
 
@@ -15,6 +16,7 @@ declare module 'next-auth' {
     userId?: string
     username?: string
     twitterId: string // 添加你的自定义字段
+    referralCode?: string
   }
 }
 
@@ -23,5 +25,6 @@ declare module 'next-auth/jwt' {
     userId?: string
     id: string
     username?: string
+    referralCode?: string
   }
 }

@@ -11,12 +11,13 @@ interface CommiModalProps {
   title?: string
   children: React.ReactNode
   size?: 'small' | 'medium' | 'large'
+  className?: string
 }
 
 const sizeStyles = {
   small: {
     width: '440px',
-    height: '320px',
+    // height: '320px',
     padding: '4px 0',
   },
   medium: {
@@ -37,13 +38,14 @@ export default function CommiModal({
   title,
   children,
   size = 'medium',
+  className,
 }: CommiModalProps) {
   const closeIconPosition =
     size === 'small'
       ? { right: 16, top: 20 }
       : size === 'medium'
-      ? { right: 24, top: 24 }
-      : { right: 32, top: 32 }
+        ? { right: 24, top: 24 }
+        : { right: 32, top: 32 }
 
   return (
     <Dialog
@@ -66,7 +68,7 @@ export default function CommiModal({
         color={customColors.blue[300]}
         style={{ position: 'absolute', cursor: 'pointer', ...closeIconPosition }}
       />
-      <DialogContent>{children}</DialogContent>
+      <DialogContent className={className}>{children}</DialogContent>
     </Dialog>
   )
 }

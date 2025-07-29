@@ -54,7 +54,7 @@ export const nextAuthOptions: NextAuthOptions = {
         })
 
         // 创建 whitelist
-        await prisma.whitelist.upsert({
+        const whitelist = await prisma.whitelist.upsert({
           where: {
             twitterId: dbUser.twitterId,
           },
@@ -66,6 +66,8 @@ export const nextAuthOptions: NextAuthOptions = {
             status: WhitelistStatus.REGISTERED,
           },
         })
+
+        user.referralCode = whitelist.referralCode
 
         user.userId = dbUser.id.toString()
 
@@ -82,7 +84,7 @@ export const nextAuthOptions: NextAuthOptions = {
         token.userId = user.userId
         token.name = user.name
         token.picture = user.image
-        token.testtest = 'heiheih'
+        token.referralCode = user.referralCode
         if (user.username) {
           token.username = user.username
         }
@@ -98,6 +100,7 @@ export const nextAuthOptions: NextAuthOptions = {
       session.user.userId = token.userId // 从数据库获取的 ID
       session.user.name = token.name
       session.user.image = token.picture
+      session.user.referralCode = token.referralCode
 
       // Pass the username from the token to the session
       if (token.username) {
