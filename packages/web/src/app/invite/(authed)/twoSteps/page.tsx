@@ -84,7 +84,9 @@ const Page = () => {
     window.open(twitterUrl, '_blank')
 
     setTimeout(() => {
-      fetch('/api/whitelist/post').catch(err => {
+      fetch('/api/whitelist/post', {
+        method: 'POST',
+      }).catch(err => {
         console.error('Failed to post:', err)
       })
     }, 3000)
