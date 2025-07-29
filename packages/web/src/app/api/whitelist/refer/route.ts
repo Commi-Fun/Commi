@@ -17,6 +17,6 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   if (!result.success) {
     return error(result.error || 'Failed to refer', 500)
   }
-  
+
   return success(result.data)
 })

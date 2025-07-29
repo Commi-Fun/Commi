@@ -4,7 +4,7 @@ export const TelegramIcon = ({ fontSize = '24px', ...rest }: IconType) => {
   return (
     <svg
       width="1em"
-      height="13m"
+      height="1em"
       fontSize={fontSize}
       viewBox="0 0 40 40"
       fill="none"
