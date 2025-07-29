@@ -8,10 +8,10 @@ import { nextAuthOptions } from '../../auth/[...nextauth]/route'
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const session = await getServerSession(nextAuthOptions)
-  if (!session) {
+  if (!session || !session.user.userId) {
     return error('Unauthorized', 401)
   }
-  const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
+  const userDto = { userId: +session.user.userId, twitterId: session.user.twitterId }
   const result = await whitelistService.post(userDto as never)
   if (!result.success) {
     return error(result.error || 'Failed to post', 500)
