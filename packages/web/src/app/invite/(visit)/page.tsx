@@ -18,8 +18,8 @@ function InviteContent() {
     }
     const fff = async () => {
       const code = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
+      console.log('refer code', code)
       if (code) {
-        console.log('refer code', code)
         try {
           await fetch('/api/whitelist/refer', {
             method: 'POST',
@@ -31,14 +31,13 @@ function InviteContent() {
           console.error(e)
         }
       }
+      console.log('data?.user.status', data?.user.status)
+      if (data?.user.status === WhitelistStatus.CLAIMED) {
+        router.push('/invite/finish')
+      } else {
+        router.push('/invite/twoSteps')
+      }
     }
-    console.log('data?.user.status', data?.user.status)
-    if (data?.user.status === WhitelistStatus.CLAIMED) {
-      router.push('/invite/finish')
-    } else {
-      router.push('/invite/twoSteps')
-    }
-
     fff()
   }, [router, status, searchparams, data?.user.status])
 
