@@ -7,13 +7,22 @@ import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { XIcon } from '@/components/icons/XIcon'
 import { ChatDots } from '@/components/icons/ChatDots'
 import { LogOutButton } from '@/dashboard/components/LogOutButton'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { data } = useSession()
+  const { data, status } = useSession()
+  const router = useRouter()
 
   const handleXIconClick = () => {
     window.open('https://x.com/commidotfun', '_blank', 'noopener,noreferrer')
   }
+
+  useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/')
+    }
+  }, [router, status])
 
   return (
     <div className="bg-green01-500 w-screen min-h-screen relative overflow-hidden flex flex-col pt-10">
