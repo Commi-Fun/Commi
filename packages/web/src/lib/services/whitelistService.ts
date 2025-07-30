@@ -96,8 +96,14 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
     if (!referralCode) {
       throw new ValidationError('Invalid referral code')
     }
+
     await prisma.$transaction(async tx => {
       const referrer = await findWhitelistByReferralCode(tx, referralCode)
+
+      if (data.userId === referrer?.userId) {
+        throw new ValidationError('Cannot refer yourself')
+      }
+
       if (!referrer) {
         throw new NotFoundError('Referrer not found')
       }
