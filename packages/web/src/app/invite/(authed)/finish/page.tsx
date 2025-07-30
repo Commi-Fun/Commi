@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 
 const Page = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
-  const [invitedFriends, setInvitedFriends] = React.useState<unknown[]>([])
+  const [invitedFriends, setInvitedFriends] = React.useState<any[]>([])
   const [copied, setCopied] = useState(false)
   const { data } = useSession()
 
