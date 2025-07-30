@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 
 const Page = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
-  const [invitedFriends, setInvitedFriends] = React.useState<object[]>([{}, {}, {}, {}, {}])
+  const [invitedFriends, setInvitedFriends] = React.useState<any[]>([])
   const [copied, setCopied] = useState(false)
   const { data } = useSession()
 
@@ -52,7 +52,7 @@ const Page = () => {
     }, 3000)
   }, [])
 
-  const open = Boolean(anchorEl)
+  const open = Boolean(anchorEl) && invitedFriends.length > 0
   return (
     <div className="">
       <p className="text-[72px] text-main-Black font-extrabold font-shadow-white">BOOST YOUR</p>
@@ -83,7 +83,6 @@ const Page = () => {
       </p>
       <Popover
         id="mouse-over-popover"
-        sx={{ pointerEvents: 'none' }}
         open={open}
         anchorEl={anchorEl}
         anchorOrigin={{
@@ -94,18 +93,23 @@ const Page = () => {
           vertical: 'top',
           horizontal: 'right',
         }}
-        onClose={handlePopoverClose}
-        disableRestoreFocus>
+        onClose={handlePopoverClose}>
         <div className="bg-blue-500 p-9">
           <div className="min-w-50 flex flex-col">
             <div className="text-main-White font-bold text-[1.125rem]">
-              {invitedFriends.length} friends invited
+              {invitedFriends.length} friends joined🧃
             </div>
-            <div className="flex flex-col gap-4 mt-6">
-              {invitedFriends.slice(0, 4).map((_, index) => (
+            <div className="flex flex-col gap-4 mt-6 max-h-[200px] overflow-y-auto">
+              {invitedFriends.map((item, index) => (
                 <div className="flex gap-2" key={index}>
-                  <Image className="rounded-full" width={24} height={24} src={''} alt="" />
-                  <span className="text-[1.125rem] font-bold text-blue-200">Invite friends</span>
+                  <Image
+                    className="rounded-full"
+                    width={24}
+                    height={24}
+                    src={item.profileImageUrl}
+                    alt=""
+                  />
+                  <span className="text-[1.125rem] font-bold text-blue-200">@{item.handle}</span>
                 </div>
               ))}
             </div>
