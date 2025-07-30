@@ -41,6 +41,8 @@ function InviteContent() {
     fff()
   }, [router, status, searchparams, data?.user.status])
 
+  const XCallbackUrl = `/invite?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+
   return (
     <div className="relative overflow-hidden mt-35 px-2.5">
       <p className="stroke-black font-extrabold font-shadow-black text-white text-[46px] 2xl:text-[56px]">
@@ -59,7 +61,7 @@ function InviteContent() {
       </div>
 
       <div className="mt-30 2xl:mt-50">
-        <LoginButton callbackUrl="/invite?referalCode=123">
+        <LoginButton callbackUrl={XCallbackUrl}>
           <button className="bg-black text-white rounded-lg text-3xl font-bold flex items-center gap-2 drop-shadow-lg hover:bg-gray-800 transition-colors px-10 py-3 cursor-pointer">
             Get Now
             <ArrowCircleRight className={`text-[50px] text-main-Green01`} />
