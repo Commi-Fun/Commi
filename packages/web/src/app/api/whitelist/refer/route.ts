@@ -11,6 +11,9 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   if (!session) {
     return error('Unauthorized', 401)
   }
+  if (!session.user.isNew) {
+    return error('Can not get referred after register', 400)
+  }
   const body = await req.json()
   const { referralCode } = body
   const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }

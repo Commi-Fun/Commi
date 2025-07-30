@@ -10,6 +10,7 @@ declare module 'next-auth' {
       userId: number
       referralCode?: string
       status?: string
+      isNew?: boolean
     } & DefaultSession['user']
   }
 
@@ -19,6 +20,7 @@ declare module 'next-auth' {
     twitterId: string // 添加你的自定义字段
     referralCode?: string
     status?: string
+    isNew?: boolean
   }
 }
 
@@ -29,5 +31,6 @@ declare module 'next-auth/jwt' {
     username?: string
     referralCode?: string
     status?: string
+    isNew?: boolean
   }
 }

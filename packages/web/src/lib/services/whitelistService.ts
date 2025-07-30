@@ -121,6 +121,16 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
         throw new ConflictError('Already referred')
       }
 
+      const mutuallyRefer = await tx.referral.findFirst({
+        where: {
+          referrerId: data.userId,
+          refereeId: referrer.userId,
+        },
+      })
+      if (mutuallyRefer) {
+        throw new ConflictError('Cannot get mutually refer')
+      }
+
       const referralDomain: ReferralDomain = {
         referrerId: referrer.userId,
         referrerTwitterId: referrer.twitterId,

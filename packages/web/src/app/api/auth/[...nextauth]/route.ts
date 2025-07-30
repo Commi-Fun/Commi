@@ -55,24 +55,26 @@ export const nextAuthOptions: NextAuthOptions = {
         })
 
         // 创建 whitelist
-        const whitelist = await prisma.whitelist.upsert({
+        const whitelist = await prisma.whitelist.findFirst({
           where: {
-            twitterId: dbUser.twitterId,
-          },
-          update: {},
-          create: {
-            userId: dbUser.id,
-            twitterId: dbUser.twitterId,
-            referralCode: nanoid(6),
-            status: WhitelistStatus.REGISTERED,
-          },
+            userId: dbUser.id
+          }
         })
-
-        user.referralCode = whitelist.referralCode
-
+        if (whitelist === null) {
+          const whitelist = await prisma.whitelist.create({
+            data: {
+              userId: dbUser.id,
+              twitterId: dbUser.twitterId,
+              referralCode: nanoid(6),
+              status: WhitelistStatus.REGISTERED,
+            },
+          })
+          user.isNew = true
+          user.referralCode = whitelist.referralCode
+          user.status = whitelist.status
+        }
         user.userId = dbUser.id
-        user.status = whitelist.status
-
+        
         return true // 允许登录
       } catch (error) {
         return false // 拒绝登录
@@ -88,6 +90,7 @@ export const nextAuthOptions: NextAuthOptions = {
         token.picture = user.image
         token.referralCode = user.referralCode
         token.status = user.status
+        token.isNew = user.isNew
         if (user.username) {
           token.username = user.username
         }
@@ -105,6 +108,7 @@ export const nextAuthOptions: NextAuthOptions = {
       session.user.image = token.picture
       session.user.referralCode = token.referralCode
       session.user.status = token.status
+      session.user.isNew = token.isNew
 
       // Pass the username from the token to the session
       if (token.username) {
