@@ -12,33 +12,9 @@ function InviteContent() {
   const searchparams = useSearchParams()
 
   useEffect(() => {
-    console.log('Auth status:', status)
-    console.log('Session data:', data)
-
     if (status !== 'authenticated') {
       return
     }
-
-    console.log('User authenticated:', data?.user)
-    console.log('Search params string:', searchparams.toString())
-
-    // 🎯 获取所有查询参数的方法
-    const allParams = {}
-    searchparams.forEach((value, key) => {
-      allParams[key] = value
-    })
-    console.log('All URL parameters:', allParams)
-
-    // 🎯 获取特定参数
-    const referralCode = searchparams.get('referralCode')
-    const utm_source = searchparams.get('utm_source')
-    const utm_campaign = searchparams.get('utm_campaign')
-
-    console.log('Specific parameters:', {
-      referralCode,
-      utm_source,
-      utm_campaign,
-    })
 
     const fff = async () => {
       const referralCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
