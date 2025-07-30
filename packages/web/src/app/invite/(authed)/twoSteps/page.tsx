@@ -38,6 +38,8 @@ const Page = () => {
     }
   }
 
+  console.log('data?.user.status', data?.user.status)
+
   useEffect(() => {
     if (data?.user.status === WhitelistStatus.CLAIMED) {
       router.push('/invite/finish')

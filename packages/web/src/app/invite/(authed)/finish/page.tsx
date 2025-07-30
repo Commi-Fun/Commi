@@ -95,13 +95,7 @@ const Page = () => {
         }}
         onClose={handlePopoverClose}
         sx={{
-          // 让 Popover 背景不阻挡鼠标事件
-          '& .MuiPopover-paper': {
-            pointerEvents: 'auto', // 内容可交互
-          },
-          '& .MuiModal-backdrop': {
-            pointerEvents: 'none', // 背景不阻挡
-          },
+          pointerEvents: 'auto',
         }}
         disableRestoreFocus
         disableEnforceFocus>
@@ -114,7 +108,7 @@ const Page = () => {
             <div className="text-main-White font-bold text-[1.125rem]">
               {invitedFriends.length} friends joined🧃
             </div>
-            <div className="flex flex-col gap-4 mt-6 max-h-[200px] overflow-y-auto">
+            <div className="flex flex-col gap-4 mt-6">
               {invitedFriends.map((item, index) => (
                 <div className="flex gap-2" key={index}>
                   <img
