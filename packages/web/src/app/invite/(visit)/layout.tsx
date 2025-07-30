@@ -110,7 +110,6 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
   const [hoveredMeme, setHoveredMeme] = useState<null | MemeType>(null)
   const [hoveredIndex, setHoveredIndex] = useState<number>(-1)
   const [clickSelected, setClickSelected] = useState(false)
-  const [isAnimating, setIsAnimating] = useState(false)
 
   const handleXIconClick = () => {
     window.open('https://x.com/commidotfun', '_blank', 'noopener,noreferrer')

@@ -109,6 +109,8 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
         },
       })
 
+      console.log('hasRefered', hasRefered)
+
       if (hasRefered) {
         throw new ConflictError('Already referred')
       }
@@ -119,6 +121,9 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
         refereeId: data.userId as number,
         refereeTwitterId: data.twitterId,
       }
+
+      console.log('referralDomain', referralDomain)
+
       const referralResult = await referralService.createReferral(tx, referralDomain)
       if (!referralResult) throw new DatabaseError('Failed to create referral')
 

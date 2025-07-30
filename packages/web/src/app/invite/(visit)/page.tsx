@@ -19,6 +19,7 @@ function InviteContent() {
     const fff = async () => {
       const code = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
       if (code) {
+        console.log('refer code', code)
         try {
           await fetch('/api/whitelist/refer', {
             method: 'POST',
@@ -31,6 +32,7 @@ function InviteContent() {
         }
       }
     }
+    console.log('data?.user.status', data?.user.status)
     if (data?.user.status === WhitelistStatus.CLAIMED) {
       router.push('/invite/finish')
     } else {
