@@ -2,6 +2,7 @@
 import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
 import { LoginButton } from '@/dashboard/components/LoginButton'
 import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
+import { WhitelistStatus } from '@/lib/services/whitelistService'
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, Suspense } from 'react'
@@ -18,7 +19,6 @@ function InviteContent() {
 
     const fff = async () => {
       const referralCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
-      console.log('Processing referral code:', referralCode)
       if (referralCode) {
         try {
           console.log('Sending referral code to API:', referralCode)
@@ -38,12 +38,11 @@ function InviteContent() {
           console.error(e)
         }
       }
-      console.log('data?.user.status', data?.user.status)
-      // if (data?.user.status === WhitelistStatus.CLAIMED) {
-      //   router.push('/invite/finish')
-      // } else {
-      //   router.push('/invite/twoSteps')
-      // }
+      if (data?.user.status === WhitelistStatus.CLAIMED) {
+        router.push('/invite/finish')
+      } else {
+        router.push('/invite/twoSteps')
+      }
     }
     fff()
   }, [router, status, searchparams, data?.user.status, data])
