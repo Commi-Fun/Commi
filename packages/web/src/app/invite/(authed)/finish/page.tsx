@@ -94,9 +94,7 @@ const Page = () => {
           horizontal: 'right',
         }}
         onClose={handlePopoverClose}
-        sx={{
-          pointerEvents: 'auto',
-        }}
+        sx={{ pointerEvents: 'none' }}
         disableRestoreFocus
         disableEnforceFocus>
         <div

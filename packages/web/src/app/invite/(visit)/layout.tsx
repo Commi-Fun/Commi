@@ -101,8 +101,6 @@ const memes: MemeType[] = [
     fullImageSrc: '/images/memeFullSize/girl.png',
     fullImageClassName:
       'w-[459.34] h-[490px] 2xl:w-[637px] 2xl:h-[678px] right-[20.66px] 2xl:right-[41px]',
-
-    isSpecial: true,
   },
 ]
 
