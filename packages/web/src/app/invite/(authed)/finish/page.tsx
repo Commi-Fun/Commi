@@ -35,6 +35,23 @@ const Page = () => {
     }
   }
 
+  useEffect(() => {
+    const getReferees = () => {
+      fetch('/api/whitelist/referees')
+        .then(value => value.json())
+        .then(value => {
+          setInvitedFriends(value.data)
+        })
+        .catch(error => {
+          console.error('Failed to check:', error)
+        })
+    }
+    getReferees()
+    setInterval(() => {
+      getReferees()
+    }, 3000)
+  }, [])
+
   const open = Boolean(anchorEl)
   return (
     <div className="">
@@ -62,7 +79,7 @@ const Page = () => {
         onMouseEnter={handlePopoverOpen}
         onMouseLeave={handlePopoverClose}
         className="text-right mt-4 font-semibold">
-        X friends joined🧃
+        {invitedFriends.length} friends joined🧃
       </p>
       <Popover
         id="mouse-over-popover"
@@ -81,7 +98,9 @@ const Page = () => {
         disableRestoreFocus>
         <div className="bg-blue-500 p-9">
           <div className="min-w-50 flex flex-col">
-            <div className="text-main-White font-bold text-[1.125rem]">X friends invited</div>
+            <div className="text-main-White font-bold text-[1.125rem]">
+              {invitedFriends.length} friends invited
+            </div>
             <div className="flex flex-col gap-4 mt-6">
               {invitedFriends.slice(0, 4).map((_, index) => (
                 <div className="flex gap-2" key={index}>
