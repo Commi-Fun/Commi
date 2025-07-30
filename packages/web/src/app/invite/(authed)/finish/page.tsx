@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react'
 
 const Page = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
-  const [invitedFriends, setInvitedFriends] = React.useState<any[]>([])
+  const [invitedFriends, setInvitedFriends] = React.useState<unknown[]>([])
   const [copied, setCopied] = useState(false)
   const { data } = useSession()
 
@@ -52,7 +52,7 @@ const Page = () => {
     }, 3000)
   }, [])
 
-  const open = Boolean(anchorEl) && invitedFriends.length > 0
+  const open = Boolean(anchorEl)
   return (
     <div className="">
       <p className="text-[72px] text-main-Black font-extrabold font-shadow-white">BOOST YOUR</p>
@@ -93,8 +93,23 @@ const Page = () => {
           vertical: 'top',
           horizontal: 'right',
         }}
-        onClose={handlePopoverClose}>
-        <div className="bg-blue-500 p-9">
+        onClose={handlePopoverClose}
+        sx={{
+          // 让 Popover 背景不阻挡鼠标事件
+          '& .MuiPopover-paper': {
+            pointerEvents: 'auto', // 内容可交互
+          },
+          '& .MuiModal-backdrop': {
+            pointerEvents: 'none', // 背景不阻挡
+          },
+        }}
+        disableRestoreFocus
+        disableEnforceFocus>
+        <div
+          className="bg-blue-500 p-9"
+          onMouseEnter={() => setAnchorEl(anchorEl)} // 保持弹框打开
+          onMouseLeave={handlePopoverClose} // 鼠标离开时关闭
+        >
           <div className="min-w-50 flex flex-col">
             <div className="text-main-White font-bold text-[1.125rem]">
               {invitedFriends.length} friends joined🧃
@@ -102,7 +117,7 @@ const Page = () => {
             <div className="flex flex-col gap-4 mt-6 max-h-[200px] overflow-y-auto">
               {invitedFriends.map((item, index) => (
                 <div className="flex gap-2" key={index}>
-                  <Image
+                  <img
                     className="rounded-full"
                     width={24}
                     height={24}
