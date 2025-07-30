@@ -20,7 +20,7 @@
     "db:generate": "pnpm --filter @commi-dashboard/db generate",
     "db:push": "pnpm --filter @commi-dashboard/db push",
     "db:migrate": "pnpm --filter @commi-dashboard/db migrate",
-    "web": "pnpm --filter @commi-dashboard/web dev",
+    "web:dev": "pnpm --filter @commi-dashboard/web dev",
     "backend": "pnpm --filter @commi-dashboard/backend dev",
     "prepare": "husky install"
   },

@@ -7,24 +7,27 @@ declare module 'next-auth' {
       id: string
       twitterId: string
       username?: string
-      userId?: string
+      userId: number
       referralCode?: string
+      status?: string
     } & DefaultSession['user']
   }
 
   interface User extends DefaultUser {
-    userId?: string
+    userId: number
     username?: string
     twitterId: string // 添加你的自定义字段
     referralCode?: string
+    status?: string
   }
 }
 
 declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
-    userId?: string
+    userId: number
     id: string
     username?: string
     referralCode?: string
+    status?: string
   }
 }

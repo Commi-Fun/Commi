@@ -10,7 +10,11 @@ export async function middleware(request: NextRequest) {
   // 1. 首页重定向逻辑（保留原有逻辑）
   if (pathname === '/') {
     if (ACTIVE_HOME_PAGE === 'invite') {
-      return NextResponse.redirect(new URL('/invite', request.url))
+      // 🎯 保留查询参数进行重定向
+      const redirectUrl = new URL('/invite', request.url)
+      // 复制原始 URL 的查询参数
+      redirectUrl.search = request.nextUrl.search
+      return NextResponse.redirect(redirectUrl)
     }
     return NextResponse.next()
   }

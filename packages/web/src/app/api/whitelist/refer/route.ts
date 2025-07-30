@@ -8,12 +8,12 @@ import { nextAuthOptions } from '../../auth/[...nextauth]/route'
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const session = await getServerSession(nextAuthOptions)
-  if (!session || !session.user.userId) {
+  if (!session) {
     return error('Unauthorized', 401)
   }
   const body = await req.json()
   const { referralCode } = body
-  const userDto = { userId: +session.user.userId, twitterId: session.user.twitterId }
+  const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
   const result = await whitelistService.refer(userDto as never, referralCode)
   if (!result.success) {
     return error(result.error || 'Failed to refer', 500)

@@ -110,6 +110,7 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
   const [hoveredMeme, setHoveredMeme] = useState<null | MemeType>(null)
   const [hoveredIndex, setHoveredIndex] = useState<number>(-1)
   const [clickSelected, setClickSelected] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
 
   const handleXIconClick = () => {
     window.open('https://x.com/commidotfun', '_blank', 'noopener,noreferrer')
@@ -118,7 +119,7 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
   return (
     <div
       className={
-        'w-screen min-h-screen flex flex-col transition-colors duration-300 bg-green01-500 overflow-hidden'
+        'w-screen min-h-screen flex flex-col transition-colors duration-500 bg-green01-500 overflow-hidden'
       }
       style={{ backgroundColor: hoveredMeme ? hoveredMeme.themeColor : undefined }}>
       <div className="hidden lg:block absolute inset-0 z-50 pointer-events-none">
@@ -133,6 +134,7 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
             src={meme.headSrc}
             alt=""
             onMouseEnter={() => {
+              setClickSelected(false)
               setHoveredMeme(meme)
               setHoveredIndex(index)
             }}
@@ -149,35 +151,6 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
           />
         ))}
       </div>
-
-      {/* {hoveredMeme?.isSpecial ? (
-        <Image
-          src={hoveredMeme.fullImageSrc}
-          alt=""
-          width={hoveredMeme?.width}
-          height={hoveredMeme?.height}
-          className="absolute -bottom-0 right-20 pointer-events-none"
-        />
-      ) : (
-        <div className="absolute -bottom-[11.4vw] -right-[6.6vw] w-[50vw] h-[50vw] z-10">
-          <div
-            style={{ transform: 'translateX(-50%)' }}
-            className={`absolute max-h-[60%] bottom-[11.4vw] left-[50%] pointer-events-none`}>
-            <Image
-              src={hoveredMeme ? hoveredMeme.fullImageSrc : '/images/commiCup.png'}
-              alt=""
-              width={hoveredMeme?.width || 400}
-              height={hoveredMeme?.height || 680}
-              className="max-h-[60%] w-auto object-contain"
-            />
-          </div>
-          <div
-            className={`w-full h-full bg-green01-900 rounded-full`}
-            style={{
-              backgroundColor: hoveredMeme ? hoveredMeme.secondaryColor : undefined,
-            }}></div>
-        </div>
-      )} */}
 
       <main className="relative z-40 flex-grow px-15 2xl:px-20">
         <div className="mt-10">
@@ -212,24 +185,25 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
         {hoveredMeme?.isSpecial ? (
           <img
             src={hoveredMeme.fullImageSrc}
-            className={`absolute bottom-0 ${hoveredMeme.fullImageClassName}`}
+            className={`absolute bottom-0 ${hoveredMeme.fullImageClassName} fade-in-image`}
             alt=""
           />
         ) : (
           <div className="relative w-[600px] 2xl:w-[850px] h-[560px] 2xl:h-[769] -mt-[560px] 2xl:-mt-[769px] right-0 overflow-hidden">
             <div
-              className={`rounded-full bg-green01-900 h-[700px] w-[700px] 2xl:h-[977px] 2xl:w-[977px]`}
+              className={`rounded-full bg-green01-900 h-[700px] w-[700px] 2xl:h-[977px] 2xl:w-[977px] transition-all duration-300 ease-out`}
               style={{ backgroundColor: hoveredMeme?.secondaryColor || '' }}></div>
             {hoveredMeme ? (
               <img
+                key={hoveredMeme.fullImageSrc}
                 src={hoveredMeme.fullImageSrc}
-                className={`absolute bottom-0 w-[500] h-[500] 2xl:w-[700] 2xl:h-[700] right-[0]`}
+                className={`absolute bottom-0 w-[500] h-[500] 2xl:w-[700] 2xl:h-[700] right-[0] meme-container-enter`}
                 alt=""
               />
             ) : (
               <>
                 <Image
-                  className="2xl:hidden absolute bottom-0 right-[102.71px] 2xl:right-[162px]"
+                  className="2xl:hidden absolute bottom-0 right-[102.71px] 2xl:right-[162px] fade-in-slow"
                   alt=""
                   width={293.79}
                   height={459.5}
@@ -237,7 +211,7 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
                 />
 
                 <Image
-                  className="hidden 2xl:block absolute bottom-0 right-[102.71px] 2xl:right-[162px]"
+                  className="hidden 2xl:block absolute bottom-0 right-[102.71px] 2xl:right-[162px] fade-in-slow"
                   alt=""
                   width={400}
                   height={621}

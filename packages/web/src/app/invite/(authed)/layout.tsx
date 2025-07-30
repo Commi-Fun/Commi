@@ -52,7 +52,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <footer className="sticky flex gap-6 justify-end pr-15 2xl:pr-20 py-10 mt-6">
         <TelegramIcon fontSize={'2.5rem'} className="cursor-pointer" />
         <XIcon fontSize={'2.5rem'} className="cursor-pointer" onClick={handleXIconClick} />
-        <div className="bg-main-Black h-10 px-4 flex items-center gap-2 text-main-White rounded-4xl cursor-pointer">
+        <div
+          onClick={() =>
+            window.open(
+              'https://docs.google.com/forms/d/1x6qMHY8DRFQroO5riwxJfexCxBGsmsN-bj0yTSyobXw/viewform?edit_requested=true',
+            )
+          }
+          className="bg-main-Black h-10 px-4 flex items-center gap-2 text-main-White rounded-4xl cursor-pointer">
           <span className="text-[22px] font-extrabold">contact us</span>
           <ChatDots className="text-[1.5rem]"></ChatDots>
         </div>

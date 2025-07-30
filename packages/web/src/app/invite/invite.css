@@ -69,3 +69,45 @@ body {
 .float-animation:nth-child(5n) {
   animation-delay: -1.5s;
 }
+
+/* 淡入动画 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.fade-in-image {
+  animation: fadeIn 5s ease-out forwards;
+}
+
+.fade-in-slow {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* 整体切换动画 - 与背景同步 */
+@keyframes memeAppear {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.meme-container-enter {
+  animation: memeAppear 0.5s ease-out forwards;
+  /* 与背景的 transition-all duration-500 保持一致 */
+}
+
+/* 背景颜色变化的同步动画 */
+.meme-background-sync {
+  transition: all 0.5s ease-out;
+}

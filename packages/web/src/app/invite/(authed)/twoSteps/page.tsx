@@ -39,6 +39,21 @@ const Page = () => {
   }
 
   useEffect(() => {
+    if (data?.user.status === WhitelistStatus.CLAIMED) {
+      router.push('/invite/finish')
+    }
+  }, [])
+
+  useEffect(() => {
+    const callCheck = fetch('/api/whitelist/check')
+      .then(value => value.json())
+      .then(value => {
+        setStatus(value.data.status)
+      })
+      .catch(error => {
+        console.error('Failed to check:', error)
+      })
+
     setInterval(() => {
       fetch('/api/whitelist/check')
         .then(value => value.json())
@@ -54,6 +69,7 @@ const Page = () => {
   const handleCheck = async () => {
     if (isSpinning) return // 防止重复点击
     setIsSpinning(true)
+    setTimeout(() => setIsSpinning(false), 1000)
     try {
       const result = await fetch('/api/whitelist/check')
       const data = await result.json()
@@ -61,8 +77,6 @@ const Page = () => {
     } catch (err) {
       console.error('Failed to check:', err)
     }
-
-    setIsSpinning(false)
   }
 
   const claim = async () => {
@@ -76,7 +90,7 @@ const Page = () => {
   const handlePostToTwitter = () => {
     const tweetText =
       "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later!"
-    const websiteUrl = 'https://commi.fun'
+    const websiteUrl = `https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
     const hashtags = 'Commi,Airdrop,Crypto'
 
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(websiteUrl)}&hashtags=${encodeURIComponent(hashtags)}`

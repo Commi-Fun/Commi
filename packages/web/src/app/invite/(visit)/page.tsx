@@ -2,13 +2,14 @@
 import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
 import { LoginButton } from '@/dashboard/components/LoginButton'
 import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
+import { WhitelistStatus } from '@/lib/services/whitelistService'
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, Suspense } from 'react'
 
 function InviteContent() {
   const router = useRouter()
-  const { status } = useSession()
+  const { status, data } = useSession()
   const searchparams = useSearchParams()
 
   useEffect(() => {
@@ -20,9 +21,11 @@ function InviteContent() {
           body: JSON.stringify({
             [REFERRAL_CODE_SEARCH_PARAM]: code,
           }),
-        }).finally(() => {
-          router.push('/invite/twoSteps')
         })
+      }
+      const userStatus = data.user.status
+      if (userStatus === WhitelistStatus.CLAIMED) {
+        router.push('/invite/finish')
       } else {
         router.push('/invite/twoSteps')
       }

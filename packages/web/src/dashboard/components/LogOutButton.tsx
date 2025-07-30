@@ -11,9 +11,19 @@ export const LogOutButton = (props: IconType) => {
   const router = useRouter()
 
   const logOut = async () => {
-    await signOut()
-    router.push('/invite')
-    setOpen(false)
+    try {
+      // 🎯 使用 signOut 的 callbackUrl 参数直接重定向
+      await signOut({
+        callbackUrl: '/invite',
+        redirect: true, // 确保重定向生效
+      })
+      setOpen(false)
+    } catch (error) {
+      console.error('Logout error:', error)
+      // 如果 signOut 失败，手动跳转
+      router.push('/invite')
+      setOpen(false)
+    }
   }
 
   return (

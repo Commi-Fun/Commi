@@ -20,6 +20,7 @@ export const nextAuthOptions: NextAuthOptions = {
           image: userProfile.profile_image_url,
           username: userProfile.username,
           email: userProfile.email,
+          userId: -1,
         }
 
         return standardizedUser
@@ -69,7 +70,8 @@ export const nextAuthOptions: NextAuthOptions = {
 
         user.referralCode = whitelist.referralCode
 
-        user.userId = dbUser.id.toString()
+        user.userId = dbUser.id
+        user.status = whitelist.status
 
         return true // 允许登录
       } catch (error) {
@@ -85,6 +87,7 @@ export const nextAuthOptions: NextAuthOptions = {
         token.name = user.name
         token.picture = user.image
         token.referralCode = user.referralCode
+        token.status = user.status
         if (user.username) {
           token.username = user.username
         }
@@ -101,6 +104,7 @@ export const nextAuthOptions: NextAuthOptions = {
       session.user.name = token.name
       session.user.image = token.picture
       session.user.referralCode = token.referralCode
+      session.user.status = token.status
 
       // Pass the username from the token to the session
       if (token.username) {
