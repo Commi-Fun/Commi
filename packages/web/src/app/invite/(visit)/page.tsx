@@ -16,6 +16,7 @@ function InviteContent() {
     if (status !== 'authenticated') {
       return
     }
+    console.log('searchparams', searchparams)
     const fff = async () => {
       const code = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
       console.log('refer code', code)
@@ -32,16 +33,18 @@ function InviteContent() {
         }
       }
       console.log('data?.user.status', data?.user.status)
-      if (data?.user.status === WhitelistStatus.CLAIMED) {
-        router.push('/invite/finish')
-      } else {
-        router.push('/invite/twoSteps')
-      }
+      // if (data?.user.status === WhitelistStatus.CLAIMED) {
+      //   router.push('/invite/finish')
+      // } else {
+      //   router.push('/invite/twoSteps')
+      // }
     }
     fff()
   }, [router, status, searchparams, data?.user.status])
 
-  const XCallbackUrl = `/invite?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+  const XCallbackUrl = data?.user?.referralCode
+    ? `/invite?${REFERRAL_CODE_SEARCH_PARAM}=${encodeURIComponent(data.user.referralCode)}`
+    : '/invite'
 
   return (
     <div className="relative overflow-hidden mt-35 px-2.5">
