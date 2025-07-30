@@ -2,7 +2,6 @@
 import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
 import { LoginButton } from '@/dashboard/components/LoginButton'
 import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
-import { WhitelistStatus } from '@/lib/services/whitelistService'
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, Suspense } from 'react'
@@ -13,21 +12,52 @@ function InviteContent() {
   const searchparams = useSearchParams()
 
   useEffect(() => {
+    console.log('Auth status:', status)
+    console.log('Session data:', data)
+
     if (status !== 'authenticated') {
       return
     }
-    console.log('searchparams', searchparams)
+
+    console.log('User authenticated:', data?.user)
+    console.log('Search params string:', searchparams.toString())
+
+    // 🎯 获取所有查询参数的方法
+    const allParams = {}
+    searchparams.forEach((value, key) => {
+      allParams[key] = value
+    })
+    console.log('All URL parameters:', allParams)
+
+    // 🎯 获取特定参数
+    const referralCode = searchparams.get('referralCode')
+    const utm_source = searchparams.get('utm_source')
+    const utm_campaign = searchparams.get('utm_campaign')
+
+    console.log('Specific parameters:', {
+      referralCode,
+      utm_source,
+      utm_campaign,
+    })
+
     const fff = async () => {
-      const code = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
-      console.log('refer code', code)
-      if (code) {
+      const referralCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
+      console.log('Processing referral code:', referralCode)
+      if (referralCode) {
         try {
-          await fetch('/api/whitelist/refer', {
+          console.log('Sending referral code to API:', referralCode)
+          const response = await fetch('/api/whitelist/refer', {
             method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
             body: JSON.stringify({
-              [REFERRAL_CODE_SEARCH_PARAM]: code,
+              [REFERRAL_CODE_SEARCH_PARAM]: referralCode,
             }),
           })
+
+          const result = await response.json()
+          console.log('Referral API response:', result)
         } catch (e) {
           console.error(e)
         }
@@ -40,11 +70,15 @@ function InviteContent() {
       // }
     }
     fff()
-  }, [router, status, searchparams, data?.user.status])
+  }, [router, status, searchparams, data?.user.status, data])
 
-  const XCallbackUrl = data?.user?.referralCode
-    ? `/invite?${REFERRAL_CODE_SEARCH_PARAM}=${encodeURIComponent(data.user.referralCode)}`
+  const referrerCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
+
+  const XCallbackUrl = referrerCode
+    ? `/invite?${REFERRAL_CODE_SEARCH_PARAM}=${encodeURIComponent(referrerCode)}`
     : '/invite'
+
+  console.log('XCallbackUrl', XCallbackUrl)
 
   return (
     <div className="relative overflow-hidden mt-35 px-2.5">
