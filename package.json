@@ -16,11 +16,11 @@
     "format": "pnpm -r run format",
     "test": "pnpm -r run test",
     "clean": "pnpm -r run clean && rimraf node_modules",
-    "start:invite:dev": "cd ./packages/web && pnpm start:invite:dev",
     "db:generate": "pnpm --filter @commi-dashboard/db generate",
     "db:push": "pnpm --filter @commi-dashboard/db push",
     "db:migrate": "pnpm --filter @commi-dashboard/db migrate",
     "web:dev": "pnpm --filter @commi-dashboard/web dev",
+    "web:start:invite": "pnpm --filter @commi-dashboard/web start:invite",
     "backend": "pnpm --filter @commi-dashboard/backend dev",
     "prepare": "husky install"
   },

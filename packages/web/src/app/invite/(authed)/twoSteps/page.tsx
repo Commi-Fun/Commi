@@ -42,18 +42,9 @@ const Page = () => {
     if (data?.user.status === WhitelistStatus.CLAIMED) {
       router.push('/invite/finish')
     }
-  }, [])
+  }, [data?.user.status, router])
 
   useEffect(() => {
-    const callCheck = fetch('/api/whitelist/check')
-      .then(value => value.json())
-      .then(value => {
-        setStatus(value.data.status)
-      })
-      .catch(error => {
-        console.error('Failed to check:', error)
-      })
-
     setInterval(() => {
       fetch('/api/whitelist/check')
         .then(value => value.json())

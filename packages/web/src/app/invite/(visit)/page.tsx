@@ -13,24 +13,32 @@ function InviteContent() {
   const searchparams = useSearchParams()
 
   useEffect(() => {
-    if (status === 'authenticated') {
+    if (status !== 'authenticated') {
+      return
+    }
+    const fff = async () => {
       const code = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
       if (code) {
-        fetch('/api/whitelist/refer', {
-          method: 'POST',
-          body: JSON.stringify({
-            [REFERRAL_CODE_SEARCH_PARAM]: code,
-          }),
-        })
-      }
-      const userStatus = data.user.status
-      if (userStatus === WhitelistStatus.CLAIMED) {
-        router.push('/invite/finish')
-      } else {
-        router.push('/invite/twoSteps')
+        try {
+          await fetch('/api/whitelist/refer', {
+            method: 'POST',
+            body: JSON.stringify({
+              [REFERRAL_CODE_SEARCH_PARAM]: code,
+            }),
+          })
+        } catch (e) {
+          console.error(e)
+        }
       }
     }
-  }, [router, status, searchparams])
+    if (data?.user.status === WhitelistStatus.CLAIMED) {
+      router.push('/invite/finish')
+    } else {
+      router.push('/invite/twoSteps')
+    }
+
+    fff()
+  }, [router, status, searchparams, data?.user.status])
 
   return (
     <div className="relative overflow-hidden mt-35 px-2.5">

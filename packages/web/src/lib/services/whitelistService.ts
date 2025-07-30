@@ -101,6 +101,18 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
       if (!referrer) {
         throw new NotFoundError('Referrer not found')
       }
+
+      const hasRefered = await tx.referral.findFirst({
+        where: {
+          referrerId: referrer.userId,
+          refereeId: data.userId,
+        },
+      })
+
+      if (hasRefered) {
+        throw new ConflictError('Already referred')
+      }
+
       const referralDomain: ReferralDomain = {
         referrerId: referrer.userId,
         referrerTwitterId: referrer.twitterId,
@@ -109,6 +121,7 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
       }
       const referralResult = await referralService.createReferral(tx, referralDomain)
       if (!referralResult) throw new DatabaseError('Failed to create referral')
+
       if (
         referrer.status === WhitelistStatus.REGISTERED ||
         referrer.status === WhitelistStatus.POSTED
