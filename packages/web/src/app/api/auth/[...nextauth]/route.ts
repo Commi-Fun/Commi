@@ -55,13 +55,13 @@ export const nextAuthOptions: NextAuthOptions = {
         })
 
         // 创建 whitelist
-        const whitelist = await prisma.whitelist.findFirst({
+        let whitelist = await prisma.whitelist.findFirst({
           where: {
             userId: dbUser.id
           }
         })
         if (whitelist === null) {
-          const whitelist = await prisma.whitelist.create({
+          whitelist = await prisma.whitelist.create({
             data: {
               userId: dbUser.id,
               twitterId: dbUser.twitterId,
@@ -70,10 +70,12 @@ export const nextAuthOptions: NextAuthOptions = {
             },
           })
           user.isNew = true
-          user.referralCode = whitelist.referralCode
-          user.status = whitelist.status
+        }else {
+          user.isNew = false
         }
         user.userId = dbUser.id
+        user.referralCode = whitelist.referralCode
+        user.status = whitelist.status
         
         return true // 允许登录
       } catch (error) {
