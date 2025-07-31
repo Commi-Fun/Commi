@@ -219,6 +219,12 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
           </div>
         )}
       </div>
+
+      <div style={{ display: 'none' }}>
+        {memes.map((meme, index) => {
+          return <img key={index} className={''} src={meme.fullImageSrc} alt="" />
+        })}
+      </div>
     </div>
   )
 }
