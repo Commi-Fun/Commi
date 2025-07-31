@@ -2,13 +2,14 @@
 import Image from 'next/image'
 import '@/app/globals.css'
 import '@/app/invite/invite.css'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { XIcon } from '@/components/icons/XIcon'
 import { ChatDots } from '@/components/icons/ChatDots'
 import { LogOutButton } from '@/dashboard/components/LogOutButton'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { ExitIcon } from '@/components/icons/ExitIcon'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { data, status } = useSession()
@@ -48,7 +49,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 alt=""
               />
               <span className="text-main-Black font-bold">{data.user.name}</span>
-              <LogOutButton className="text-[24px] lg:text-[30px] cursor-pointer" />
+              <LogOutButton className="hidden lg:block text-[24px] lg:text-[30px] cursor-pointer" />
+              <ExitIcon
+                className="hidden lg:block text-[24px] lg:text-[30px] cursor-pointer"
+                onClick={() => signOut()}
+              />
             </div>
           )}
         </div>
