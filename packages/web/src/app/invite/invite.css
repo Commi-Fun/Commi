@@ -12,8 +12,16 @@ body {
   text-shadow: 5.65px 5.65px 0 #000000;
 }
 
+.mobile-font-shdow-black {
+  text-shadow: 1.65px 1.65px 0 #000000;
+}
+
 .font-shadow-white {
   text-shadow: 5.65px 5.65px 0 #ffffff;
+}
+
+.mobile-font-shdow-white {
+  text-shadow: 1.65px 1.65px 0 #ffffff;
 }
 
 .stroke-black {
@@ -30,8 +38,6 @@ body {
 }
 
 .normal-button {
-  height: 40px;
-  width: 120px;
   display: flex;
   align-items: center;
   justify-content: center;

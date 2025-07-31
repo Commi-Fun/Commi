@@ -44,7 +44,7 @@ const CampaignCard = ({ address, members }: Props) => {
             <Typography fontSize={'1.125rem'} fontWeight={'bold'} pr={0.5}>
               Token name
             </Typography>
-            <XIcon color={customColors.blue[500]} />
+            <XIcon color={customColors.blue[500]} className="text-[1.5rem]" />
             <Users />
             <Typography
               sx={{

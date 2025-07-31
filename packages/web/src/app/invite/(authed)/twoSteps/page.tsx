@@ -101,45 +101,46 @@ const Page = () => {
 
   return (
     <div className="">
-      <p className="text-[46px] 2xl:text-[72px] text-main-Black font-extrabold font-shadow-white">
+      <p className="text-[40px] lg:text-[46px] 2xl:text-[72px] text-main-Black font-extrabold mobile-font-shdow-white lg:font-shadow-white">
         2 STEPS
       </p>
-      <p className="text-white font-extrabold font-shadow-black text-[46px] 2xl:text-[72px] stroke-black mt-1.5">
+      <p className="text-white font-extrabold mobile-font-shdow-white lg:font-shadow-black text-[30px] lg:text-[46px] 2xl:text-[72px] stroke-black mt-1.5">
         GET WHITELIST EARLY!
       </p>
       <div className="flex items-center justify-between w-full mt-15 2xl:mt-30">
         <div className="flex items-center gap-4">
-          <span className="w-4 h-4 rounded-full bg-main-Green04"></span>
-          <span className="text-2xl font-extrabold text-main-Black">Complete Tasks</span>
+          <span className="w-2 lg:w-4 h-2 lg:h-4 rounded-full bg-main-Green04"></span>
+          <span className="text-[18px] lg:text-2xl font-bold lg:font-extrabold text-main-Black">
+            Complete Tasks
+          </span>
         </div>
-        <div className="flex items-center gap-2 cursor-pointer" onClick={handleCheck}>
+        <div className="flex items-center gap-0.5 lg:gap-2 cursor-pointer" onClick={handleCheck}>
           <RedoIcon
             color={customColors.green01[200]}
-            fontSize={28}
-            className={`${isSpinning ? 'animate-spin' : ''}`}
+            className={`text-[18px] lg:text-[28px] ${isSpinning ? 'animate-spin' : ''}`}
           />
-          <span className="text-green01-200 text-[24px] font-bold">Check</span>
+          <span className="text-green01-200 text-[14px] lg:text-[24px] font-bold">Check</span>
         </div>
       </div>
 
       <div className="h-[360px] py-[50px] 2xl:py-[70px] relative pl-11">
         <div
-          className={`absolute left-1.5 top-0 bottom-0 w-1 ${statusNumber >= 3 ? 'bg-main-Green04' : 'bg-green01-900'} rounded-full`}></div>
+          className={`absolute left-0.5 lg:left-1.5 top-0 bottom-0 w-1 ${statusNumber >= 3 ? 'bg-main-Green04' : 'bg-green01-900'} rounded-full`}></div>
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
             {statusNumber >= 2 ? (
-              <div className="w-6 h-6 bg-main-Green01 rounded-full flex items-center justify-center">
-                <CheckBig className="text-main-Black text-[1.125rem]" />
+              <div className="w-4.5 h-4.5 lg:w-6 lg:h-6 bg-main-Green01 rounded-full flex items-center justify-center">
+                <CheckBig className="text-main-Black text-[14px] lg:text-[1.125rem]" />
               </div>
             ) : (
               <span
                 style={{ borderWidth: '2px' }}
-                className="w-6 h-6 rounded-full border-solid border-main-Black w-4 h-4"></span>
+                className="w-4.5 h-4.5 lg:w-6 lg:h-6 rounded-full border-solid border-main-Black"></span>
             )}
-            <span className="font-bold text-[1.125rem] cursor-pointer">Post to Join</span>
+            <span className="font-bold lg:text-[1.125rem] cursor-pointer">Post to Join</span>
           </div>
           <button
-            className="normal-button bg-main-Black text-main-Green01 cursor-pointer"
+            className="normal-button w-20 h-8 lg:w-30 lg:h-10 text-[12px] lg:text-[1rem] bg-main-Black text-main-Green01 cursor-pointer"
             onClick={handlePostToTwitter}>
             Post
           </button>
@@ -147,18 +148,18 @@ const Page = () => {
         <div className="flex justify-between mt-9">
           <div className="flex items-center gap-4">
             {statusNumber >= 3 ? (
-              <div className="w-6 h-6 bg-main-Green01 rounded-full flex items-center justify-center">
-                <CheckBig className="text-main-Black text-[1.125rem]" />
+              <div className="w-4.5 h-4.5 lg:w-6 lg:h-6 bg-main-Green01 rounded-full flex items-center justify-center">
+                <CheckBig className="text-main-Black text-[14px] lg:text-[1.125rem]" />
               </div>
             ) : (
               <span
                 style={{ borderWidth: '2px' }}
-                className="w-6 h-6 rounded-full border-solid border-main-Black w-4 h-4"></span>
+                className="w-4.5 h-4.5 lg:w-6 lg:h-6 rounded-full border-solid border-main-Black"></span>
             )}
-            <span className="font-bold text-[1.125rem]">Invite 1 friend to get access</span>
+            <span className="font-bold lg:text-[1.125rem]">Invite 1 friend to get access</span>
           </div>
           <CopyIcon
-            className={`cursor-pointer transition-colors ${copied ? 'text-main-Green01' : 'text-green01-200'}`}
+            className={`cursor-pointer transition-colors text-[22px] lg:text-[24px] ${copied ? 'text-main-Green01' : 'text-green01-200'}`}
             onClick={handleCopy}
           />
         </div>
@@ -171,8 +172,10 @@ const Page = () => {
       <div className="flex items-center justify-between py-1">
         <div className="flex gap-4 items-center">
           <span
-            className={`w-4 h-4 rounded-full ${statusNumber >= 3 ? 'bg-main-Green04' : 'bg-green01-1000'}`}></span>
-          <span className="text-2xl font-extrabold text-main-Black">Get Whitelist</span>
+            className={`w-2 lg:w-4 h-2 lg:h-4 rounded-full ${statusNumber >= 3 ? 'bg-main-Green04' : 'bg-green01-1000'}`}></span>
+          <span className="text-[18px] lg:text-2xl font-bold lg:font-extrabold text-main-Black">
+            Get Whitelist
+          </span>
         </div>
 
         {statusNumber === 3 && (

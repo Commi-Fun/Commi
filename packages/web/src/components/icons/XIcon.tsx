@@ -1,16 +1,15 @@
 import { IconType } from '@/types/Icon'
 
-export const XIcon = ({ fontSize = '24px', ...rest }: IconType) => {
+export const XIcon = (props: IconType) => {
   return (
     <svg
       width="1em"
       height="1em"
-      fontSize={fontSize}
-      {...rest}
+      {...props}
       viewBox="0 0 22 23"
       fill="none"
       xmlns="http://www.w3.org/2000/svg">
-      <circle cx="11" cy="11.5" r="11" fill="currentColor" />
+      <circle cx="11" cy="11.5" r="11" fill={props.fill || 'currentColor'} />
       <path
         d="M8.1977 6.47363H6.96033C6.55582 6.47363 6.31874 6.92898 6.55071 7.26036L13.1196 16.6445C13.2755 16.8673 13.5304 16.9999 13.8023 16.9999H15.0397C15.4442 16.9999 15.6813 16.5446 15.4493 16.2132L8.88039 6.82908C8.72445 6.60631 8.46963 6.47363 8.1977 6.47363Z"
         fill="#F3FBFF"

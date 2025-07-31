@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { XIcon } from '@/components/icons/XIcon'
@@ -108,6 +108,29 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
   const [hoveredMeme, setHoveredMeme] = useState<null | MemeType>(null)
   const [hoveredIndex, setHoveredIndex] = useState<number>(-1)
   const [clickSelected, setClickSelected] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 500)
+    }
+
+    // 防抖函数
+    const debounce = (func: () => void, delay: number) => {
+      let timeoutId: NodeJS.Timeout
+      return () => {
+        clearTimeout(timeoutId)
+        timeoutId = setTimeout(func, delay)
+      }
+    }
+
+    const debouncedCheckMobile = debounce(checkMobile, 150)
+
+    checkMobile()
+    window.addEventListener('resize', debouncedCheckMobile)
+
+    return () => window.removeEventListener('resize', debouncedCheckMobile)
+  }, [])
 
   const handleXIconClick = () => {
     window.open('https://x.com/commidotfun', '_blank', 'noopener,noreferrer')
@@ -149,9 +172,9 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
         ))}
       </div>
 
-      <main className="relative z-40 flex-grow px-15 2xl:px-20">
-        <div className="mt-10">
-          <div className="flex  relative gap-3 w-29 lg:w-79 h-fit aspect-[2.67/1] overflow-hidden">
+      <main className="relative z-40 flex-grow px-4.5 lg:px-15 2xl:px-20">
+        <div className="mt-2.5 lg:mt-10">
+          <div className="flex relative gap-3 w-29 lg:w-79 h-fit aspect-[2.67/1] overflow-hidden">
             <Image
               src={'/inviteLogo.png'}
               fill
@@ -161,24 +184,39 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
             />
           </div>
         </div>
+        <div className="flex relative lg:hidden w-full items-center justify-center mt-[46px]">
+          <div
+            className={`rounded-full bg-green01-900 w-[280px] h-[280px]`}
+            style={{ backgroundColor: hoveredMeme?.secondaryColor || '' }}></div>
+          <Image
+            src={'/images/mobileLogoAndFont.png'}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+            alt=""
+            width={175}
+            height={187.42}
+          />
+        </div>
         {children}
       </main>
-      <footer className="flex gap-6 bottom-10 left-20 px-15 2xl:px-20  py-10 mt-6">
-        <TelegramIcon fontSize={'2.5rem'} className="cursor-pointer" />
-        <XIcon fontSize={'2.5rem'} className="cursor-pointer" onClick={handleXIconClick} />
+      <footer className="flex justify-end lg:justify-start gap-4 lg:gap-6 px-4 lg:px-15 2xl:px-20 py-4 lg:py-10 mt-6">
+        <TelegramIcon className={`cursor-pointer text-[1.5rem] lg:text-[2.5rem]`} />
+        <XIcon
+          className={`cursor-pointer text-[1.5rem] lg:text-[2.5rem]`}
+          onClick={handleXIconClick}
+        />
         <div
-          className="bg-main-Black h-10 px-4 flex items-center gap-2 text-main-White rounded-4xl cursor-pointer"
+          className="bg-main-Black h-6 lg:h-10 px-2.5 lg:px-4 flex items-center gap-2 text-main-White rounded-4xl cursor-pointer"
           onClick={() =>
             window.open(
               'https://docs.google.com/forms/d/1x6qMHY8DRFQroO5riwxJfexCxBGsmsN-bj0yTSyobXw/viewform?edit_requested=true',
             )
           }>
-          <span className="text-[22px] font-extrabold">contact us</span>
-          <ChatDots className="text-[1.5rem]"></ChatDots>
+          <span className="text-[14px] lg:text-[22px] font-extrabold">contact us</span>
+          <ChatDots className="text-[14px] lg:text-[1.5rem]"></ChatDots>
         </div>
       </footer>
 
-      <div className="flex justify-end">
+      <div className="hidden lg:flex justify-end">
         {hoveredMeme?.isSpecial ? (
           <img
             src={hoveredMeme.fullImageSrc}
@@ -220,11 +258,13 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
         )}
       </div>
 
-      <div style={{ display: 'none' }}>
-        {memes.map((meme, index) => {
-          return <img key={index} className={''} src={meme.fullImageSrc} alt="" />
-        })}
-      </div>
+      {!isMobile && (
+        <div style={{ display: 'none' }}>
+          {memes.map((meme, index) => {
+            return <img key={index} className={''} src={meme.fullImageSrc} alt="" />
+          })}
+        </div>
+      )}
     </div>
   )
 }

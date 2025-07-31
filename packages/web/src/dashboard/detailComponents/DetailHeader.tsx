@@ -56,7 +56,7 @@ const DetailHeader = () => {
                   |
                 </Typography>
                 <Stack direction={'row'} gap={0.5}>
-                  <XIcon color={customColors.blue[500]} />
+                  <XIcon color={customColors.blue[500]} className="text-1.5rem" />
                   <Users />
                 </Stack>
               </Stack>
