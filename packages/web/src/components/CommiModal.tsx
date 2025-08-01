@@ -40,12 +40,14 @@ export default function CommiModal({
   size = 'medium',
   className,
 }: CommiModalProps) {
-  const closeIconPosition =
-    size === 'small'
-      ? { right: 16, top: 20 }
-      : size === 'medium'
-        ? { right: 24, top: 24 }
-        : { right: 32, top: 32 }
+  let closeIconPosition = ''
+  if (size === 'small') {
+    closeIconPosition = 'right-2 lg:right-4 top-2 lg:top-5'
+  } else if (size === 'medium') {
+    closeIconPosition = 'right-2 top-2 lg:right-3 lg:top-3'
+  } else {
+    closeIconPosition = 'right-8 top-8'
+  }
 
   return (
     <Dialog
@@ -66,7 +68,7 @@ export default function CommiModal({
       <CloseLgIcon
         onClick={onClose}
         color={customColors.blue[300]}
-        style={{ position: 'absolute', cursor: 'pointer', ...closeIconPosition }}
+        className={`absolute cursor-pointer ${closeIconPosition}`}
       />
       {children}
     </Dialog>

@@ -40,13 +40,25 @@ export const LogOutButton = (props: IconType) => {
             <ExitIcon className="text-[30px] text-main-White" />
             <span className="text-[18px]  lg:text-[1.5rem]">Log out of Twitter?</span>
           </div>
-          <div className="flex justify-between w-full px-9 gap-4">
-            <CommiButton className="h-8" theme="primary" sx={{ width: 166 }} onClick={logOut}>
+          <div className="flex justify-center w-full gap-4">
+            <CommiButton
+              sx={{
+                width: {
+                  lg: '166px',
+                },
+              }}
+              className="h-8"
+              theme="primary"
+              onClick={logOut}>
               log out
             </CommiButton>
             <CommiButton
               variant="outlined"
-              sx={{ width: 166, height: { sx: '32px', lg: '40px' } }}
+              sx={{
+                width: {
+                  lg: '166px',
+                },
+              }}
               onClick={() => setOpen(false)}>
               stay here
             </CommiButton>

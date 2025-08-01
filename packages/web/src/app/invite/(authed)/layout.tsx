@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/')
+      // router.push('/')
     }
   }, [router, status])
 
@@ -51,6 +51,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <LogOutButton className="text-[24px] lg:text-[30px] cursor-pointer" />
             </div>
           )}
+          <LogOutButton className="text-[24px] lg:text-[30px] cursor-pointer" />
         </div>
 
         <div className="px-[18px] lg:px-15  lg:relative z-40 2xl:pr-20 w-full flex justify-end mt-16 lg:mt-10">
