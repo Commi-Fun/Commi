@@ -2,14 +2,13 @@
 import Image from 'next/image'
 import '@/app/globals.css'
 import '@/app/invite/invite.css'
-import { signOut, useSession } from 'next-auth/react'
+import { useSession } from 'next-auth/react'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { XIcon } from '@/components/icons/XIcon'
 import { ChatDots } from '@/components/icons/ChatDots'
 import { LogOutButton } from '@/dashboard/components/LogOutButton'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { ExitIcon } from '@/components/icons/ExitIcon'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { data, status } = useSession()
@@ -26,7 +25,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   }, [router, status])
 
   return (
-    <div className="bg-green01-500 w-screen min-h-screen relative overflow-hidden flex flex-col pt-[18.5px] lx:pt-10">
+    <div className="bg-green01-500 w-screen min-h-svh relative overflow-hidden flex flex-col pt-[18.5px] lx:pt-10">
       <main className="w-full flex-grow overflow-y-auto">
         <div className="flex items-center justify-between gap-3 px-[18px] lg:px-20">
           <Image
@@ -49,11 +48,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 alt=""
               />
               <span className="text-main-Black font-bold">{data.user.name}</span>
-              <LogOutButton className="hidden lg:block text-[24px] lg:text-[30px] cursor-pointer" />
-              <ExitIcon
-                className="block lg:hidden text-[24px] lg:text-[30px] cursor-pointer"
-                onClick={() => signOut()}
-              />
+              <LogOutButton className="text-[24px] lg:text-[30px] cursor-pointer" />
             </div>
           )}
         </div>

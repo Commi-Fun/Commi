@@ -47,9 +47,15 @@ const CommiButton = ({
       justifyContent: 'center',
     }),
     ...(size === 'medium' && {
-      height: '40px',
+      height: {
+        xs: '32px',
+        lg: '40px',
+      },
       borderRadius: '20px',
-      fontSize: '1rem',
+      fontSize: {
+        xs: '14px',
+        lg: '1rem',
+      },
       minWidth: '120px',
     }),
     ...(size === 'large' &&

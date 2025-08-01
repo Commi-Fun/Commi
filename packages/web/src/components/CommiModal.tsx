@@ -68,7 +68,7 @@ export default function CommiModal({
         color={customColors.blue[300]}
         style={{ position: 'absolute', cursor: 'pointer', ...closeIconPosition }}
       />
-      <DialogContent className={className}>{children}</DialogContent>
+      {children}
     </Dialog>
   )
 }

@@ -31,21 +31,26 @@ export const LogOutButton = (props: IconType) => {
       <ExitIcon {...props} onClick={() => setOpen(true)} />
 
       <CommiModal
-        className="flex flex-col justify-center items-center gap-9"
+        className="flex flex-col justify-center items-center gap-9 max-w-screen p-0"
         size="small"
         open={open}
         onClose={() => setOpen(false)}>
-        <div className="flex items-center gap-2 mt-10">
-          <ExitIcon className="text-[30px] text-main-White" />
-          <span className="text-[1.5rem]">Log out of Twitter?</span>
-        </div>
-        <div className="flex justify-between w-full px-9 gap-4 mb-10">
-          <CommiButton theme="primary" sx={{ width: 166 }} onClick={logOut}>
-            log out
-          </CommiButton>
-          <CommiButton sx={{ width: 166 }} variant="outlined" onClick={() => setOpen(false)}>
-            stay here
-          </CommiButton>
+        <div className="w-full h-full p-[18px] lg:p-9 flex flex-col gap-4 lg:gap-9">
+          <div className="flex items-center gap-2 w-full justify-center">
+            <ExitIcon className="text-[30px] text-main-White" />
+            <span className="text-[18px]  lg:text-[1.5rem]">Log out of Twitter?</span>
+          </div>
+          <div className="flex justify-between w-full px-9 gap-4">
+            <CommiButton className="h-8" theme="primary" sx={{ width: 166 }} onClick={logOut}>
+              log out
+            </CommiButton>
+            <CommiButton
+              variant="outlined"
+              sx={{ width: 166, height: { sx: '32px', lg: '40px' } }}
+              onClick={() => setOpen(false)}>
+              stay here
+            </CommiButton>
+          </div>
         </div>
       </CommiModal>
     </div>

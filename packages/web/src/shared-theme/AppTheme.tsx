@@ -35,6 +35,15 @@ export default function AppTheme(props: AppThemeProps) {
   const theme = React.useMemo(
     () =>
       createTheme({
+        breakpoints: {
+          values: {
+            xs: 0, // 等同于 Tailwind 的移动端默认
+            sm: 640, // 对应 Tailwind 的 'sm'
+            md: 768, // 对应 Tailwind 的 'md'
+            lg: 1024, // 对应 Tailwind 的 'lg'
+            xl: 1280, // 对应 Tailwind 的 'xl'
+          },
+        },
         palette: {
           primary: {
             main: '#d0f685',

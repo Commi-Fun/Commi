@@ -139,11 +139,13 @@ const Page = () => {
             )}
             <span className="font-bold lg:text-[1.125rem] cursor-pointer">Post to Join</span>
           </div>
-          <button
-            className="normal-button w-20 h-8 lg:w-30 lg:h-10 text-[12px] lg:text-[1rem] bg-main-Black text-main-Green01 cursor-pointer"
-            onClick={handlePostToTwitter}>
-            Post
-          </button>
+          {statusNumber < 2 && (
+            <button
+              className="normal-button w-20 h-8 lg:w-30 lg:h-10 text-[12px] lg:text-[1rem] bg-main-Black text-main-Green01 cursor-pointer"
+              onClick={handlePostToTwitter}>
+              Post
+            </button>
+          )}
         </div>
         <div className="flex justify-between mt-9">
           <div className="flex items-center gap-4">
