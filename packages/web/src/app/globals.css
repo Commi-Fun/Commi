@@ -131,3 +131,7 @@ body {
   font-family: Nunito Sans, Nunito Sans Fallback;
   color: '#F3FBFF';
 }
+
+.primary-linear {
+  background: linear-gradient(to right, #48B98E 0%, #D1F791 100%);
+}

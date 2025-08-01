@@ -1,10 +1,9 @@
 'use client'
 import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
-import { GreenBlackXIcon } from '@/components/icons/GreenBlackXIcon'
+import { SlideButton } from '@/components/SlideButton'
 import { LoginButton } from '@/dashboard/components/LoginButton'
 import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
 import { WhitelistStatus } from '@/lib/services/whitelistService'
-import { customColors } from '@/shared-theme/themePrimitives'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, Suspense } from 'react'
@@ -83,7 +82,6 @@ function InviteContent() {
             FUTURE AIRDROP
           </span>
         </div>
-
         <div className="hidden lg:block mt-30 2xl:mt-50">
           <LoginButton callbackUrl={XCallbackUrl}>
             <button className="bg-black text-white rounded-lg text-3xl font-bold flex items-center gap-2 drop-shadow-lg hover:bg-gray-800 transition-colors px-10 py-3 cursor-pointer">
@@ -94,16 +92,8 @@ function InviteContent() {
         </div>
       </div>
       {/* 移动端登录按钮 */}
-      <div className="block absolute bottom-9 lg:hidden w-full px-4.5 left-0">
-        <div
-          onClick={connectWithX}
-          className="rounded-[30px] bg-main-Black w-full h-15 flex items-center justify-center relative">
-          <GreenBlackXIcon
-            className="text-[50px] absolute top-[5px] left-[5px]"
-            fill={customColors.main.Green01}
-          />
-          <span className="text-main-Green01 font-bold text-[18px]">Log in with X</span>
-        </div>
+      <div className="block absolute bottom-9 lg:hidden w-full px-10 left-0">
+        <SlideButton onSlideComplete={connectWithX} />
       </div>
     </>
   )
