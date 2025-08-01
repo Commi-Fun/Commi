@@ -51,7 +51,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <span className="text-main-Black font-bold">{data.user.name}</span>
               <LogOutButton className="hidden lg:block text-[24px] lg:text-[30px] cursor-pointer" />
               <ExitIcon
-                className="hidden lg:block text-[24px] lg:text-[30px] cursor-pointer"
+                className="block lg:hidden text-[24px] lg:text-[30px] cursor-pointer"
                 onClick={() => signOut()}
               />
             </div>

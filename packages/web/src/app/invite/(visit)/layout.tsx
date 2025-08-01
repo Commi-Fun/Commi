@@ -139,7 +139,7 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
   return (
     <div
       className={
-        'w-screen min-h-screen flex flex-col transition-colors duration-500 bg-green01-500 overflow-hidden'
+        'w-screen min-h-svh flex flex-col transition-colors duration-500 bg-green01-500 overflow-hidden'
       }
       style={{ backgroundColor: hoveredMeme ? hoveredMeme.themeColor : undefined }}>
       <div className="hidden lg:block absolute inset-0 z-50 pointer-events-none">
