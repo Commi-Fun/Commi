@@ -27,7 +27,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="bg-green01-500 w-screen min-h-svh relative overflow-hidden flex flex-col pt-[18.5px] lx:pt-10">
       <main className="w-full flex-grow overflow-y-auto">
-        <div className="flex items-center justify-between gap-3 px-[18px] lg:px-20">
+        <div className="hidden lg:flex items-center justify-between gap-3 px-[18px] lg:px-20">
           <Image
             src={'/inviteLogo.png'}
             width={317.67}
@@ -48,10 +48,26 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 alt=""
               />
               <span className="text-main-Black font-bold">{data.user.name}</span>
-              <LogOutButton className="text-[24px] lg:text-[30px] cursor-pointer" />
+              <LogOutButton className="text-[30px] cursor-pointer" />
             </div>
           )}
-          <LogOutButton className="text-[24px] lg:text-[30px] cursor-pointer" />
+        </div>
+        <div className="flex lg:hidden items-center justify-between px-[18px]">
+          {data?.user && (
+            <>
+              <div className="flex items-center gap-4">
+                <img
+                  className="rounded-full"
+                  src={data?.user?.image || ''}
+                  width={24}
+                  height={24}
+                  alt=""
+                />
+                <span className="text-main-Black font-bold">{data.user.name}</span>
+              </div>
+              <LogOutButton className="text-[24px] cursor-pointer" />
+            </>
+          )}
         </div>
 
         <div className="px-[18px] lg:px-15  lg:relative z-40 2xl:pr-20 w-full flex justify-end mt-16 lg:mt-10">
