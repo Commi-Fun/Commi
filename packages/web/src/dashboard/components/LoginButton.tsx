@@ -57,7 +57,12 @@ export const LoginButton = ({
       {renderButton()}
 
       <CommiModal open={openSignInModal} onClose={() => setOpenSignInModal(false)} size="small">
-        <Stack direction={'column'} alignItems="center" justifyContent="center" spacing={2}>
+        <Stack
+          className="p-6"
+          direction={'column'}
+          alignItems="center"
+          justifyContent="center"
+          spacing={2}>
           <Image alt="" width={180} height={60} src={'/images/commiLogoAndFont.png'} />
           <CommiTypo color="white" type="heading-h1">
             Log in / Sign up
