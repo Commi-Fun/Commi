@@ -8,3 +8,4 @@ description: Research before implementation
 3. Use subagents to verify details or investigate particular questions it might have to tends context availability without much downside in terms of lost efficiency.
 4. ASK CRUCIAL QUESTIONS everytime you receive a demand
 5. Use "think hard" everytime
+6. Keep implementation simple
