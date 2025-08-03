@@ -1,0 +1,98 @@
+import { Button, ButtonProps as MuiButtonProps } from '@mui/material'
+import { SxProps, Theme } from '@mui/material/styles'
+import { customColors, primaryLinear } from '@/shared-theme/themePrimitives'
+import CommiTypo from './CommiTypo'
+
+interface CommiButtonProps extends Omit<MuiButtonProps, 'variant' | 'size' | 'color'> {
+  children: React.ReactNode
+  size?: 'small' | 'medium' | 'large'
+  variant?: 'contained' | 'outlined'
+  theme?: 'primary' | 'primaryLinear' | 'default'
+  color?: string
+  weight?: 'bold' | 'semibold'
+}
+
+const themeSx = {
+  primary: {
+    backgroundColor: customColors.main.Green01,
+    color: customColors.main.Black,
+  },
+  primaryLinear: {
+    background: primaryLinear,
+    color: customColors.main.Black,
+  },
+  default: {
+    backgroundColor: 'unset',
+    color: customColors.main.White,
+  },
+}
+
+const CommiButton = ({
+  children,
+  size = 'medium',
+  variant = 'contained',
+  color = '',
+  weight,
+  sx: incomingSx,
+  theme = 'default',
+  ...rest
+}: CommiButtonProps) => {
+  const sizeSx: SxProps<Theme> = {
+    ...(size === 'small' && {
+      height: '24px',
+      fontSize: '0.875rem',
+      px: 1.125,
+      fontWeight: '600',
+      borderRadius: '60px',
+      justifyContent: 'center',
+    }),
+    ...(size === 'medium' && {
+      height: {
+        xs: '32px',
+        lg: '40px',
+      },
+      borderRadius: '20px',
+      fontSize: {
+        xs: '14px',
+        lg: '1rem',
+      },
+      minWidth: '120px',
+    }),
+    ...(size === 'large' &&
+      {
+        // height: '48px',
+        // fontSize: '1.125rem',
+      }),
+  }
+
+  const fontSx: Record<string, string> =
+    size === 'medium'
+      ? {
+          type: 'content' as const,
+          weight: 'bold' as const,
+        }
+      : {}
+
+  const cusSx: SxProps<Theme> = {
+    justifyContent: 'center !important',
+  }
+
+  const colorSx = { ...(themeSx[theme] || {}) }
+
+  if (variant === 'outlined') {
+    colorSx.color = customColors.main.Green01
+  }
+
+  const finalSx = [sizeSx, colorSx, cusSx]
+  if (incomingSx) {
+    finalSx.push(incomingSx as never)
+  }
+
+  return (
+    <Button variant={variant} sx={finalSx} {...rest}>
+      {children}
+    </Button>
+  )
+}
+
+export default CommiButton

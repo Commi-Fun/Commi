@@ -6,19 +6,31 @@
   "types": "./src/index.ts",
   "scripts": {
     "generate": "prisma generate",
-    "push": "prisma db push",
-    "migrate": "prisma migrate dev",
-    "migrate:deploy": "prisma migrate deploy",
-    "studio": "prisma studio",
+    "push:dev": "dotenv -e .env.dev -- prisma db push",
+    "push:prod": "dotenv -e .env.prod -- prisma db push",
+    "migrate:dev": "dotenv -e .env.dev -- prisma migrate dev",
+    "migrate:prod": "dotenv -e .env.prod -- prisma migrate deploy",
+    "migrate:reset:dev": "dotenv -e .env.dev -- prisma migrate reset",
+    "migrate:reset:prod": "dotenv -e .env.prod -- prisma migrate reset",
+    "studio:dev": "dotenv -e .env.dev -- prisma studio",
+    "studio:prod": "dotenv -e .env.prod -- prisma studio",
     "format": "prisma format",
     "clean": "rimraf node_modules .turbo dist generated"
   },
   "dependencies": {
-    "@prisma/client": "^5.9.1"
+    "@nestjs/common": "^11.1.5",
+    "@prisma/client": "^5.22.0"
   },
   "devDependencies": {
-    "prisma": "^5.9.1",
+    "@nestjs/testing": "^11.1.5",
+    "@types/jest": "^30.0.0",
+    "@types/node": "^24.1.0",
+    "dotenv-cli": "^10.0.0",
+    "prisma": "^5.22.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.3.3"
+  },
+  "directories": {
+    "test": "tests"
   }
 }

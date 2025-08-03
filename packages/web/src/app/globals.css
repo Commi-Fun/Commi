@@ -1,0 +1,137 @@
+@import 'tailwindcss';
+/* @import '../styles/fonts.css'; */
+
+@theme {
+  --color-main-White: #f3fbff;
+  --color-main-Black: #020f15;
+  --color-main-Red: #f76472;
+  --color-main-Green02: #078b5a;
+  --color-main-Green01: #c9f572;
+  --color-main-Green04: #078B5A;
+  --color-green01-100: #14190b;
+  --color-green01-200: #384520;
+  --color-green01-300: #5c7134;
+  --color-green01-400: #819d49;
+  --color-green01-500: #a5c95d;
+  --color-green01-600: #c9f572;
+  --color-green01-700: #d0f685;
+  --color-green01-800: #d7f897;
+  --color-green01-900: #def9aa;
+  --color-green01-1000: #e6fabd;
+  --color-green01-1100: #edfccf;
+  --color-green02-100: #022719;
+  --color-green02-200: #034029;
+  --color-green02-300: #03593a;
+  --color-green02-400: #05724a;
+  --color-green02-500: #058b5a;
+  --color-green02-600: #078b5a;
+  --color-green02-700: #0ac781;
+  --color-green02-800: #1cf4a3;
+  --color-green02-900: #57f7bb;
+  --color-green02-1000: #e6fabd;
+  --color-green02-1100: #cefdeb;
+  --color-red-100: #190a0b;
+  --color-red-200: #451c20;
+  --color-red-300: #722e35;
+  --color-red-400: #9e4049;
+  --color-red-500: #cb525e;
+  --color-red-600: #f76472;
+  --color-red-700: #f87986;
+  --color-red-800: #f98e99;
+  --color-red-900: #faa4ac;
+  --color-red-1000: #fbb9c0;
+  --color-red-1100: #fdced3;
+  --color-blue-100: #e6e7e8;
+  --color-blue-200: #b8bcbd;
+  --color-blue-300: #8b9193;
+  --color-blue-400: #5d6569;
+  --color-blue-500: #303a3f;
+  --color-blue-600: #020f15;
+  --color-blue-700: #0a4865;
+  --color-blue-800: #1181b4;
+  --color-blue-900: #31b1eb;
+  --color-blue-1000: #81cff3;
+  --color-blue-1100: #d0edfb;
+  --color-blue-1200: #172028;
+  --color-blue-1300: #152026;
+
+  /* 自定义字体大小 */
+  --font-size-3_5xl: 56px;
+  --font-size-10xl: 160px;
+  --font-size-11xl: 192px;
+  --font-size-12xl: 224px;
+  --font-size-13xl: 256px;
+  --font-size-14xl: 288px;
+  --font-size-15xl: 320px;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* 自定义文字阴影和描边效果 */
+.text-shadow-bold {
+  text-shadow: 6px 6px 0 #000;
+}
+
+.text-shadow-stroke {
+  text-shadow: 2px 2px 0 #000;
+}
+
+.text-stroke-black {
+  -webkit-text-stroke: 2px #000000;
+}
+
+.text-stroke-white {
+  -webkit-text-stroke: 2px #ffffff;
+}
+
+.text-hero-bold {
+  text-shadow: 6px 6px 0 #000;
+  -webkit-text-stroke: 2px #000000;
+}
+
+.text-hero-light {
+  text-shadow: 6px 6px 0 #000;
+  -webkit-text-stroke: 2px #ffffff;
+}
+
+.text-outline-dark {
+  -webkit-text-stroke: 2px #000000;
+}
+
+.text-outline-light {
+  -webkit-text-stroke: 2px #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  --primary-color: #00c5b3;
+  --orange-100: #fe6100;
+  --gray-100: #1c292d;
+}
+
+.MuiTypography-root {
+  font-family: Nunito Sans, Nunito Sans Fallback;
+  color: '#F3FBFF';
+}
+
+.primary-linear {
+  background: linear-gradient(to right, #48B98E 0%, #D1F791 100%);
+}

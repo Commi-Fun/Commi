@@ -1,0 +1,43 @@
+/* Nunito Sans 字体 */
+@font-face {
+  font-family: 'Nunito Sans';
+  src: url('/Users/zhanghan/projects/Post2Earn/frontend/public/Nunito_Sans/NunitoSans-Italic-VariableFont_YTLC,opsz,wdth,wght.ttf')
+    format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito Sans';
+  src: url('/Users/zhanghan/projects/Post2Earn/frontend/public/Nunito_Sans/NunitoSans-VariableFont_YTLC,opsz,wdth,wght.ttf')
+    format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Nunito 可变字体 - 推荐使用，支持所有字重 */
+@font-face {
+  font-family: 'Nunito';
+  src: url('/Nunito/Nunito-VariableFont_wght.ttf') format('truetype');
+  font-weight: 200 1000; /* 支持从 ExtraLight 到 Black 的所有字重 */
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nunito';
+  src: url('/Nunito/Nunito-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 200 1000; /* 支持从 ExtraLight 到 Black 的所有斜体字重 */
+  font-style: italic;
+  font-display: swap;
+}
+
+.font-nunito {
+  font-family: 'Nunito', sans-serif;
+}
+
+.font-nunito-sans {
+  font-family: 'Nunito Sans', sans-serif;
+}

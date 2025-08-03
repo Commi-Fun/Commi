@@ -1,9 +1,12 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated"
+  output   = "../generated/prisma/client"
 }
 
 datasource db {
@@ -12,54 +15,53 @@ datasource db {
 }
 
 model User {
-  id                String   @id @default(cuid())
-  twitterId         String   @unique
-  username          String   @unique
-  name              String
-  profileImageUrl   String?
-  verified          Boolean  @default(false)
-  description       String?
-  followersCount    Int      @default(0)
-  followingCount    Int      @default(0)
-  tweetsCount       Int      @default(0)
-  listedCount       Int      @default(0)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id              Int      @id @default(autoincrement())
+  twitterId       String   @unique @db.VarChar(20)
+  handle          String   @unique @db.VarChar(20)
+  name            String
+  profileImageUrl String?
+  verified        Boolean  @default(false)
+  description     String?
+  followersCount  Int      @default(0)
+  followingCount  Int      @default(0)
+  tweetsCount     Int      @default(0)
+  listedCount     Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 
-  tweets            Tweet[]
-  nftDistributions  NFTDistribution[]
+  tweets           Tweet[]
+  nftDistributions NFTDistribution[]
 
-  @@index([username])
   @@index([createdAt])
 }
 
 model Tweet {
-  id                String   @id @default(cuid())
-  tweetId           String   @unique
-  text              String
-  userId            String
-  user              User     @relation(fields: [userId], references: [id])
-  createdAt         DateTime
-  retweetCount      Int      @default(0)
-  replyCount        Int      @default(0)
-  likeCount         Int      @default(0)
-  quoteCount        Int      @default(0)
-  viewCount         Int      @default(0)
-  bookmarkCount     Int      @default(0)
-  isRetweet         Boolean  @default(false)
-  isQuote           Boolean  @default(false)
-  isReply           Boolean  @default(false)
-  hasMedia          Boolean  @default(false)
-  tickerSymbols     String[] // Array of ticker symbols mentioned
-  influenceScore    Float?   // Calculated influence score
-  fetchedAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id             Int      @id @default(autoincrement())
+  tweetId        String   @unique @db.VarChar(20)
+  text           String
+  userId         Int
+  user           User     @relation(fields: [userId], references: [id])
+  createdAt      DateTime
+  retweetCount   Int      @default(0)
+  replyCount     Int      @default(0)
+  likeCount      Int      @default(0)
+  quoteCount     Int      @default(0)
+  viewCount      Int      @default(0)
+  bookmarkCount  Int      @default(0)
+  isRetweet      Boolean  @default(false)
+  isQuote        Boolean  @default(false)
+  isReply        Boolean  @default(false)
+  hasMedia       Boolean  @default(false)
+  tickerSymbols  String[] // Array of ticker symbols mentioned
+  influenceScore Float? // Calculated influence score
+  fetchedAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 
-  parentTweetId     String?
-  parentTweet       Tweet?   @relation("TweetReplies", fields: [parentTweetId], references: [id])
-  replies           Tweet[]  @relation("TweetReplies")
+  parentTweetId Int?
+  parentTweet   Tweet?  @relation("TweetReplies", fields: [parentTweetId], references: [id])
+  replies       Tweet[] @relation("TweetReplies")
 
-  nftDistributions  NFTDistribution[]
+  nftDistributions NFTDistribution[]
 
   @@index([userId])
   @@index([createdAt])
@@ -68,20 +70,20 @@ model Tweet {
 }
 
 model NFTDistribution {
-  id                String   @id @default(cuid())
-  userId            String
-  user              User     @relation(fields: [userId], references: [id])
-  tweetId           String
-  tweet             Tweet    @relation(fields: [tweetId], references: [id])
-  nftTokenId        String?
-  transactionHash   String?
-  walletAddress     String
-  amount            Int      @default(1)
-  status            DistributionStatus @default(PENDING)
-  blockchain        Blockchain @default(SOLANA)
-  error             String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id              Int                @id @default(autoincrement())
+  userId          Int
+  user            User               @relation(fields: [userId], references: [id])
+  tweetId         Int
+  tweet           Tweet              @relation(fields: [tweetId], references: [id])
+  nftTokenId      String?
+  transactionHash String?
+  walletAddress   String
+  amount          Int                @default(1)
+  status          DistributionStatus @default(PENDING)
+  blockchain      Blockchain         @default(SOLANA)
+  error           String?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 
   @@unique([userId, tweetId])
   @@index([status])
@@ -90,23 +92,23 @@ model NFTDistribution {
 }
 
 model SystemConfig {
-  id                String   @id @default(cuid())
-  key               String   @unique
-  value             Json
-  description       String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       Json
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model CrawlerLog {
-  id                String   @id @default(cuid())
-  type              String   // "user_fetch", "tweet_fetch", "community_fetch"
-  status            String   // "success", "error", "partial"
-  message           String?
-  metadata          Json?    // Additional data like counts, errors, etc.
-  startedAt         DateTime
-  completedAt       DateTime?
-  createdAt         DateTime @default(now())
+  id          Int       @id @default(autoincrement())
+  type        String // "user_fetch", "tweet_fetch", "community_fetch"
+  status      String // "success", "error", "partial"
+  message     String?
+  metadata    Json? // Additional data like counts, errors, etc.
+  startedAt   DateTime
+  completedAt DateTime?
+  createdAt   DateTime  @default(now())
 
   @@index([type])
   @@index([status])
@@ -127,4 +129,86 @@ enum Blockchain {
   POLYGON
   ARBITRUM
   OPTIMISM
+}
+
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  address   String   @unique @db.VarChar(44)
+  isPrimary Boolean  @default(false)
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Campaign {
+  id              Int      @id @default(autoincrement())
+  name            String
+  description     String?
+  tokenAddress    String   @db.VarChar(44)
+  tokenName       String
+  totalAmount     BigInt
+  remainingAmount BigInt
+  marketCap       BigInt
+  startTime       DateTime
+  endTime         DateTime
+  tags            String[]
+  socialLinks     Json?
+  status          String   @default("pending") @db.VarChar(10) // 'pending', 'active', 'ended', 'canceled'
+  creatorId       Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index(tokenAddress)
+  @@index(endTime)
+  @@index(creatorId)
+  @@index([tags], type: Gin)
+}
+
+model TokenPool {
+  id         Int      @id @default(autoincrement())
+  campaignId Int
+  txHash     String   @db.VarChar(88)
+  amount     BigInt
+  type       String   @default("launch") @db.VarChar(6) // 'launch', 'fund'
+  creatorId  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index(campaignId)
+  @@index(creatorId)
+}
+
+model Participation {
+  id           Int      @id @default(autoincrement())
+  campaignId   Int
+  userId       Int
+  scores       Int
+  rewardAmount BigInt
+  claimStatus  String   @default("can_not_claim") @db.VarChar(15) // 'can_not_claim', 'can_claim','not_claimed', 'claimed'
+  txHash       String   @db.VarChar(88)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index(campaignId)
+  @@index(userId)
+}
+
+model Whitelist {
+  id           Int    @id @default(autoincrement())
+  userId       Int    @unique
+  twitterId    String @unique @db.VarChar(20)
+  referralCode String @unique
+  status       String @default("registered") @db.VarChar(15) // 'registered', 'can_claim', 'claimed'
+}
+
+model Referral {
+  id                Int    @id @default(autoincrement())
+  referrerId        Int
+  referrerTwitterId String @db.VarChar(20)
+  refereeId         Int
+  refereeTwitterId  String @db.VarChar(20)
+
+  @@unique([referrerId, refereeId])
 }
