@@ -21,6 +21,7 @@
     "db:migrate": "pnpm --filter @commi-dashboard/db migrate",
     "web:dev": "pnpm --filter @commi-dashboard/web dev",
     "web:start:invite": "pnpm --filter @commi-dashboard/web start:invite",
+    "web:start:dev:invite": "pnpm --filter @commi-dashboard/web start:dev:invite",
     "backend": "pnpm --filter @commi-dashboard/backend dev",
     "prepare": "husky install"
   },
