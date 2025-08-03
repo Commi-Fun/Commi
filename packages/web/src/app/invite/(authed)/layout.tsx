@@ -20,7 +20,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      // router.push('/')
+      router.push('/')
     }
   }, [router, status])
 
