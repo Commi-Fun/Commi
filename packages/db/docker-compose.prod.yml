@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  postgres-prod:
+    image: postgres:16-alpine
+    container_name: commi_dashboard_db_prod
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-prod_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-prod_secure_password_2024}
+      POSTGRES_DB: ${POSTGRES_DB:-prod}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+      - postgres_prod_backups:/backups
+      - ./scripts/backup.sh:/usr/local/bin/backup.sh:ro
+    networks:
+      - commi_prod_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-prod_user} -d ${POSTGRES_DB:-prod}"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+        reservations:
+          cpus: '1.0'
+          memory: 2G
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  postgres-backup:
+    image: postgres:16-alpine
+    container_name: commi_dashboard_db_backup
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-prod_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-prod_secure_password_2024}
+      POSTGRES_DB: ${POSTGRES_DB:-ai_airdrop_prod}
+      BACKUP_SCHEDULE: ${BACKUP_SCHEDULE:-0 2 * * *}  # Daily at 2 AM
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-7}
+    volumes:
+      - postgres_prod_backups:/backups
+      - ./scripts/backup-cron.sh:/usr/local/bin/backup-cron.sh:ro
+    networks:
+      - commi_prod_network
+    depends_on:
+      postgres-prod:
+        condition: service_healthy
+    command: ["/usr/local/bin/backup-cron.sh"]
+
+volumes:
+  postgres_prod_data:
+    name: commi_dashboard_postgres_prod_data
+  postgres_prod_backups:
+    name: commi_dashboard_postgres_prod_backups
+
+networks:
+  commi_prod_network:
+    name: commi_prod_network
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
