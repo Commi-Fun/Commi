@@ -40,11 +40,9 @@ function InviteContent() {
         }
       }
       if (data?.user.status === WhitelistStatus.CLAIMED) {
-        // router.push('/invite/finish')
-        window.location.href = '/invite/finish'
+        router.push('/invite/finish')
       } else {
-        // router.push('/invite/twoSteps')
-        window.location.href = '/invite/twoSteps'
+        router.push('/invite/twoSteps')
       }
     }
     fff()
