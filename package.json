@@ -23,6 +23,9 @@
     "web:start:invite": "pnpm --filter @commi-dashboard/web start:invite",
     "web:start:dev:invite": "pnpm --filter @commi-dashboard/web start:dev:invite",
     "backend": "pnpm --filter @commi-dashboard/backend dev",
+    "dashboard": "pnpm --filter @commi-dashboard/dashboard dev",
+    "dashboard:build": "pnpm --filter @commi-dashboard/dashboard build",
+    "dashboard:start": "pnpm --filter @commi-dashboard/dashboard start",
     "prepare": "husky install"
   },
   "devDependencies": {
