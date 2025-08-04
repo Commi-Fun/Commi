@@ -1,6 +1,6 @@
 'use client'
 import CopyIcon from '@/components/icons/CopyIcon'
-import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
+import { copyText, REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
 import { Popover } from '@mui/material'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
@@ -11,7 +11,7 @@ const Page = () => {
   const [copied, setCopied] = useState(false)
   const { data } = useSession()
 
-  const copyText = `🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later: https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+  const referalUrl = `https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     if (invitedFriends.length === 0) {
@@ -26,7 +26,7 @@ const Page = () => {
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(copyText)
+      await navigator.clipboard.writeText(copyText + referalUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 1000) // 2秒后重置状态
     } catch (err) {
@@ -76,8 +76,7 @@ const Page = () => {
         />
       </div>
       <div className="mt-4 bg-green01-800 font-medium lg:font-[400] p-[18px] lg:p-6 rounded-2xl text-[14px] lg:text-[1.125rem]">
-        🧃Airdrop season’s coming. I’m in Commi @commidotfun early — whitelist now or regret
-        later:...
+        {copyText + referalUrl}
       </div>
 
       <p

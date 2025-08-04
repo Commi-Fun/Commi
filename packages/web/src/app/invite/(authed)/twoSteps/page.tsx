@@ -3,7 +3,7 @@ import CommiButton from '@/components/CommiButton'
 import CheckBig from '@/components/icons/CheckBig'
 import CopyIcon from '@/components/icons/CopyIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
-import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
+import { copyText, REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
 import { WhitelistStatus } from '@/lib/services/whitelistService'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { useSession } from 'next-auth/react'
@@ -25,12 +25,11 @@ const Page = () => {
 
   const [status, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
   const statusNumber = STATUS_MAP[status] || 0
-
-  const copyText = `🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later: https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+  const referalUrl = `https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(copyText)
+      await navigator.clipboard.writeText(copyText + referalUrl)
       setCopied(true)
       setTimeout(() => setCopied(false), 1000) // 2秒后重置状态
     } catch (err) {
@@ -81,12 +80,10 @@ const Page = () => {
   }
 
   const handlePostToTwitter = () => {
-    const tweetText =
-      "🧃Airdrop season's coming. I'm in Commi @commidotfun early — whitelist now or regret later!"
-    const websiteUrl = `https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+    // const websiteUrl = `https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
     const hashtags = 'Commi,Airdrop,Crypto'
 
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}&url=${encodeURIComponent(websiteUrl)}&hashtags=${encodeURIComponent(hashtags)}`
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(copyText)}&url=${encodeURIComponent(referalUrl)}&hashtags=${encodeURIComponent(hashtags)}`
 
     window.open(twitterUrl, '_blank')
 
@@ -165,10 +162,7 @@ const Page = () => {
             onClick={handleCopy}
           />
         </div>
-        <div className="mt-4 bg-green01-800 p-6 rounded-2xl">
-          🧃Airdrop season’s coming. I’m in Commi @commidotfun early — whitelist now or regret
-          later:...
-        </div>
+        <div className="mt-4 bg-green01-800 p-6 rounded-2xl">{copyText + referalUrl}</div>
       </div>
 
       <div className="flex items-center justify-between py-1">
