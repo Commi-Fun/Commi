@@ -69,7 +69,6 @@ export async function getWhitelist(twitterId: string): Promise<ServiceResult<Whi
 }
 
 export async function post(data: UserDTO): Promise<ServiceResult<WhitelistDto>> {
-  console.log('data', data)
   try {
     const result = await prisma.whitelist.update({
       where: {
@@ -115,8 +114,6 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
         },
       })
 
-      console.log('hasRefered', hasRefered)
-
       if (hasRefered) {
         throw new ConflictError('Already referred')
       }
@@ -138,8 +135,6 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
         refereeTwitterId: data.twitterId,
       }
 
-      console.log('referralDomain', referralDomain)
-
       const referralResult = await referralService.createReferral(tx, referralDomain)
       if (!referralResult) throw new DatabaseError('Failed to create referral')
 
@@ -156,7 +151,7 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
             status: WhitelistStatus.REFERRED,
           },
         })
-        if (!updateResult) throw new DatabaseError('Failed to update referrer whitelist')
+        if (!updateResult) console.log("Update referrer status error:", referralDomain)
       }
     })
     return createSuccessResult(null)
