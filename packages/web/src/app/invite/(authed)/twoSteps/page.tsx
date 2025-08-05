@@ -80,10 +80,7 @@ const Page = () => {
   }
 
   const handlePostToTwitter = () => {
-    // const websiteUrl = `https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
-    const hashtags = 'Commi,Airdrop,Crypto'
-
-    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(copyText)}&url=${encodeURIComponent(referalUrl)}&hashtags=${encodeURIComponent(hashtags)}`
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(copyText)}&url=${encodeURIComponent(referalUrl)}`
 
     window.open(twitterUrl, '_blank')
 
