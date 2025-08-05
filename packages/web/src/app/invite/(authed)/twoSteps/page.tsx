@@ -8,7 +8,7 @@ import { WhitelistStatus } from '@/lib/services/whitelistService'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 const STATUS_MAP = {
   [WhitelistStatus.REGISTERED]: 1,
@@ -21,7 +21,8 @@ const Page = () => {
   const [copied, setCopied] = useState(false)
   const [isSpinning, setIsSpinning] = useState(false)
   const router = useRouter()
-  const { data } = useSession()
+  const { data, update } = useSession()
+  console.log('data.user', data?.user)
 
   const [status, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
   const statusNumber = STATUS_MAP[status] || 0
@@ -37,6 +38,21 @@ const Page = () => {
     }
   }
 
+  const updateStatus = useCallback(
+    (response: any) => {
+      if (data?.user.status !== response.data.status) {
+        update({
+          user: {
+            ...data?.user,
+            status: response.data.status,
+          },
+        })
+      }
+      setStatus(response.data.status)
+    },
+    [data?.user, update],
+  )
+
   console.log('data?.user.status', data?.user.status)
 
   useEffect(() => {
@@ -46,17 +62,20 @@ const Page = () => {
   }, [data?.user.status, router])
 
   useEffect(() => {
-    setInterval(() => {
+    const fetchStatus = () =>
       fetch('/api/whitelist/check')
         .then(value => value.json())
         .then(value => {
-          setStatus(value.data.status)
+          updateStatus(value)
         })
         .catch(error => {
           console.error('Failed to check:', error)
         })
+    fetchStatus()
+    setInterval(() => {
+      fetchStatus()
     }, 3000)
-  }, [])
+  }, [status, update, updateStatus])
 
   const handleCheck = async () => {
     if (isSpinning) return // 防止重复点击
@@ -75,7 +94,8 @@ const Page = () => {
     const result = await fetch('/api/whitelist/claim', {
       method: 'POST',
     })
-    await result.json()
+    const data = await result.json()
+    updateStatus(data)
     router.push('/invite/finish')
   }
 
@@ -84,13 +104,18 @@ const Page = () => {
 
     window.open(twitterUrl, '_blank')
 
-    setTimeout(() => {
-      fetch('/api/whitelist/post', {
-        method: 'POST',
-      }).catch(err => {
+    fetch('/api/whitelist/post', {
+      method: 'POST',
+    })
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        updateStatus(data)
+      })
+      .catch(err => {
         console.error('Failed to post:', err)
       })
-    }, 3000)
   }
 
   return (

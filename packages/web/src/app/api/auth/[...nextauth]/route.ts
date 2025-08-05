@@ -57,8 +57,8 @@ export const nextAuthOptions: NextAuthOptions = {
         // 创建 whitelist
         let whitelist = await prisma.whitelist.findFirst({
           where: {
-            userId: dbUser.id
-          }
+            userId: dbUser.id,
+          },
         })
         if (whitelist === null) {
           whitelist = await prisma.whitelist.create({
@@ -70,20 +70,20 @@ export const nextAuthOptions: NextAuthOptions = {
             },
           })
           user.isNew = true
-        }else {
+        } else {
           user.isNew = false
         }
         user.userId = dbUser.id
         user.referralCode = whitelist.referralCode
         user.status = whitelist.status
-        
+
         return true // 允许登录
       } catch (error) {
         return false // 拒绝登录
       }
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id // Twitter ID
         token.twitterId = user.id // Twitter ID
@@ -96,6 +96,11 @@ export const nextAuthOptions: NextAuthOptions = {
         if (user.username) {
           token.username = user.username
         }
+      }
+
+      // 当调用update()时触发
+      if (trigger === 'update' && session) {
+        token = { ...token, ...session }
       }
 
       return token
