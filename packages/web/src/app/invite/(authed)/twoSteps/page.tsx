@@ -65,8 +65,16 @@ const Page = () => {
     const fetchStatus = () =>
       fetch('/api/whitelist/check')
         .then(value => value.json())
-        .then(value => {
-          updateStatus(value)
+        .then(response => {
+          if (data?.user.status !== response.data.status) {
+            update({
+              user: {
+                ...data?.user,
+                status: response.data.status,
+              },
+            })
+          }
+          setStatus(response.data.status)
         })
         .catch(error => {
           console.error('Failed to check:', error)
@@ -75,7 +83,7 @@ const Page = () => {
     setInterval(() => {
       fetchStatus()
     }, 3000)
-  }, [status, update, updateStatus])
+  }, [data?.user.status, update])
 
   const handleCheck = async () => {
     if (isSpinning) return // 防止重复点击
