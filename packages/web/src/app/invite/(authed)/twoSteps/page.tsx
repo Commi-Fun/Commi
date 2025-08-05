@@ -66,14 +66,14 @@ const Page = () => {
       fetch('/api/whitelist/check')
         .then(value => value.json())
         .then(response => {
-          if (data?.user.status !== response.data.status) {
-            update({
-              user: {
-                ...data?.user,
-                status: response.data.status,
-              },
-            })
-          }
+          // if (data?.user.status !== response.data.status) {
+          //   update({
+          //     user: {
+          //       ...data?.user,
+          //       status: response.data.status,
+          //     },
+          //   })
+          // }
           setStatus(response.data.status)
         })
         .catch(error => {
@@ -83,7 +83,7 @@ const Page = () => {
     setInterval(() => {
       fetchStatus()
     }, 3000)
-  }, [data?.user.status, update])
+  }, [data?.user.status])
 
   const handleCheck = async () => {
     if (isSpinning) return // 防止重复点击
