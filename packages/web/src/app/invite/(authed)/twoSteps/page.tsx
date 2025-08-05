@@ -66,14 +66,14 @@ const Page = () => {
       fetch('/api/whitelist/check')
         .then(value => value.json())
         .then(response => {
-          // if (data?.user.status !== response.data.status) {
-          //   update({
-          //     user: {
-          //       ...data?.user,
-          //       status: response.data.status,
-          //     },
-          //   })
-          // }
+          if (data?.user.status !== response.data.status) {
+            update({
+              user: {
+                ...data?.user,
+                status: response.data.status,
+              },
+            })
+          }
           setStatus(response.data.status)
         })
         .catch(error => {
@@ -150,7 +150,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="h-[360px] py-[50px] 2xl:py-[70px] relative pl-11">
+      <div className="h-fit py-[50px] 2xl:py-[70px] relative pl-11">
         <div
           className={`absolute left-0.5 lg:left-1.5 top-0 bottom-0 w-1 ${statusNumber >= 3 ? 'bg-main-Green04' : 'bg-green01-900'} rounded-full`}></div>
         <div className="flex justify-between">
