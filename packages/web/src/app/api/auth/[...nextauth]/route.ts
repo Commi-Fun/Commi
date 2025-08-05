@@ -99,9 +99,9 @@ export const nextAuthOptions: NextAuthOptions = {
       }
 
       // 当调用update()时触发
-      if (trigger === 'update' && session) {
-        token = { ...token, ...session }
-      }
+      // if (trigger === 'update' && session) {
+      //   token = { ...token, ...session }
+      // }
 
       return token
     },
