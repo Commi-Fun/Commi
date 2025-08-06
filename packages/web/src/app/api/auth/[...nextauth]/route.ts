@@ -30,7 +30,10 @@ export const nextAuthOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret:
+    process.env.NODE_ENV === 'production'
+      ? process.env.NEXTAUTH_SECRET
+      : process.env.DEV_NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user }) {
       try {
