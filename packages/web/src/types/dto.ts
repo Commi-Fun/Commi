@@ -8,7 +8,11 @@ export interface UserDTO {
 
 export interface WhitelistDto {
     referralCode?: string;
-    status?: string
+    registered?: boolean
+    followed?: boolean
+    posted?: boolean
+    referred?: boolean
+    claimed?: boolean
 }
 
 export interface LoginDto {

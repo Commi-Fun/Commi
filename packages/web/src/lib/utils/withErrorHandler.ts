@@ -9,14 +9,14 @@ export function withErrorHandler(
       return await handler(req, context);
     } catch (e: any) {
       // Handle different types of errors
-      if (e.name === 'ValidationError') {
+      if (e.name === 'BadRequestError') {
         return error(e.message, 400);
       } else if (e.name === 'UnauthorizedError') {
         return error(e.message, 401);
+      } else if (e.name === 'ForbiddenError') {
+        return error(e.message, 403);
       } else if (e.name === 'NotFoundError') {
         return error(e.message, 404);
-      } else if (e.name === 'ConflictError') {
-        return error(e.message, 409);
       } else {
         return error(e.message || 'Internal server error', e.status || 500);
       }

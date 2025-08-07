@@ -196,19 +196,31 @@ model Participation {
 }
 
 model Whitelist {
-  id           Int    @id @default(autoincrement())
-  userId       Int    @unique
-  twitterId    String @unique @db.VarChar(20)
-  referralCode String @unique
-  status       String @default("registered") @db.VarChar(15) // 'registered', 'can_claim', 'claimed'
+  id           Int     @id @default(autoincrement())
+  userId       Int     @unique
+  twitterId    String  @unique @db.VarChar(20)
+  referralCode String  @unique
+  status       String  @default("registered") @db.VarChar(15) // 'registered', 'can_claim', 'claimed'
+  postLink     String?
+
+  registeredAt DateTime? @default(now())
+  followedAt   DateTime?
+  postedAt     DateTime?
+  referredAt   DateTime?
+  claimedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 }
 
 model Referral {
-  id                Int    @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   referrerId        Int
-  referrerTwitterId String @db.VarChar(20)
+  referrerTwitterId String   @db.VarChar(20)
   refereeId         Int
-  refereeTwitterId  String @db.VarChar(20)
+  refereeTwitterId  String   @db.VarChar(20)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @default(now()) @updatedAt
 
   @@unique([referrerId, refereeId])
 }

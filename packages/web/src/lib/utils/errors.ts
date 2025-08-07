@@ -1,11 +1,11 @@
-export class ValidationError extends Error {
-  name = 'ValidationError';
+export class BadRequestError extends Error {
+  name = 'BadRequestError';
   status = 400;
   
-  constructor(message: string) {
+  constructor(message: string = 'BadRequest') {
     super(message);
   }
-}
+} 
 
 export class UnauthorizedError extends Error {
   name = 'UnauthorizedError';
@@ -16,20 +16,20 @@ export class UnauthorizedError extends Error {
   }
 }
 
+export class ForbiddenError extends Error {
+  name = 'ForbiddenError';
+  status = 403;
+  
+  constructor(message: string) {
+    super(message);
+  }
+}
+
 export class NotFoundError extends Error {
   name = 'NotFoundError';
   status = 404;
   
   constructor(message: string = 'Resource not found') {
-    super(message);
-  }
-}
-
-export class ConflictError extends Error {
-  name = 'ConflictError';
-  status = 409;
-  
-  constructor(message: string = 'Resource conflict') {
     super(message);
   }
 }
