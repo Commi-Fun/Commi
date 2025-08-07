@@ -4,8 +4,10 @@ import { nanoid } from 'nanoid'
 import * as referralService from '@/lib/services/referralService'
 import { UserDTO, WhitelistDto } from '@/types/dto'
 import { WhitelistDomain, ReferralDomain } from '@/types/domain'
-import { ValidationError, NotFoundError, ConflictError, DatabaseError } from '@/lib/utils/errors'
+import { NotFoundError, DatabaseError, BadRequestError, ForbiddenError } from '@/lib/utils/errors'
 import { ServiceResult, createSuccessResult, createErrorResult } from '@/lib/utils/serviceResult'
+import { validateTweetLink, fetchTweetFromCDN, TweetDataResponse } from './twitterService'
+import { url_prefix } from '../constants'
 
 export enum WhitelistStatus {
   REGISTERED = 'REGISTERED',
@@ -22,20 +24,7 @@ export async function createWhitelist(tx: PrismaTransaction, data: WhitelistDoma
       userId: data.user.userId as number,
       twitterId: data.user.twitterId as string,
       referralCode: nanoid(6),
-      status: data.status,
-    },
-  })
-}
-
-export async function updateWhitelist(tx: PrismaTransaction, data: WhitelistDomain) {
-  const client = getTransactionClient(tx)
-  return client.whitelist.update({
-    where: {
-      userId: data.user.userId as number,
-    },
-    data: {
-      twitterId: data.user.twitterId,
-      status: data.status,
+      registeredAt: new Date()
     },
   })
 }
@@ -53,14 +42,10 @@ export async function findWhitelistByReferralCode(tx: PrismaTransaction, code: s
 // Service functions
 export async function getWhitelist(twitterId: string): Promise<ServiceResult<WhitelistDto | null>> {
   try {
-    const whitelist = await prisma.whitelist.findUnique({ where: { twitterId: twitterId } })
+    const result = await prisma.whitelist.findUnique({ where: { twitterId: twitterId } })
 
-    if (whitelist != null) {
-      const whitelistDto: WhitelistDto = {
-        referralCode: whitelist.referralCode,
-        status: whitelist.status,
-      }
-      return createSuccessResult(whitelistDto)
+    if (result != null) {
+      return createSuccessResult(entityToWhitelistDTO(result))
     }
     return createSuccessResult(null)
   } catch (error: any) {
@@ -68,23 +53,76 @@ export async function getWhitelist(twitterId: string): Promise<ServiceResult<Whi
   }
 }
 
-export async function post(data: UserDTO): Promise<ServiceResult<WhitelistDto>> {
+export async function follow(data: UserDTO): Promise<ServiceResult<WhitelistDto>> {
   try {
+    const userWhitelist = await prisma.whitelist.findUnique({
+      where: {
+        userId: data.userId,
+        twitterId: data.twitterId
+      }
+    })
+    if (!userWhitelist) {
+      throw new NotFoundError('User not found') 
+    }
+    if (userWhitelist.followedAt != null) {
+      throw new BadRequestError("Already followed")
+    }
+
     const result = await prisma.whitelist.update({
       where: {
         userId: data.userId,
         twitterId: data.twitterId,
-        status: WhitelistStatus.REGISTERED,
+        followedAt: null
       },
       data: {
-        status: WhitelistStatus.POSTED,
+        followedAt: new Date(),
       },
     })
-    const whitelistDto: WhitelistDto = {
-      referralCode: result.referralCode,
-      status: result.status,
+    return createSuccessResult(entityToWhitelistDTO(result))
+  } catch (error: any) {
+    return createErrorResult(error.message || 'Failed to update whitelist status')
+  }
+}
+
+export async function post(data: UserDTO, postLink: string): Promise<ServiceResult<WhitelistDto>> {
+  const tweetId = validateTweetLink(postLink)
+  if (tweetId == null) {
+    throw new BadRequestError('Invalid post link') 
+  }
+  try {
+    const tweetData = await fetchTweetFromCDN(tweetId)
+    if (tweetData == null || validatePost(tweetData)) {
+      throw new BadRequestError('Invalid post content')
     }
-    return createSuccessResult(whitelistDto)
+    if (tweetData.author !== data.twitterId) {
+      throw new ForbiddenError('Not post owner')
+    }
+
+    const userWhitelist = await prisma.whitelist.findUnique({
+      where: {
+        userId: data.userId,
+        twitterId: data.twitterId
+      }
+    })
+    if (!userWhitelist) {
+      throw new NotFoundError('User not found') 
+    }
+    if (userWhitelist.postedAt != null) {
+      throw new BadRequestError("Already posted")
+    }
+
+    const result = await prisma.whitelist.update({
+      where: {
+        userId: data.userId,
+        twitterId: data.twitterId,
+        postedAt: null
+      },
+      data: {
+        postLink: postLink,
+        postedAt: new Date()
+      },
+    })
+    return createSuccessResult(entityToWhitelistDTO(result))
   } catch (error: any) {
     return createErrorResult(error.message || 'Failed to update whitelist status')
   }
@@ -93,14 +131,14 @@ export async function post(data: UserDTO): Promise<ServiceResult<WhitelistDto>> 
 export async function refer(data: UserDTO, referralCode?: string): Promise<ServiceResult<any>> {
   try {
     if (!referralCode) {
-      throw new ValidationError('Invalid referral code')
+      throw new BadRequestError('Invalid referral code')
     }
 
     await prisma.$transaction(async tx => {
       const referrer = await findWhitelistByReferralCode(tx, referralCode)
 
       if (data.userId === referrer?.userId) {
-        throw new ValidationError('Cannot refer yourself')
+        throw new ForbiddenError('Cannot refer yourself')
       }
 
       if (!referrer) {
@@ -115,7 +153,7 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
       })
 
       if (hasRefered) {
-        throw new ConflictError('Already referred')
+        throw new BadRequestError('Already referred')
       }
 
       const mutuallyRefer = await tx.referral.findFirst({
@@ -125,7 +163,7 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
         },
       })
       if (mutuallyRefer) {
-        throw new ConflictError('Cannot get mutually refer')
+        throw new BadRequestError('Cannot get mutually refer')
       }
 
       const referralDomain: ReferralDomain = {
@@ -139,16 +177,15 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
       if (!referralResult) throw new DatabaseError('Failed to create referral')
 
       if (
-        referrer.status === WhitelistStatus.REGISTERED ||
-        referrer.status === WhitelistStatus.POSTED
+        referrer.referredAt !== null
       ) {
         const updateResult = await tx.whitelist.update({
           where: {
             userId: referrer.userId,
-            status: referrer.status,
+            referredAt: null,
           },
           data: {
-            status: WhitelistStatus.REFERRED,
+            referredAt: new Date(),
           },
         })
         if (!updateResult) console.log("Update referrer status error:", referralDomain)
@@ -169,28 +206,28 @@ export async function claimWhitelist(data: UserDTO): Promise<ServiceResult<White
       },
     })
     if (whitelist == null) {
-      throw new NotFoundError('Not permitted to claim')
+      throw new ForbiddenError('Not permitted to claim')
     } else if (
-      whitelist.status === WhitelistStatus.REGISTERED ||
-      whitelist.status === WhitelistStatus.POSTED
+      whitelist.registeredAt === null ||
+      whitelist.followedAt === null ||
+      whitelist.postedAt === null ||
+      whitelist.referredAt === null
     ) {
-      throw new ValidationError('Not permitted to claim')
-    } else if (whitelist.status === WhitelistStatus.CLAIMED) {
-      throw new ConflictError('Already claimed')
+      throw new ForbiddenError('Not permitted to claim')
+    } else if (whitelist.claimedAt !== null) {
+      throw new BadRequestError('Already claimed')
     }
     const result = await prisma.whitelist.update({
       where: {
         userId: data.userId,
         twitterId: data.twitterId,
+        referredAt: null
       },
       data: {
-        status: WhitelistStatus.CLAIMED,
+        referredAt: new Date(),
       },
     })
-    const whitelistDto: WhitelistDto = {
-      status: result.status,
-    }
-    return createSuccessResult(whitelistDto)
+    return createSuccessResult(entityToWhitelistDTO(result))
   } catch (error: any) {
     return createErrorResult(error.message || 'Failed to claim whitelist')
   }
@@ -227,5 +264,28 @@ export async function listReferees(twitterId: string): Promise<ServiceResult<Use
     return createSuccessResult(result)
   } catch (error: any) {
     return createErrorResult(error.message || 'Failed to list referees')
+  }
+}
+
+function validatePost(data: TweetDataResponse): boolean {
+  if (data == null) {
+    return false
+  }
+  for (const url in data.urls) {
+    if (url.includes(url_prefix)) {
+      return true;
+    }
+  }
+  return false
+}
+
+function entityToWhitelistDTO(entity: Whitelist): WhitelistDto {
+  return {
+    referralCode: entity.referralCode,
+    registered: entity.registeredAt != null,
+    followed: entity.followedAt != null,
+    posted: entity.postedAt != null,
+    referred: entity.referredAt != null,
+    claimed: entity.claimedAt != null,
   }
 }

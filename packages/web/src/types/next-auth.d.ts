@@ -11,6 +11,11 @@ declare module 'next-auth' {
       referralCode?: string
       status?: string
       isNew?: boolean
+      registered?: boolean
+      followed?: boolean
+      posted?: boolean
+      referred?: boolean
+      claimed?: boolean
     } & DefaultSession['user']
   }
 
@@ -21,6 +26,11 @@ declare module 'next-auth' {
     referralCode?: string
     status?: string
     isNew?: boolean
+    registered?: boolean
+    followed?: boolean
+    posted?: boolean
+    referred?: boolean
+    claimed?: boolean
   }
 }
 
@@ -32,5 +42,10 @@ declare module 'next-auth/jwt' {
     referralCode?: string
     status?: string
     isNew?: boolean
+    registered?: boolean
+    followed?: boolean
+    posted?: boolean
+    referred?: boolean
+    claimed?: boolean
   }
 }

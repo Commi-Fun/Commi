@@ -386,9 +386,6 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.81.5
         version: 5.82.0(react@19.1.0)
-      '@types/express':
-        specifier: ^5.0.3
-        version: 5.0.3
       '@types/jest':
         specifier: ^30.0.0
         version: 30.0.0
@@ -413,9 +410,6 @@ importers:
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
-      express:
-        specifier: ^5.1.0
-        version: 5.1.0
       jsonwebtoken:
         specifier: ^9.0.2
         version: 9.0.2
@@ -483,6 +477,9 @@ importers:
       '@next/eslint-plugin-next':
         specifier: ^15.3.5
         version: 15.3.5
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: 6.13.0
+        version: 6.13.0
       '@tailwindcss/postcss':
         specifier: ^4
         version: 4.1.11
@@ -2213,6 +2210,9 @@ packages:
 
   '@prisma/get-platform@5.22.0':
     resolution: {integrity: sha512-pHhpQdr1UPFpt+zFfnPazhulaZYCUqeIcPpJViYoq9R+D/yw4fjE+CtnsnKzPYm0ddUbeXUzjGVGIRVgPDCk4Q==}
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.13.0':
+    resolution: {integrity: sha512-RUNHn4SDb5lu8k7AcS2N2O4pftYPu0rVVRNOG6qzekup+1alb1ezgykAhsWhS15a/Sa2TThyLSegP+Ef8+3xlw==}
 
   '@privy-io/api-base@1.5.2':
     resolution: {integrity: sha512-0eJBoQNmCSsWSWhzEVSU8WqPm7bgeN6VaAmqeXvjk8Ni0jM8nyTYjmRAqiCSs3mRzsnlQVchkGR6lsMTHkHKbw==}
@@ -12004,6 +12004,8 @@ snapshots:
   '@prisma/get-platform@5.22.0':
     dependencies:
       '@prisma/debug': 5.22.0
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.13.0': {}
 
   '@privy-io/api-base@1.5.2':
     dependencies:

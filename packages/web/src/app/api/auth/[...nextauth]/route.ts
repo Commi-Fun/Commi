@@ -67,6 +67,7 @@ export const nextAuthOptions: NextAuthOptions = {
               twitterId: dbUser.twitterId,
               referralCode: nanoid(6),
               status: WhitelistStatus.REGISTERED,
+              registeredAt: new Date()
             },
           })
           user.isNew = true
@@ -76,6 +77,11 @@ export const nextAuthOptions: NextAuthOptions = {
         user.userId = dbUser.id
         user.referralCode = whitelist.referralCode
         user.status = whitelist.status
+        user.registered = whitelist.registeredAt !== null
+        user.followed = whitelist.followedAt !== null
+        user.posted = whitelist.postedAt !== null
+        user.referred = whitelist.referredAt !== null
+        user.claimed = whitelist.claimedAt !== null
 
         return true // 允许登录
       } catch (error) {
@@ -93,6 +99,11 @@ export const nextAuthOptions: NextAuthOptions = {
         token.referralCode = user.referralCode
         token.status = user.status
         token.isNew = user.isNew
+        token.registered = user.registered
+        token.followed = user.followed
+        token.posted = user.posted
+        token.referred = user.referred
+        token.claimed = user.claimed
         if (user.username) {
           token.username = user.username
         }
@@ -116,6 +127,11 @@ export const nextAuthOptions: NextAuthOptions = {
       session.user.referralCode = token.referralCode
       session.user.status = token.status
       session.user.isNew = token.isNew
+      session.user.registered = token.registered
+      session.user.followed = token.followed
+      session.user.posted = token.posted
+      session.user.referred = token.referred
+      session.user.claimed = token.claimed
 
       // Pass the username from the token to the session
       if (token.username) {

@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const { data, status } = useSession()
   const router = useRouter()
+  console.log('data', data?.user.status)
 
   const handleXIconClick = () => {
     window.open('https://x.com/commidotfun', '_blank', 'noopener,noreferrer')
