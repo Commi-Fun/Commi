@@ -9,10 +9,7 @@ export const prisma =
   new PrismaClient({
     datasources: {
       db: {
-        url:
-          process.env.NODE_ENV === 'production'
-            ? process.env.DATABASE_URL
-            : process.env.DEV_DATABASE_URL,
+        url: process.env.DATABASE_URL,
       },
     },
   })
