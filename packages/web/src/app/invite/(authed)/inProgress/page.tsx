@@ -6,6 +6,7 @@ import RedoIcon from '@/components/icons/RedoIcon'
 import { copyText, REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
 import { WhitelistStatus } from '@/lib/services/whitelistService'
 import { customColors } from '@/shared-theme/themePrimitives'
+import { Input } from '@mui/material'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
@@ -22,6 +23,7 @@ const Page = () => {
   const [isSpinning, setIsSpinning] = useState(false)
   const router = useRouter()
   const { data, update } = useSession()
+  const [postUrl, setPostUrl] = useState('')
   console.log('data.user', data?.user)
 
   const [status, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
@@ -114,6 +116,9 @@ const Page = () => {
 
     fetch('/api/whitelist/post', {
       method: 'POST',
+      body: JSON.stringify({
+        postLink: postUrl,
+      }),
     })
       .then(response => {
         return response.json()
@@ -124,6 +129,16 @@ const Page = () => {
       .catch(err => {
         console.error('Failed to post:', err)
       })
+  }
+
+  const followOnX = () => {
+    const twitterUrl = `https://x.com/commidotfun`
+
+    window.open(twitterUrl, '_blank')
+
+    fetch('/api/whitelist/follow', {
+      method: 'POST',
+    })
   }
 
   return (
@@ -153,7 +168,32 @@ const Page = () => {
       <div className="h-fit py-[50px] 2xl:py-[70px] relative pl-11">
         <div
           className={`absolute left-0.5 lg:left-1.5 top-0 bottom-0 w-1 ${statusNumber >= 3 ? 'bg-main-Green04' : 'bg-green01-900'} rounded-full`}></div>
+        {/* follow on X */}
         <div className="flex justify-between">
+          <div className="flex items-center gap-4">
+            {statusNumber >= 2 ? (
+              <div className="w-4.5 h-4.5 lg:w-6 lg:h-6 bg-main-Green01 rounded-full flex items-center justify-center">
+                <CheckBig className="text-main-Black text-[14px] lg:text-[1.125rem]" />
+              </div>
+            ) : (
+              <span
+                style={{ borderWidth: '2px' }}
+                className="w-4.5 h-4.5 lg:w-6 lg:h-6 rounded-full border-solid border-main-Black"></span>
+            )}
+            <span className="font-bold lg:text-[1.125rem] cursor-pointer">
+              Follow us on X (Twitter)
+            </span>
+          </div>
+          {statusNumber < 2 && (
+            <button
+              className="normal-button w-20 h-8 lg:w-30 lg:h-10 text-[12px] lg:text-[1rem] bg-main-Black text-main-Green01 cursor-pointer"
+              onClick={followOnX}>
+              Follow
+            </button>
+          )}
+        </div>
+        {/* Post */}
+        <div className="flex justify-between mt-9">
           <div className="flex items-center gap-4">
             {statusNumber >= 2 ? (
               <div className="w-4.5 h-4.5 lg:w-6 lg:h-6 bg-main-Green01 rounded-full flex items-center justify-center">
@@ -174,6 +214,14 @@ const Page = () => {
             </button>
           )}
         </div>
+        <div className="mt-4">
+          <input
+            className="outline-0 lg:text-[18px] bg-green01-800 focus:bg-green01-1000 p-6 rounded-2xl w-full border-0 focus:border-1 focus:border-main-Green02"
+            placeholder="Please paste the URL of your posted tweet."
+            onChange={e => setPostUrl(e.target.value)}
+          />
+        </div>
+        {/* invite */}
         <div className="flex justify-between mt-9">
           <div className="flex items-center gap-4">
             {statusNumber >= 3 ? (
