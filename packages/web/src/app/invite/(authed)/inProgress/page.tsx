@@ -3,20 +3,13 @@ import CommiButton from '@/components/CommiButton'
 import CheckBig from '@/components/icons/CheckBig'
 import CopyIcon from '@/components/icons/CopyIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
+import { SpinningRefresh } from '@/components/SpinningRefresh'
 import { copyText, REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
-import { WhitelistStatus } from '@/lib/services/whitelistService'
 import { customColors } from '@/shared-theme/themePrimitives'
-import { Input } from '@mui/material'
+import { WhitelistStatus } from '@/types/whitelist'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
-
-const STATUS_MAP = {
-  [WhitelistStatus.REGISTERED]: 1,
-  [WhitelistStatus.POSTED]: 2,
-  [WhitelistStatus.REFERRED]: 3,
-  [WhitelistStatus.CLAIMED]: 4,
-}
 
 const Page = () => {
   const [copied, setCopied] = useState(false)
@@ -24,11 +17,15 @@ const Page = () => {
   const router = useRouter()
   const { data, update } = useSession()
   const [postUrl, setPostUrl] = useState('')
-  console.log('data.user', data?.user)
 
   const [status, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
-  const statusNumber = STATUS_MAP[status] || 0
+  const statusNumber = 0
   const referalUrl = `https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+  const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({})
+  const [posted, setPosted] = useState(false)
+  const [verifyLoading, setVerifyLoading] = useState(false)
+  const [verifyError, setVerifyError] = useState(false)
+  const verifyButtonDisabled = !postUrl || verifyLoading
 
   const handleCopy = async () => {
     try {
@@ -40,52 +37,32 @@ const Page = () => {
     }
   }
 
-  const updateStatus = useCallback(
-    (response: any) => {
-      if (data?.user.status !== response.data.status) {
-        update({
-          user: {
-            ...data?.user,
-            status: response.data.status,
-          },
-        })
-      }
-      setStatus(response.data.status)
-    },
-    [data?.user, update],
-  )
-
   console.log('data?.user.status', data?.user.status)
 
   useEffect(() => {
-    if (data?.user.status === WhitelistStatus.CLAIMED) {
+    if (whitelistStatus.claimed) {
       router.push('/invite/finish')
     }
-  }, [data?.user.status, router])
+  }, [router, whitelistStatus.claimed])
 
   useEffect(() => {
     const fetchStatus = () =>
       fetch('/api/whitelist/check')
         .then(value => value.json())
         .then(response => {
-          if (data?.user.status !== response.data.status) {
-            update({
-              user: {
-                ...data?.user,
-                status: response.data.status,
-              },
-            })
-          }
-          setStatus(response.data.status)
+          setWhitelistStatus(response.data)
         })
         .catch(error => {
-          console.error('Failed to check:', error)
+          if (error instanceof Error) console.error('Failed to check:', error.message)
         })
+        .finally(() => {
+          setTimeout(() => {
+            fetchStatus()
+          }, 10000)
+        })
+
     fetchStatus()
-    setInterval(() => {
-      fetchStatus()
-    }, 3000)
-  }, [data?.user.status])
+  }, [])
 
   const handleCheck = async () => {
     if (isSpinning) return // 防止重复点击
@@ -94,7 +71,12 @@ const Page = () => {
     try {
       const result = await fetch('/api/whitelist/check')
       const data = await result.json()
-      setStatus(data.data.status)
+      if (data.status === 200) {
+        setWhitelistStatus(prev => ({
+          ...prev,
+          ...data.data,
+        }))
+      }
     } catch (err) {
       console.error('Failed to check:', err)
     }
@@ -105,30 +87,20 @@ const Page = () => {
       method: 'POST',
     })
     const data = await result.json()
-    updateStatus(data)
-    router.push('/invite/finish')
+    if (data.status === 200) {
+      setWhitelistStatus(prev => ({
+        ...prev,
+        claimed: true,
+      }))
+      router.push('/invite/finish')
+    }
   }
 
   const handlePostToTwitter = () => {
     const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(copyText)}&url=${encodeURIComponent(referalUrl)}`
 
     window.open(twitterUrl, '_blank')
-
-    fetch('/api/whitelist/post', {
-      method: 'POST',
-      body: JSON.stringify({
-        postLink: postUrl,
-      }),
-    })
-      .then(response => {
-        return response.json()
-      })
-      .then(data => {
-        updateStatus(data)
-      })
-      .catch(err => {
-        console.error('Failed to post:', err)
-      })
+    setPosted(true)
   }
 
   const followOnX = () => {
@@ -139,6 +111,41 @@ const Page = () => {
     fetch('/api/whitelist/follow', {
       method: 'POST',
     })
+      .then(response => response.json())
+      .then(data => {
+        setWhitelistStatus(prev => ({
+          ...prev,
+          followed: !!!data?.data?.followed,
+        }))
+      })
+  }
+
+  const handleVerify = () => {
+    setVerifyLoading(true)
+    fetch('/api/whitelist/post', {
+      method: 'POST',
+      body: JSON.stringify({
+        postLink: postUrl,
+      }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 200) {
+          setWhitelistStatus(prev => ({
+            ...prev,
+            posted: !!data?.data?.posted,
+          }))
+        } else {
+          setVerifyError(true)
+        }
+      })
+      .catch(err => {
+        setVerifyError(true)
+        if (err instanceof Error) console.error('Failed to check:', err.message)
+      })
+      .finally(() => {
+        setVerifyLoading(false)
+      })
   }
 
   return (
@@ -171,7 +178,7 @@ const Page = () => {
         {/* follow on X */}
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
-            {statusNumber >= 2 ? (
+            {whitelistStatus.followed ? (
               <div className="w-4.5 h-4.5 lg:w-6 lg:h-6 bg-main-Green01 rounded-full flex items-center justify-center">
                 <CheckBig className="text-main-Black text-[14px] lg:text-[1.125rem]" />
               </div>
@@ -184,7 +191,7 @@ const Page = () => {
               Follow us on X (Twitter)
             </span>
           </div>
-          {statusNumber < 2 && (
+          {!whitelistStatus.followed && (
             <button
               className="normal-button w-20 h-8 lg:w-30 lg:h-10 text-[12px] lg:text-[1rem] bg-main-Black text-main-Green01 cursor-pointer"
               onClick={followOnX}>
@@ -195,7 +202,7 @@ const Page = () => {
         {/* Post */}
         <div className="flex justify-between mt-9">
           <div className="flex items-center gap-4">
-            {statusNumber >= 2 ? (
+            {whitelistStatus.posted ? (
               <div className="w-4.5 h-4.5 lg:w-6 lg:h-6 bg-main-Green01 rounded-full flex items-center justify-center">
                 <CheckBig className="text-main-Black text-[14px] lg:text-[1.125rem]" />
               </div>
@@ -206,25 +213,51 @@ const Page = () => {
             )}
             <span className="font-bold lg:text-[1.125rem] cursor-pointer">Post to Join</span>
           </div>
-          {statusNumber < 2 && (
-            <button
-              className="normal-button w-20 h-8 lg:w-30 lg:h-10 text-[12px] lg:text-[1rem] bg-main-Black text-main-Green01 cursor-pointer"
-              onClick={handlePostToTwitter}>
-              Post
-            </button>
-          )}
+          {!whitelistStatus.posted &&
+            (posted ? (
+              <button
+                className={`disabled flex gap-2 normal-button w-20 h-8 lg:w-30 lg:h-10 text-[12px] lg:text-[1rem] 
+                  bg-main-Black ${verifyButtonDisabled ? 'text-green01-400 !bg-green01-200' : 'text-main-Green01'}  cursor-pointer`}
+                onClick={handleVerify}
+                disabled={verifyButtonDisabled}>
+                {verifyLoading ? (
+                  <>
+                    <SpinningRefresh /> Verifing...
+                  </>
+                ) : verifyError ? (
+                  'Retry'
+                ) : (
+                  'Verify'
+                )}
+              </button>
+            ) : (
+              <button
+                className="normal-button w-20 h-8 lg:w-30 lg:h-10 text-[12px] lg:text-[1rem] bg-main-Black text-main-Green01 cursor-pointer"
+                onClick={handlePostToTwitter}>
+                Post
+              </button>
+            ))}
         </div>
-        <div className="mt-4">
-          <input
-            className="outline-0 lg:text-[18px] bg-green01-800 focus:bg-green01-1000 p-6 rounded-2xl w-full border-0 focus:border-1 focus:border-main-Green02"
-            placeholder="Please paste the URL of your posted tweet."
-            onChange={e => setPostUrl(e.target.value)}
-          />
-        </div>
+        {!whitelistStatus.posted && posted && (
+          <div className="mt-4 flex flex-col items-end">
+            <input
+              className={`outline-0 lg:text-[18px] bg-green01-800 focus:bg-green01-1000 
+                  p-6 rounded-2xl w-full border-0 ${verifyError ? 'border-[1px] !border-red-300' : ''} focus:border-1 focus:border-main-Green02`}
+              placeholder="Please paste the URL of your posted tweet."
+              onChange={e => setPostUrl(e.target.value)}
+            />
+            {verifyError && (
+              <p className="text-red-500 mt-2 font-extrabold">
+                ⚠️ Verification failed！ Make sure your tweet is public and the URL is correct.
+              </p>
+            )}
+          </div>
+        )}
+
         {/* invite */}
         <div className="flex justify-between mt-9">
           <div className="flex items-center gap-4">
-            {statusNumber >= 3 ? (
+            {whitelistStatus.referred ? (
               <div className="w-4.5 h-4.5 lg:w-6 lg:h-6 bg-main-Green01 rounded-full flex items-center justify-center">
                 <CheckBig className="text-main-Black text-[14px] lg:text-[1.125rem]" />
               </div>
@@ -252,7 +285,7 @@ const Page = () => {
           </span>
         </div>
 
-        {statusNumber === 3 && (
+        {whitelistStatus.followed && whitelistStatus.posted && whitelistStatus.referred && (
           <CommiButton
             size="medium"
             theme="primaryLinear"
