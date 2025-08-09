@@ -129,6 +129,7 @@ export async function post(data: UserDTO, postLink: string): Promise<ServiceResu
 }
 
 export async function refer(data: UserDTO, referralCode?: string): Promise<ServiceResult<any>> {
+  console.log('refer api', referralCode)
   try {
     if (!referralCode) {
       throw new BadRequestError('Invalid referral code')
@@ -152,6 +153,8 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
         },
       })
 
+      console.log('refer api hasRefered', hasRefered)
+
       if (hasRefered) {
         throw new BadRequestError('Already referred')
       }
@@ -162,6 +165,9 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
           refereeId: referrer.userId,
         },
       })
+
+      console.log('refer api mutuallyRefer', mutuallyRefer)
+
       if (mutuallyRefer) {
         throw new BadRequestError('Cannot get mutually refer')
       }
@@ -174,6 +180,9 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
       }
 
       const referralResult = await referralService.createReferral(tx, referralDomain)
+
+      console.log('refer api referralResult', referralResult)
+
       if (!referralResult) throw new DatabaseError('Failed to create referral')
 
       if (referrer.referredAt !== null) {

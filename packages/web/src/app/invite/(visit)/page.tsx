@@ -12,6 +12,7 @@ function InviteContent() {
   const router = useRouter()
   const { status, data } = useSession()
   const searchparams = useSearchParams()
+  console.log('status', status)
 
   useEffect(() => {
     if (status !== 'authenticated') {
@@ -36,7 +37,7 @@ function InviteContent() {
         )
       }
       try {
-        const [result1] = await Promise.allSettled(fetchArr)
+        const [result1, result2] = await Promise.allSettled(fetchArr)
         if (result1.status === 'fulfilled') {
           console.log('result1.value.data.claimed', result1.value.data.claimed)
           if (result1.value.data?.claimed) {
@@ -44,6 +45,9 @@ function InviteContent() {
           } else {
             router.push('/invite/inProgress')
           }
+        }
+        if (result2.status !== 'fulfilled') {
+          console.error('Failed to fetch referral status')
         }
       } catch (e) {
         if (e instanceof Error) {

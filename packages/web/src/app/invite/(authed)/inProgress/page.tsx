@@ -4,7 +4,7 @@ import CheckBig from '@/components/icons/CheckBig'
 import CopyIcon from '@/components/icons/CopyIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
 import { SpinningRefresh } from '@/components/SpinningRefresh'
-import { copyText, REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
+import { copyText, REFERRAL_CODE_SEARCH_PARAM, url_prefix } from '@/lib/constants'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { WhitelistStatus } from '@/types/whitelist'
 import { useSession } from 'next-auth/react'
@@ -20,7 +20,7 @@ const Page = () => {
 
   const [status, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
   const statusNumber = 0
-  const referalUrl = `https://commi.fun?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+  const referalUrl = `${url_prefix}?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
   const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({})
   const [posted, setPosted] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
@@ -40,10 +40,10 @@ const Page = () => {
   console.log('data?.user.status', data?.user.status)
 
   useEffect(() => {
-    if (whitelistStatus.claimed) {
+    if (whitelistStatus?.claimed) {
       router.push('/invite/finish')
     }
-  }, [router, whitelistStatus.claimed])
+  }, [router, whitelistStatus?.claimed])
 
   useEffect(() => {
     const fetchStatus = () =>
