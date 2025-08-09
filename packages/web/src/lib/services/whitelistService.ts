@@ -200,6 +200,7 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
     })
     return createSuccessResult(null)
   } catch (error: any) {
+    console.log('refer api error', error)
     return createErrorResult(error.message || 'Failed to process referral')
   }
 }
