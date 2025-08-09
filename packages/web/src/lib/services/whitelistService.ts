@@ -185,7 +185,7 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
 
       if (!referralResult) throw new DatabaseError('Failed to create referral')
 
-      if (referrer.referredAt !== null) {
+      if (!referrer.referredAt) {
         const updateResult = await tx.whitelist.update({
           where: {
             userId: referrer.userId,
@@ -200,7 +200,6 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
     })
     return createSuccessResult(null)
   } catch (error: any) {
-    console.log('refer api error', error)
     return createErrorResult(error.message || 'Failed to process referral')
   }
 }
