@@ -94,7 +94,6 @@ export async function post(data: UserDTO, postLink: string): Promise<ServiceResu
     if (tweetData == null || validatePost(tweetData)) {
       throw new BadRequestError('Invalid post content')
     }
-    console.log('Not post owner', tweetData.author, data.twitterId)
     if (tweetData.author !== data.twitterId) {
       throw new ForbiddenError('Not post owner')
     }
