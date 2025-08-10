@@ -29,6 +29,9 @@
     "dashboard:start": "pnpm --filter @commi-dashboard/dashboard start",
     "prepare": "husky install"
   },
+  "dependencies": {
+    "next": "15.3.4"
+  },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
