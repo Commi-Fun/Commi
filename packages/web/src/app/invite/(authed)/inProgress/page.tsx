@@ -9,17 +9,16 @@ import { customColors } from '@/shared-theme/themePrimitives'
 import { WhitelistStatus } from '@/types/whitelist'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 
 const Page = () => {
   const [copied, setCopied] = useState(false)
   const [isSpinning, setIsSpinning] = useState(false)
   const router = useRouter()
-  const { data, update } = useSession()
+  const { data } = useSession()
   const [postUrl, setPostUrl] = useState('')
 
-  const [status, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
   const statusNumber = 0
   const referalUrl = `${url_prefix}?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
   const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({})
@@ -152,7 +151,7 @@ const Page = () => {
   return (
     <div className="">
       <p className="text-[40px] lg:text-[46px] 2xl:text-[72px] text-main-Black font-extrabold mobile-font-shdow-white lg:font-shadow-white">
-        2 STEPS
+        3 STEPS
       </p>
       <p className="text-white font-extrabold mobile-font-shdow-white lg:font-shadow-black text-[30px] lg:text-[46px] 2xl:text-[72px] stroke-black mt-1.5">
         GET WHITELIST EARLY!
