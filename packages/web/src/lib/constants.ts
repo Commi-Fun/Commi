@@ -6,4 +6,4 @@ export const copyText = `Juice early. Juice loud. Juice for real.
 I'm in the Commi beta — whitelist claimed, rewards loading... 🍹
 
 Start juicing 👉 `
-export const url_prefix = `https://commi.fun`
+export const url_prefix = process.env.NEXT_PUBLIC_BASE_URL || 'https://commi.fun'

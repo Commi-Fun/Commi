@@ -6,6 +6,8 @@ import Image from 'next/image'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { XIcon } from '@/components/icons/XIcon'
 import { ChatDots } from '@/components/icons/ChatDots'
+import { usePlatform } from '@/hooks/usePlatform'
+import { JumpOutside } from '../components/jumpOutside'
 
 type MemeType = {
   headSrc: string
@@ -109,6 +111,7 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
   const [hoveredIndex, setHoveredIndex] = useState<number>(-1)
   const [clickSelected, setClickSelected] = useState(false)
   const [isMobile, setIsMobile] = useState(false)
+  const isSocialMobile = usePlatform()
 
   useEffect(() => {
     const checkMobile = () => {
@@ -134,6 +137,10 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
 
   const handleXIconClick = () => {
     window.open('https://x.com/commidotfun', '_blank', 'noopener,noreferrer')
+  }
+
+  if (isSocialMobile) {
+    return <JumpOutside />
   }
 
   return (

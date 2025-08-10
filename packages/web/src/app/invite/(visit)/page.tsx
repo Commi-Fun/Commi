@@ -12,18 +12,20 @@ function InviteContent() {
   const router = useRouter()
   const { status, data } = useSession()
   const searchparams = useSearchParams()
+  console.log('status', status)
 
   useEffect(() => {
     if (status !== 'authenticated') {
       return
     }
 
-    const fff = async () => {
+    const fetchStatusAndRefer = async () => {
+      const fetchArr = []
+      fetchArr.push(fetch('/api/whitelist/check').then(response => response.json()))
       const referralCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
       if (referralCode) {
-        try {
-          console.log('Sending referral code to API:', referralCode)
-          const response = await fetch('/api/whitelist/refer', {
+        fetchArr.push(
+          fetch('/api/whitelist/refer', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -31,21 +33,29 @@ function InviteContent() {
             body: JSON.stringify({
               [REFERRAL_CODE_SEARCH_PARAM]: referralCode,
             }),
-          })
-
-          const result = await response.json()
-          console.log('Referral API response:', result)
-        } catch (e) {
-          console.error(e)
+          }).then(response => response.json()),
+        )
+      }
+      try {
+        const [result1, result2] = await Promise.allSettled(fetchArr)
+        if (result1.status === 'fulfilled') {
+          console.log('result1.value.data.claimed', result1.value.data.claimed)
+          if (result1.value.data?.claimed) {
+            router.push('/invite/finish')
+          } else {
+            router.push('/invite/inProgress')
+          }
+        }
+        if (result2.status !== 'fulfilled') {
+          console.error('Failed to fetch referral status')
+        }
+      } catch (e) {
+        if (e instanceof Error) {
+          console.error(`Failed to fetch whitelist status: ${e?.message}`)
         }
       }
-      if (data?.user.status === WhitelistStatus.CLAIMED) {
-        router.push('/invite/finish')
-      } else {
-        router.push('/invite/twoSteps')
-      }
     }
-    fff()
+    fetchStatusAndRefer()
   }, [router, status, searchparams, data?.user.status, data])
 
   const referrerCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
@@ -54,14 +64,13 @@ function InviteContent() {
     ? `/invite?${REFERRAL_CODE_SEARCH_PARAM}=${encodeURIComponent(referrerCode)}`
     : '/invite'
 
-  console.log('XCallbackUrl', XCallbackUrl)
-
   const connectWithX = async () => {
     try {
       const result = await signIn('x', { redirect: false, callbackUrl: XCallbackUrl })
-      console.log('Sign in with X result:', result)
     } catch (error) {
-      console.error('Sign in with X failed:', error)
+      if (error instanceof Error) {
+        console.error(`Failed to sign in with X: ${error?.message}`)
+      }
     }
   }
 
