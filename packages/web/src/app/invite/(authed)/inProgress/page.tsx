@@ -22,11 +22,7 @@ const Page = () => {
   const [status, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
   const statusNumber = 0
   const referalUrl = `${url_prefix}?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
-  const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({
-    followed: true,
-    posted: true,
-    referred: true,
-  })
+  const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({})
   const [posted, setPosted] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
   const [verifyError, setVerifyError] = useState(false)
