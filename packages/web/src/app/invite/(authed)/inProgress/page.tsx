@@ -10,6 +10,7 @@ import { WhitelistStatus } from '@/types/whitelist'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
+import Image from 'next/image'
 
 const Page = () => {
   const [copied, setCopied] = useState(false)
@@ -21,7 +22,11 @@ const Page = () => {
   const [status, setStatus] = useState<'REGISTERED' | 'CLAIMED'>('REGISTERED')
   const statusNumber = 0
   const referalUrl = `${url_prefix}?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
-  const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({})
+  const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({
+    followed: true,
+    posted: true,
+    referred: true,
+  })
   const [posted, setPosted] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
   const [verifyError, setVerifyError] = useState(false)
@@ -286,14 +291,33 @@ const Page = () => {
         </div>
 
         {whitelistStatus.followed && whitelistStatus.posted && whitelistStatus.referred && (
-          <CommiButton
-            size="medium"
-            theme="primaryLinear"
-            color={customColors.main.Black}
-            onClick={claim}
-            weight="bold">
-            Calim
-          </CommiButton>
+          <>
+            <div
+              className="hidden lg:block gradient-border-wrapper rounded-full cursor-pointer"
+              onClick={claim}>
+              <div className="gradient-border-content relative rounded-full px-[75px] py-[7.5px]">
+                <Image
+                  className="hidden lg:block absolute bottom-0 left-9"
+                  src="/logo.svg"
+                  alt=""
+                  width={35}
+                  height={60}
+                />
+                <span className="font-bold text-[18px]">Calim</span>
+              </div>
+            </div>
+            <div className="block lg:hidden ">
+              <CommiButton
+                size="medium"
+                theme="primaryLinear"
+                color={customColors.main.Black}
+                onClick={claim}
+                className="gradient-border-custom"
+                weight="bold">
+                <span className="px-15 font-bold text-[18px]">Calim</span>
+              </CommiButton>
+            </div>
+          </>
         )}
       </div>
     </div>

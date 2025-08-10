@@ -28,6 +28,10 @@ body {
   -webkit-text-stroke: 1.41px #000;
 }
 
+.white-font-border {
+  text-shadow: 1px 0 0 white, -1px 0 0 white, 0 1px 0 white, 0 -1px 0 white;
+}
+
 .button-transparent {
   border-radius: 24px;
   box-shadow: 5px 5px 0 #000;
@@ -116,4 +120,14 @@ body {
 /* 背景颜色变化的同步动画 */
 .meme-background-sync {
   transition: all 0.5s ease-out;
+}
+
+.gradient-border-wrapper {
+  background: linear-gradient(to right, #FFEA00, #FFFFFF);
+  /* border-radius: 25px; */
+  padding: 4px; /* border 宽度 */
+}
+
+.gradient-border-content {
+  background: linear-gradient(to right, #48B98E 0%, #D1F791 100%)
 }

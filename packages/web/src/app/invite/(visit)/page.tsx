@@ -67,9 +67,10 @@ function InviteContent() {
   const connectWithX = async () => {
     try {
       const result = await signIn('x', { redirect: false, callbackUrl: XCallbackUrl })
-      console.log('Sign in with X result:', result)
     } catch (error) {
-      console.error('Sign in with X failed:', error)
+      if (error instanceof Error) {
+        console.error(`Failed to sign in with X: ${error?.message}`)
+      }
     }
   }
 
