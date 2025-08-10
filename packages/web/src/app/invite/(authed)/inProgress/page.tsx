@@ -4,7 +4,7 @@ import CheckBig from '@/components/icons/CheckBig'
 import CopyIcon from '@/components/icons/CopyIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
 import { SpinningRefresh } from '@/components/SpinningRefresh'
-import { copyText, REFERRAL_CODE_SEARCH_PARAM, url_prefix } from '@/lib/constants'
+import { copyText, url_prefix } from '@/lib/constants'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { WhitelistStatus } from '@/types/whitelist'
 import { useSession } from 'next-auth/react'
@@ -18,9 +18,8 @@ const Page = () => {
   const router = useRouter()
   const { data } = useSession()
   const [postUrl, setPostUrl] = useState('')
-
   const statusNumber = 0
-  const referalUrl = `${url_prefix}?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+  const referalUrl = `${url_prefix}/invite/${data?.user.referralCode}`
   const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({})
   const [posted, setPosted] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)

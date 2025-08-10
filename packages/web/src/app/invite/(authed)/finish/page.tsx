@@ -1,6 +1,6 @@
 'use client'
 import CopyIcon from '@/components/icons/CopyIcon'
-import { copyText, REFERRAL_CODE_SEARCH_PARAM, url_prefix } from '@/lib/constants'
+import { copyText, url_prefix } from '@/lib/constants'
 import { Popover } from '@mui/material'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
@@ -11,7 +11,7 @@ const Page = () => {
   const [copied, setCopied] = useState(false)
   const { data } = useSession()
 
-  const referalUrl = `${url_prefix}?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+  const referalUrl = `${url_prefix}/invite/${data?.user.referralCode}`
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     if (invitedFriends.length === 0) {
