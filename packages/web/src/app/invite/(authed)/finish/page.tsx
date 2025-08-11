@@ -7,7 +7,9 @@ import React, { useEffect, useState } from 'react'
 
 const Page = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
-  const [invitedFriends, setInvitedFriends] = React.useState<any[]>([])
+  const [invitedFriends, setInvitedFriends] = React.useState<
+    Array<{ profileImageUrl: string; handle: string }>
+  >([])
   const [copied, setCopied] = useState(false)
   const { data } = useSession()
 
@@ -39,7 +41,7 @@ const Page = () => {
       fetch('/api/whitelist/referees')
         .then(value => value.json())
         .then(value => {
-          setInvitedFriends(value.data)
+          setInvitedFriends(value?.data || [])
         })
         .catch(error => {
           console.error('Failed to check:', error)
@@ -79,11 +81,10 @@ const Page = () => {
         {copyText + referalUrl}
       </div>
 
-      <p
-        onMouseEnter={handlePopoverOpen}
-        onMouseLeave={handlePopoverClose}
-        className="text-right mt-4 font-semibold text-[14px] lg:text-[1rem]">
-        {invitedFriends.length} friends joined🧃
+      <p className="text-right mt-4 font-semibold text-[14px] lg:text-[1rem]">
+        <span onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
+          {invitedFriends.length} friends joined🧃
+        </span>
       </p>
       <Popover
         id="mouse-over-popover"
@@ -103,7 +104,7 @@ const Page = () => {
         disableEnforceFocus>
         <div
           className="bg-blue-500 p-9"
-          onMouseEnter={() => setAnchorEl(anchorEl)} // 保持弹框打开
+          // onMouseEnter={() => setAnchorEl(anchorEl)} // 保持弹框打开
           onMouseLeave={handlePopoverClose} // 鼠标离开时关闭
         >
           <div className="min-w-50 flex flex-col">
