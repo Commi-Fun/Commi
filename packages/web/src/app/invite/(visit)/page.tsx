@@ -4,12 +4,13 @@ import { SlideButton } from '@/components/SlideButton'
 import { LoginButton } from '@/dashboard/components/LoginButton'
 import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
 import { signIn, useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, Suspense } from 'react'
 
 function InviteContent() {
   const router = useRouter()
   const { status, data } = useSession()
+  const searchparams = useSearchParams()
 
   useEffect(() => {
     if (status !== 'authenticated') {
@@ -20,7 +21,10 @@ function InviteContent() {
       const fetchArr = []
       fetchArr.push(fetch('/api/whitelist/check').then(response => response.json()))
       const storedReferralCode = sessionStorage.getItem(REFERRAL_CODE_SEARCH_PARAM)
-      if (storedReferralCode) {
+      const searchReferralCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
+      const code = storedReferralCode || searchReferralCode
+
+      if (code) {
         fetchArr.push(
           fetch('/api/whitelist/refer', {
             method: 'POST',
@@ -28,7 +32,7 @@ function InviteContent() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              [REFERRAL_CODE_SEARCH_PARAM]: storedReferralCode,
+              [REFERRAL_CODE_SEARCH_PARAM]: code,
             }),
           }).then(response => response.json()),
         )
@@ -53,7 +57,7 @@ function InviteContent() {
       }
     }
     fetchStatusAndRefer()
-  }, [router, status, data?.user.status, data])
+  }, [router, status, data?.user.status, data, searchparams])
 
   const XCallbackUrl = '/invite'
 
