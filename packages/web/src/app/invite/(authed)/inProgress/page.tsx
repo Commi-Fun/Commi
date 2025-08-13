@@ -4,7 +4,7 @@ import CheckBig from '@/components/icons/CheckBig'
 import CopyIcon from '@/components/icons/CopyIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
 import { SpinningRefresh } from '@/components/SpinningRefresh'
-import { copyText, REFERRAL_CODE_SEARCH_PARAM, url_prefix } from '@/lib/constants'
+import { copyText, url_prefix } from '@/lib/constants'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { WhitelistStatus } from '@/types/whitelist'
 import { useSession } from 'next-auth/react'
@@ -18,9 +18,7 @@ const Page = () => {
   const router = useRouter()
   const { data } = useSession()
   const [postUrl, setPostUrl] = useState('')
-
-  const statusNumber = 0
-  const referalUrl = `${url_prefix}?${REFERRAL_CODE_SEARCH_PARAM}=${data?.user.referralCode}`
+  const referalUrl = `${url_prefix}/invite/${data?.user.referralCode}`
   const [whitelistStatus, setWhitelistStatus] = useState<WhitelistStatus>({})
   const [posted, setPosted] = useState(false)
   const [verifyLoading, setVerifyLoading] = useState(false)
@@ -148,6 +146,8 @@ const Page = () => {
       })
   }
 
+  const canClaim = whitelistStatus.followed && whitelistStatus.posted && whitelistStatus.referred
+
   return (
     <div className="">
       <p className="text-[40px] lg:text-[46px] 2xl:text-[72px] text-main-Black font-extrabold mobile-font-shdow-white lg:font-shadow-white">
@@ -174,7 +174,7 @@ const Page = () => {
 
       <div className="h-fit py-[50px] 2xl:py-[70px] relative pl-11">
         <div
-          className={`absolute left-0.5 lg:left-1.5 top-0 bottom-0 w-1 ${statusNumber >= 3 ? 'bg-main-Green04' : 'bg-green01-900'} rounded-full`}></div>
+          className={`absolute left-0.5 lg:left-1.5 top-0 bottom-0 w-1 ${canClaim ? 'bg-main-Green04' : 'bg-green01-900'} rounded-full`}></div>
         {/* follow on X */}
         <div className="flex justify-between">
           <div className="flex items-center gap-4">
@@ -279,13 +279,13 @@ const Page = () => {
       <div className="flex items-center justify-between py-1">
         <div className="flex gap-4 items-center">
           <span
-            className={`w-2 lg:w-4 h-2 lg:h-4 rounded-full ${statusNumber >= 3 ? 'bg-main-Green04' : 'bg-green01-1000'}`}></span>
+            className={`w-2 lg:w-4 h-2 lg:h-4 rounded-full ${canClaim ? 'bg-main-Green04' : 'bg-green01-1000'}`}></span>
           <span className="text-[18px] lg:text-2xl font-bold lg:font-extrabold text-main-Black">
             Get Whitelist
           </span>
         </div>
 
-        {whitelistStatus.followed && whitelistStatus.posted && whitelistStatus.referred && (
+        {canClaim && (
           <>
             <div
               className="hidden lg:block gradient-border-wrapper rounded-full cursor-pointer"

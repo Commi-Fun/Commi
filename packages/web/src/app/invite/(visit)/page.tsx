@@ -3,7 +3,6 @@ import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
 import { SlideButton } from '@/components/SlideButton'
 import { LoginButton } from '@/dashboard/components/LoginButton'
 import { REFERRAL_CODE_SEARCH_PARAM } from '@/lib/constants'
-import { WhitelistStatus } from '@/lib/services/whitelistService'
 import { signIn, useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, Suspense } from 'react'
@@ -12,7 +11,6 @@ function InviteContent() {
   const router = useRouter()
   const { status, data } = useSession()
   const searchparams = useSearchParams()
-  console.log('status', status)
 
   useEffect(() => {
     if (status !== 'authenticated') {
@@ -22,8 +20,11 @@ function InviteContent() {
     const fetchStatusAndRefer = async () => {
       const fetchArr = []
       fetchArr.push(fetch('/api/whitelist/check').then(response => response.json()))
-      const referralCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
-      if (referralCode) {
+      const storedReferralCode = sessionStorage.getItem(REFERRAL_CODE_SEARCH_PARAM)
+      const searchReferralCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
+      const code = storedReferralCode || searchReferralCode
+
+      if (code) {
         fetchArr.push(
           fetch('/api/whitelist/refer', {
             method: 'POST',
@@ -31,7 +32,7 @@ function InviteContent() {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              [REFERRAL_CODE_SEARCH_PARAM]: referralCode,
+              [REFERRAL_CODE_SEARCH_PARAM]: code,
             }),
           }).then(response => response.json()),
         )
@@ -56,17 +57,13 @@ function InviteContent() {
       }
     }
     fetchStatusAndRefer()
-  }, [router, status, searchparams, data?.user.status, data])
+  }, [router, status, data?.user.status, data, searchparams])
 
-  const referrerCode = searchparams.get(REFERRAL_CODE_SEARCH_PARAM)
-
-  const XCallbackUrl = referrerCode
-    ? `/invite?${REFERRAL_CODE_SEARCH_PARAM}=${encodeURIComponent(referrerCode)}`
-    : '/invite'
+  const XCallbackUrl = '/invite'
 
   const connectWithX = async () => {
     try {
-      const result = await signIn('x', { redirect: false, callbackUrl: XCallbackUrl })
+      await signIn('x', { redirect: false, callbackUrl: XCallbackUrl })
     } catch (error) {
       if (error instanceof Error) {
         console.error(`Failed to sign in with X: ${error?.message}`)
