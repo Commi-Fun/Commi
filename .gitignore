@@ -44,7 +44,6 @@ Thumbs.db
 tsconfig.tsbuildinfo
 
 # Prisma
-packages/db/prisma/migrations/
 packages/db/generated/
 
 # Contracts
