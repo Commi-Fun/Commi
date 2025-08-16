@@ -135,8 +135,8 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
     return () => window.removeEventListener('resize', debouncedCheckMobile)
   }, [])
 
-  const handleXIconClick = () => {
-    window.open('https://x.com/commidotfun', '_blank', 'noopener,noreferrer')
+  const handleRelevantLinkClick = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer')
   }
 
   if (isSocialMobile) {
@@ -206,10 +206,13 @@ export default function InviteLayout({ children }: { children: React.ReactNode }
         {children}
       </main>
       <footer className="flex justify-end lg:justify-start gap-4 lg:gap-6 px-4 lg:px-15 2xl:px-20 py-4 lg:py-10 mt-6">
-        <TelegramIcon className={`cursor-pointer text-[1.5rem] lg:text-[2.5rem]`} />
+        <TelegramIcon
+          onClick={() => handleRelevantLinkClick('https://t.me/commigroup')}
+          className={`cursor-pointer text-[1.5rem] lg:text-[2.5rem]`}
+        />
         <XIcon
           className={`cursor-pointer text-[1.5rem] lg:text-[2.5rem]`}
-          onClick={handleXIconClick}
+          onClick={() => handleRelevantLinkClick('https://x.com/commidotfun')}
         />
         <div
           className="bg-main-Black h-6 lg:h-10 px-2.5 lg:px-4 flex items-center gap-2 text-main-White rounded-4xl cursor-pointer"
