@@ -165,7 +165,7 @@ enum CampaignStatus {
 
 model Campaign {
   id              Int            @id @default(autoincrement())
-  name            String
+  name            String?
   description     String
   tokenAddress    String         @db.VarChar(44)
   tokenName       String
