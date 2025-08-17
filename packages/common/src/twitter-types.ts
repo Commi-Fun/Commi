@@ -78,6 +78,7 @@ export interface XUserTweet {
   reposts: number;
   quotes: number;
   replies: number;
+  symbol: string[];
   createdAt: Date;
 }
 

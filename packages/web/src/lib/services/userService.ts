@@ -2,7 +2,10 @@ import { prisma } from '@commi-dashboard/db';
 import { UserDTO } from '@/types/dto'
 import { UserDomain } from '@/types/domain'
 import { createErrorResult, createSuccessResult, ServiceResult } from '../utils/serviceResult';
-import { UnauthorizedError } from '../utils/errors';
+import { BadRequestError, ForbiddenError, NotFoundError, UnauthorizedError } from '../utils/errors';
+import { isValidSignature } from '@commi-dashboard/common';
+import { userAgent } from 'next/server';
+import { Yesteryear } from 'next/font/google';
 
 // Repository functions
 export async function createUserInDb(data: UserDomain) {
@@ -103,4 +106,45 @@ export async function updateUser(user: UserDTO): Promise<ServiceResult<UserDTO |
     return createErrorResult(error.message || 'Failed to update user')
   }
 
+}
+
+export async function connect(user: UserDTO, wallet: { address: string, signature: string }): Promise<ServiceResult<UserDTO | null>> {
+  try {
+    // todo: check signature
+    if (isValidSignature(wallet.address, wallet.signature)) {
+      throw new ForbiddenError("Invalid signature.")
+    }
+
+    const u = await prisma.user.findUnique({
+      where: {
+        id: user.userId
+      }
+    })
+    if (!u) {
+      throw new NotFoundError("User not found.")
+    }
+
+    const wallets = await prisma.wallet.findMany({
+      where: {
+        userId: user.userId
+      }
+    })
+    for (let i = 0; i < wallets.length; i++) {
+      if (wallets[i].address === wallet.address) {
+        throw new BadRequestError("Wallet already binded.")
+      }
+    }
+    
+    await prisma.wallet.create({
+      data: {
+        address: wallet.address,
+        isPrimary: !wallets || wallets.length === 0,
+        userId: user.userId as number
+      },
+    })
+
+    return createSuccessResult(null)
+  } catch(error: any) {
+    return createErrorResult(error.message || 'Failed to connect wallet')
+  }
 }

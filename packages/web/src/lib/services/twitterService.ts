@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { prisma } from '@commi-dashboard/db';
 import { ServiceError } from '../utils/errors';
-import { safeGet, safeGetArray } from '../../../../common/src/helper';
+import { safeGet, safeGetArray } from '@commi-dashboard/common';
 
 export type TwitterUser = {
   id: string;

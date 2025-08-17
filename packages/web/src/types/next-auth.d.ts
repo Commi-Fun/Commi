@@ -16,6 +16,7 @@ declare module 'next-auth' {
       posted?: boolean
       referred?: boolean
       claimed?: boolean
+      wallets?: string[]
     } & DefaultSession['user']
   }
 
@@ -31,6 +32,7 @@ declare module 'next-auth' {
     posted?: boolean
     referred?: boolean
     claimed?: boolean
+    wallets?: string[]
   }
 }
 
@@ -47,5 +49,6 @@ declare module 'next-auth/jwt' {
     posted?: boolean
     referred?: boolean
     claimed?: boolean
+    wallets?: string[]
   }
 }
