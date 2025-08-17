@@ -1,12 +1,11 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { XUserTweet, XUser } from '@commi-dashboard/common';
+import { XUserTweet, XUser, TickerFilter, safeGet, safeGetArray } from '@commi-dashboard/common';
 
 interface XUserRequest {
   userId: string;
-  communityId: string;
   cursor: string;
-  ticker: string;
-  startTime: Date;
+  communityId?: string;
+  filters: TickerFilter[];
 }
 
 interface XUserTweetResponse {
@@ -80,15 +79,20 @@ function validateUsername(username: string): void {
   }
 }
 
-function validateTicker(ticker: string): void {
-  if (!ticker || typeof ticker !== 'string' || ticker.trim().length === 0) {
-    throw XUsersError.validation('Ticker must be a non-empty string');
+function validateFilters(filters: TickerFilter[]): void {
+  if (!Array.isArray(filters) || filters.length === 0) {
+    throw XUsersError.validation('At least one ticker filter is required');
   }
-}
-
-function validateDate(date: Date): void {
-  if (!(date instanceof Date) || isNaN(date.getTime())) {
-    throw XUsersError.validation('Start time must be a valid Date object');
+  for (const f of filters) {
+    if (!Array.isArray(f.symbols) || f.symbols.length === 0) {
+      throw XUsersError.validation('Each filter must include at least one ticker symbol');
+    }
+    if (f.startDate && (!(f.startDate instanceof Date) || isNaN(f.startDate.getTime()))) {
+      throw XUsersError.validation('Filter startDate must be a valid Date if provided');
+    }
+    if (f.endDate && (!(f.endDate instanceof Date) || isNaN(f.endDate.getTime()))) {
+      throw XUsersError.validation('Filter endDate must be a valid Date if provided');
+    }
   }
 }
 
@@ -100,31 +104,11 @@ function sanitizeNumber(num: number | undefined): number {
   return typeof num === 'number' && !isNaN(num) ? num : 0;
 }
 
-function safeGet(obj: unknown, path: string, defaultValue: unknown = undefined): unknown {
-  try {
-    // Split 'user.profile.name' into ['user', 'profile', 'name'] and traverse
-    return path.split('.').reduce((current, key) => {
-      if (current && typeof current === 'object' && key in current) {
-        return (current as Record<string, unknown>)[key];
-      }
-      return undefined;
-    }, obj) ?? defaultValue;
-  } catch {
-    // Return default if any part of traversal fails
-    return defaultValue;
-  }
-}
-
 function validateApiResponseStructure(data: TwitterApiResponse, expectedPaths: string[], context: string): void {
   const missingPaths = expectedPaths.filter(path => safeGet(data, path) === undefined);
   if (missingPaths.length > 0) {
     throw XUsersError.parsing(`Missing expected fields in ${context}: ${missingPaths.join(', ')}`);
   }
-}
-
-function safeGetArray(obj: unknown, path: string): unknown[] {
-  const result = safeGet(obj, path);
-  return Array.isArray(result) ? result : [];
 }
 
 async function delay(ms: number): Promise<void> {
@@ -263,7 +247,14 @@ function hasTickerSymbol(symbols: any, ticker: string): boolean {
   return false;
 }
 
-function parseTweetFromEntry(entry: any, communityId: string): XUserTweet {
+function hasAnyTickerSymbol(symbols: any, tickers: string[]): boolean {
+  for (const t of tickers) {
+    if (hasTickerSymbol(symbols, t)) return true;
+  }
+  return false;
+}
+
+function parseTweetFromEntry(entry: any, communityId?: string): XUserTweet {
   const tweetData = safeGet(entry, 'content.itemContent.tweet_results.result');
   const legacy = safeGet(tweetData, 'legacy');
   
@@ -275,6 +266,7 @@ function parseTweetFromEntry(entry: any, communityId: string): XUserTweet {
     const createdAt = parseTwitterDate(safeGet(legacy, 'created_at') as string);
     const media = extractMediaUrls(safeGet(legacy, 'extended_entities.media'));
     const inCommunity = safeGet(tweetData, 'tweet.community_results.id_str') === communityId;
+    const symbols = safeGet(legacy, 'entities.symbols', [])
 
     return {
       id: sanitizeString(safeGet(legacy, 'id_str') as string),
@@ -284,6 +276,7 @@ function parseTweetFromEntry(entry: any, communityId: string): XUserTweet {
       reposts: sanitizeNumber(safeGet(legacy, 'retweet_count') as number),
       quotes: sanitizeNumber(safeGet(legacy, 'quote_count') as number),
       replies: sanitizeNumber(safeGet(legacy, 'reply_count') as number),
+      symbol: Array.isArray(symbols) ? symbols : [],
       media,
       inCommunity,
       createdAt
@@ -295,11 +288,10 @@ function parseTweetFromEntry(entry: any, communityId: string): XUserTweet {
 
 
 
-async function fetchUserTweets({ userId, cursor, communityId, ticker, startTime }: XUserRequest): Promise<XUserTweetResponse> {
+export async function fetchUserTweets({ userId, cursor, communityId, filters }: XUserRequest): Promise<XUserTweetResponse> {
   // Input validation - fail fast if parameters are invalid
   validateUserId(userId);
-  validateTicker(ticker);
-  validateDate(startTime);
+  validateFilters(filters);
 
   const data = await makeApiRequest(
     `${API_CONFIG.baseURL}/user-tweets`,
@@ -331,7 +323,7 @@ async function fetchUserTweets({ userId, cursor, communityId, ticker, startTime 
   // Handle pinned tweet separately (different structure than regular tweets)
   if ((pinnedInstructions as any)?.entry) {
     try {
-      const pinnedTweet = parsePinnedTweet((pinnedInstructions as any).entry, communityId, ticker, startTime);
+      const pinnedTweet = parsePinnedTweet((pinnedInstructions as any).entry, communityId, filters);
       if (pinnedTweet) {
         tweets.push(pinnedTweet);  // Add to results if it matches our filters
       }
@@ -343,7 +335,7 @@ async function fetchUserTweets({ userId, cursor, communityId, ticker, startTime 
 
   // Process regular tweets (main content)
   if ((tweetsInstruction as any)?.entries) {
-    const filteredTweets = filterAndParseTweets((tweetsInstruction as any).entries, communityId, ticker, startTime);
+    const filteredTweets = filterAndParseTweets((tweetsInstruction as any).entries, communityId, filters);
     tweets.push(...filteredTweets);  // Spread operator to add all filtered tweets
   }
 
@@ -361,9 +353,8 @@ async function fetchUserTweets({ userId, cursor, communityId, ticker, startTime 
 
 function parsePinnedTweet(
   pinnedEntry: any,
-  communityId: string,
-  ticker: string,
-  startTime: Date
+  communityId: string | undefined,
+  filters: TickerFilter[]
 ): XUserTweet | null {
   const tweetData = safeGet(pinnedEntry, 'content.itemContent.tweet_results.result');
   const legacy = safeGet(tweetData, 'legacy');
@@ -376,7 +367,7 @@ function parsePinnedTweet(
     const createdAt = parseTwitterDate(safeGet(legacy, 'created_at') as string);
     const symbols = safeGet(legacy, 'entities.symbols', []);
     
-    if (createdAt >= startTime && hasTickerSymbol(symbols, ticker)) {
+    if (matchesAnyFilter(createdAt, symbols, filters)) {
       return parseTweetFromEntry({ content: { itemContent: { tweet_results: { result: tweetData } } } }, communityId);
     }
   } catch (error) {
@@ -386,18 +377,28 @@ function parsePinnedTweet(
   return null;
 }
 
+function matchesAnyFilter(createdAt: Date, symbols: any, filters: TickerFilter[]): boolean {
+  for (const f of filters) {
+    const start = f.startDate ?? new Date(0);
+    const end = f.endDate ?? new Date(8640000000000000);
+    if (createdAt >= start && createdAt <= end && hasAnyTickerSymbol(symbols, f.symbols)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function filterAndParseTweets(
   entries: any,
-  communityId: string,
-  ticker: string,
-  startTime: Date
+  communityId: string | undefined,
+  filters: TickerFilter[]
 ): XUserTweet[] {
   const entriesArray = Array.isArray(entries) ? entries : [];
   const validTweets: XUserTweet[] = [];
   
   for (const entry of entriesArray) {
     try {
-      if (isValidTweetEntry(entry, ticker, startTime)) {
+      if (isValidTweetEntryForFilters(entry, filters)) {
         const tweet = parseTweetFromEntry(entry, communityId);
         validTweets.push(tweet);
       }
@@ -410,7 +411,7 @@ function filterAndParseTweets(
   return validTweets;
 }
 
-function isValidTweetEntry(entry: any, ticker: string, startTime: Date): boolean {
+function isValidTweetEntryForFilters(entry: any, filters: TickerFilter[]): boolean {
   const tweetData = safeGet(entry, 'content.itemContent.tweet_results.result');
   const legacy = safeGet(tweetData, 'legacy');
   
@@ -424,15 +425,11 @@ function isValidTweetEntry(entry: any, ticker: string, startTime: Date): boolean
 
   try {
     const createdAt = parseTwitterDate(safeGet(legacy, 'created_at') as string);
-    if (createdAt < startTime) {
-      return false;
-    }
+    const symbols = safeGet(legacy, 'entities.symbols', []);
+    return matchesAnyFilter(createdAt, symbols, filters);
   } catch {
     return false;
   }
-
-  const symbols = safeGet(legacy, 'entities.symbols', []);
-  return hasTickerSymbol(symbols, ticker);
 }
 
 async function fetchUserId(username: string): Promise<string> {
@@ -486,13 +483,13 @@ async function fetchUserInformation(userId: string): Promise<XUser> {
   };
 }
 
-export async function fetchUser({ userId, communityId, ticker, startTime }: XUserRequest): Promise<XUser | undefined> {
+export async function fetchUser({ userId, communityId, filters }: XUserRequest): Promise<XUser | undefined> {
   try {
     validateUserId(userId);
-    validateTicker(ticker);
-    validateDate(startTime);
+    validateFilters(filters);
     
-    if (!communityId || typeof communityId !== 'string') {
+    // communityId is optional; if provided, it must be a non-empty string
+    if (communityId !== undefined && (typeof communityId !== 'string' || communityId.trim().length === 0)) {
       throw XUsersError.validation('Community ID must be a non-empty string');
     }
 
@@ -506,8 +503,7 @@ export async function fetchUser({ userId, communityId, ticker, startTime }: XUse
         userId, 
         cursor, 
         communityId, 
-        ticker, 
-        startTime 
+        filters
       });
       
       userInformation.tweets.push(...userTweets.tweets);
@@ -535,10 +531,10 @@ export async function fetchUser({ userId, communityId, ticker, startTime }: XUse
   }
 }
 
-export async function fetchUserByUsername(username: string, communityId: string, ticker: string, startTime: Date): Promise<XUser | undefined> {
+export async function fetchUserByUsername(username: string, communityId: string | undefined, filters: TickerFilter[]): Promise<XUser | undefined> {
   try {
     const userId = await fetchUserId(username);
-    return await fetchUser({ userId, communityId, cursor: '', ticker, startTime });
+    return await fetchUser({ userId, communityId, cursor: '', filters });
   } catch (error) {
     if (error instanceof XUsersError) {
       console.error(`XUsersError fetching user by username ${username}:`, {
@@ -554,4 +550,4 @@ export async function fetchUserByUsername(username: string, communityId: string,
 }
 
 // Export error class and validation functions for external use
-export { XUsersError, validateUserId, validateUsername, validateTicker, validateDate };
+export { XUsersError, validateUserId, validateUsername };

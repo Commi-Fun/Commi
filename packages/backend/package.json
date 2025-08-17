@@ -4,9 +4,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev": "tsx watch src/index.ts",
+    "dev": "concurrently -n scheduler,worker,compute \"pnpm scheduler\" \"pnpm worker\" \"pnpm compute\"",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "concurrently -n scheduler,worker,compute \"pnpm scheduler\" \"pnpm worker\" \"pnpm compute\"",
+    "scheduler": "tsx src/crawler/scheduler.ts",
+    "worker": "tsx src/crawler/worker.ts",
+    "compute": "tsx src/compute/compute_engine.ts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write src",
     "clean": "rimraf dist",
@@ -17,19 +20,23 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "@commi-dashboard/db": "workspace:*",
     "@commi-dashboard/common": "workspace:*",
+    "@commi-dashboard/db": "workspace:*",
     "@types/express": "^5.0.3",
     "axios": "^1.10.0",
+    "concurrently": "^9.2.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.5.0",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "node-cron": "^3.0.3"
   },
   "devDependencies": {
     "@types/dotenv": "^6.1.1",
     "@types/node": "^24.0.3",
+    "@types/node-cron": "^3.0.11",
+    "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "tsx": "^4.7.0",
-    "typescript": "^5.8.3",
-    "rimraf": "^5.0.5"
+    "typescript": "^5.8.3"
   }
 }
