@@ -20,18 +20,19 @@ export interface ReferralDomain {
 }
 
 export interface CampaignDomain {
-    name: string;
-    description: string
-    tokenAddress: string
-    tokenName: string
-    ticker: string
-    totalAmount: bigint
-    remainingAmount: bigint
-    marketCap: bigint
-    startTime: Date
-    endTime: Date
-    tags: string[]
-    socialLinks: any
-    creatorId: number
-    txHash: string
+    id?: number;
+    description: string;
+    tokenAddress: string;
+    tokenName: string;
+    ticker?: string;
+    totalAmount: bigint;
+    remainingAmount: bigint;
+    marketCap?: bigint;
+    startTime: Date;
+    endTime: Date;
+    tags?: string[];
+    socialLinks: any;
+    status: string;
+    creatorId: number;
+    txHash?: string;
 }
