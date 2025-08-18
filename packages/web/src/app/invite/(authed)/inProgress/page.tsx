@@ -309,7 +309,7 @@ const Page = () => {
                 onClick={claim}
                 className="gradient-border-custom"
                 weight="bold">
-                <span className="px-15 font-bold text-[18px]">Calim</span>
+                <span className="px-15 font-bold text-[18px]">Claim</span>
               </CommiButton>
             </div>
           </>
