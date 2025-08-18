@@ -5,19 +5,30 @@ import { success, error } from '@/lib/utils/response';
 import { getServerSession } from 'next-auth'
 import { nextAuthOptions } from '../../auth/[...nextauth]/route'
 import { UserDTO } from '@/types/dto';
-import { useRouter } from 'next/router';
 
 export const GET = withErrorHandler(async (req: NextRequest) => {
   let userDto: UserDTO | null
   const session = await getServerSession(nextAuthOptions)
   if (session) {
     userDto = { userId: session.user.userId, twitterId: session.user.twitterId } 
-  }else {
+  } else {
     userDto = null
   }
-  const router = useRouter();
-  const { id } = router.query;
-  const result = await campaignService.get(userDto as never, id as never)
+  
+  // Get campaign ID from query parameters
+  const { searchParams } = new URL(req.url)
+  const id = searchParams.get('id')
+  
+  if (!id) {
+    return error('Campaign ID is required', 400)
+  }
+  
+  const campaignId = parseInt(id, 10)
+  if (isNaN(campaignId)) {
+    return error('Invalid campaign ID', 400)
+  }
+  
+  const result = await campaignService.get(userDto as never, campaignId)
   if (!result.success) {
     return error(result.error || 'Failed to get campaign', 500)
   }

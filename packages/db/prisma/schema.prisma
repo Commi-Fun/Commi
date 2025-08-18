@@ -165,11 +165,10 @@ enum CampaignStatus {
 
 model Campaign {
   id              Int            @id @default(autoincrement())
-  name            String?
   description     String
   tokenAddress    String         @db.VarChar(44)
   tokenName       String
-  ticker          String
+  ticker          String?
   totalAmount     BigInt
   remainingAmount BigInt
   marketCap       BigInt?
@@ -179,7 +178,7 @@ model Campaign {
   socialLinks     Json
   status          CampaignStatus
   creatorId       Int
-  txHash          String         @db.VarChar(88)
+  txHash          String?        @db.VarChar(88)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
 
