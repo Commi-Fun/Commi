@@ -1,119 +1,115 @@
 import { CampaignDomain } from '@/types/domain';
-import { CampaignDto, UserDTO } from '@/types/dto';
+import { UserDTO, CreateCampaignRequestDto, CampaignResponseDto } from '@/types/dto';
 import { Campaign, CampaignStatus, Prisma, prisma } from '@commi-dashboard/db';
 import { createErrorResult, createSuccessResult, ServiceResult } from '../utils/serviceResult';
 import { BadRequestError, NotFoundError } from '../utils/errors';
 
-
-// Service Function
-export async function list(): Promise<ServiceResult<Array<CampaignDto>>>  {
+// Service Functions
+export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>>  {
   try {
     const campaigns = await findActiveCampaigns()
     if (!campaigns || campaigns.length === 0) {
-      createSuccessResult(null)
+      return createSuccessResult([])
     }
 
-    const result = []
-    const campaignIds = []
+    const result: CampaignResponseDto[] = []
+    const campaignIds = campaigns.map(c => c.id)
     let participationCountMap: Map<number, number> = new Map()
-    for (let i = 0; i < campaigns.length; i++) {
-      const campaign = campaigns[i];
-      result.push(toCampaignDto(campaign))
-      campaignIds.push(campaign.id)
-    }
-
-    const counts =  await prisma.$queryRaw<any[]>`SELECT p.campaignId, count(*) as count FROM Participation p WHERE p.campaignId in ${campaignIds} GROUP BY p.campaignId`
-    for (let index = 0; index < counts.length; index++) {
-      const c = counts[index];
+    
+    // Get participation counts
+    const counts = await prisma.$queryRaw<any[]>`SELECT p.campaignId, count(*) as count FROM Participation p WHERE p.campaignId in ${campaignIds} GROUP BY p.campaignId`
+    for (const c of counts) {
       participationCountMap.set(c.campaignId, c.count)
     }
 
-    for (let i = 0; i < result.length; i++) {
-      const campaign = result[i];
-      campaign.participationCount = participationCountMap.get(campaign.id) ?? 0
+    // Get creator names
+    const creatorIds = [...new Set(campaigns.map(c => c.creatorId))]
+    const creators = await prisma.user.findMany({
+      where: { id: { in: creatorIds } },
+      select: { id: true, name: true }
+    })
+    const creatorMap = new Map(creators.map(c => [c.id, c.name]))
+
+    for (const campaign of campaigns) {
+      const participationCount = participationCountMap.get(campaign.id) ?? 0
+      const creatorName = creatorMap.get(campaign.creatorId) || 'Unknown'
+      
+      result.push(toCampaignResponseDto(campaign, participationCount, creatorName, false))
     }
+    
     return createSuccessResult(result)
-  }catch(error: any) {
-    return createErrorResult(error.message || 'Failed to get campaign')
+  } catch(error: any) {
+    return createErrorResult(error.message || 'Failed to get campaigns')
   }
 }
 
-export async function get(user: UserDTO, id: number): Promise<ServiceResult<CampaignDto>>  {
+export async function get(user: UserDTO | null, id: number): Promise<ServiceResult<CampaignResponseDto>>  {
   try {
     const campaign = await findCampaignById(id)
     if (!campaign) {
       throw new NotFoundError("Campaign not found.")
     }
 
-    const campaignDto = toCampaignDto(campaign)
-
+    // Get creator name
     const creator = await prisma.user.findUnique({
-      where: {
-        id: campaign.creatorId
-      }
+      where: { id: campaign.creatorId },
+      select: { name: true }
     })
-    if (creator) {
-      campaignDto.creator = creator.name  
-    }
-    const count = await prisma.participation.count({
-      where: {
-        campaignId: campaign.id
-      }
+    const creatorName = creator?.name || 'Unknown'
+
+    // Get participation count
+    const participationCount = await prisma.participation.count({
+      where: { campaignId: campaign.id }
     })
-    campaignDto.participationCount = count
-    if (user) {
+
+    // Check if user has claimed
+    let claimed = false
+    if (user?.userId) {
       const unclaimed = await prisma.claimRecord.count({
         where: {
-          userId: user.userId as number,
+          userId: user.userId,
           campaignId: campaign.id,
           claimed: false
         }
       })
-      campaignDto.canClaim = unclaimed > 0
+      claimed = unclaimed === 0
     }
-    return createSuccessResult(campaignDto)
-  }catch(error: any) {
+
+    const responseDto = toCampaignResponseDto(
+      campaign, 
+      participationCount, 
+      creatorName, 
+      claimed
+    )
+
+    return createSuccessResult(responseDto)
+  } catch(error: any) {
     return createErrorResult(error.message || 'Failed to get campaign')
   }
 }
 
-export async function create(user: UserDTO, data: CampaignDto): Promise<ServiceResult>  {
+export async function create(user: UserDTO, data: CreateCampaignRequestDto): Promise<ServiceResult<{ id: number }>>  {
   try {
     const dbUser = await prisma.user.findUnique({
-      where: {
-        id: user.userId
-      }
+      where: { id: user.userId }
     })
     if (!dbUser) {
       throw new NotFoundError("User not found.")
     }
 
-    if (data.startTime < new Date() || data.startTime < data.endTime) {
-      throw new BadRequestError("Invalid start/end time.")
-    }
-    if (data.totalAmount < 0) {
+    if (data.totalAmount <= 0) {
       throw new BadRequestError("Invalid token amount.")
     }
 
-    const campaignDomain: CampaignDomain = {
-      name: data.name,
-      description: data.description,
-      tokenAddress: data.tokenAddress,
-      tokenName: data.tokenName,
-      ticker: data.ticker,
-      totalAmount: data.totalAmount,
-      remainingAmount: data.totalAmount,
-      marketCap: data.marketCap,
-      startTime: data.startTime,
-      endTime: data.endTime,
-      tags: data.tags,
-      socialLinks: data.socialLinks,
-      creatorId: dbUser.id,
-      txHash: data.txHash
+    if (data.duration <= 0) {
+      throw new BadRequestError("Invalid duration.")
     }
-    await createCampaign(campaignDomain)
-    return createSuccessResult(null)
-  }catch(error: any) {
+
+    const campaignDomain = toCampaignDomain(data, dbUser.id)
+    const result = await createCampaign(campaignDomain)
+    
+    return createSuccessResult({ id: result.id })
+  } catch(error: any) {
     return createErrorResult(error.message || 'Failed to create campaign')
   }
 }
@@ -121,9 +117,7 @@ export async function create(user: UserDTO, data: CampaignDto): Promise<ServiceR
 export async function claim(user: UserDTO, campaignId: number, txHash: string): Promise<ServiceResult>  {
   try {
     const dbUser = await prisma.user.findUnique({
-      where: {
-        id: user.userId
-      }
+      where: { id: user.userId }
     })
     if (!dbUser) {
       throw new NotFoundError("User not found.")
@@ -145,28 +139,27 @@ export async function claim(user: UserDTO, campaignId: number, txHash: string): 
       }
     })
     return createSuccessResult(null)
-  }catch(error: any) {
-    return createErrorResult(error.message || 'Failed to create campaign')
+  } catch(error: any) {
+    return createErrorResult(error.message || 'Failed to claim campaign')
   }
 }
 
-
-// Repository Function
+// Repository Functions
 export async function createCampaign(data: CampaignDomain) {
   return prisma.campaign.create({
     data: {
-      name: data.name,
       description: data.description,
       tokenAddress: data.tokenAddress,
       tokenName: data.tokenName,
       ticker: data.ticker,
+      marketCap: data.marketCap,
       totalAmount: data.totalAmount,
-      remainingAmount: data.totalAmount,
+      remainingAmount: data.remainingAmount,
       startTime: data.startTime,
       endTime: data.endTime,
       tags: data.tags,
-      socialLinks: data.tags,
-      status: CampaignStatus.UPCOMING,
+      socialLinks: data.socialLinks,
+      status: data.status as CampaignStatus,
       creatorId: data.creatorId,
       txHash: data.txHash
     },
@@ -195,24 +188,48 @@ export async function deleteCampaign(id: number) {
   await prisma.campaign.delete({ where: { id } });
 }
 
-function toCampaignDto(entity: Campaign): CampaignDto {
+// Transformation functions
+function toCampaignResponseDto(
+  campaign: Campaign, 
+  participationCount: number, 
+  creatorName: string, 
+  claimed: boolean
+): CampaignResponseDto {
   return {
-    id: entity.id,
-    name: entity.name,
-    description: entity.description,
-    tokenAddress: entity.tokenAddress,
-    tokenName: entity.tokenName,
-    ticker: entity.ticker,
-    totalAmount: entity.totalAmount,
-    remainingAmount: entity.remainingAmount,
-    marketCap: entity.marketCap ?? BigInt(0),
-    startTime: entity.startTime,
-    endTime: entity.endTime,
-    tags: entity.tags,
-    socialLinks: entity.socialLinks,
-    creator: "",
-    canClaim: false,
-    participationCount: 0,
-    txHash: ""
-  }
+      id: campaign.id,
+      description: campaign.description,
+      tokenAddress: campaign.tokenAddress,
+      tokenName: campaign.tokenName,
+      ticker: campaign.ticker ?? '',
+      marketCap: campaign.marketCap ?? 0n,
+      totalAmount: campaign.totalAmount,
+      remainingAmount: campaign.remainingAmount,
+      startTime: campaign.startTime,
+      endTime: campaign.endTime,
+      status: campaign.status,
+      participationCount: participationCount,
+      creator: creatorName,
+      tags: campaign.tags,
+      claimed: claimed
+  };
+}
+
+function toCampaignDomain(
+  campaignRequest: CreateCampaignRequestDto, 
+  creatorId: number, 
+): CampaignDomain {
+  const startTime = new Date()
+  const endTime = new Date(startTime.getTime() + campaignRequest.duration * 1000)
+  return {
+      description: campaignRequest.description,
+      tokenAddress: campaignRequest.tokenAddress,
+      tokenName: campaignRequest.tokenName,
+      totalAmount: campaignRequest.totalAmount,
+      remainingAmount: campaignRequest.totalAmount,
+      startTime: startTime,
+      endTime: endTime,
+      status: CampaignStatus.ONGOING,
+      creatorId: creatorId,
+      socialLinks: campaignRequest.socialLinks,
+  };
 }

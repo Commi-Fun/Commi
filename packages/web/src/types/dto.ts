@@ -19,22 +19,31 @@ export interface LoginDto {
     accessToken: string;
 }
 
-export interface CampaignDto {
-    id: number,
-    name: string;
-    description: string
-    tokenAddress: string
-    tokenName: string
-    ticker: string
-    totalAmount: bigint
-    remainingAmount: bigint
-    marketCap: bigint
-    startTime: Date
-    endTime: Date
-    tags: string[]
-    socialLinks: any
-    creator?: string
-    canClaim: boolean
-    participationCount: number
-    txHash: string
+// Request DTOs - for API input validation
+export interface CreateCampaignRequestDto {
+    description: string;
+    tokenAddress: string;
+    tokenName: string;
+    totalAmount: bigint;
+    duration: number;
+    socialLinks: any;
+}
+
+// Response DTOs - for API output
+export interface CampaignResponseDto {
+    id: number;
+    description: string;
+    tokenAddress: string;
+    tokenName: string;
+    ticker: string;
+    totalAmount: bigint;
+    remainingAmount: bigint;
+    marketCap: bigint;
+    startTime: Date;
+    endTime: Date;
+    status: string;
+    participationCount: number;
+    creator: string;
+    tags: string[];
+    claimed: boolean;
 }
