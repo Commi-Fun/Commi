@@ -27,12 +27,8 @@ export const LeaderBoardTitle = ({ setStatus }: { setStatus: (a: string) => void
         <span>00:12</span>
         <div className="w-[1px] h-3 bg-gray-600 rounded-full mx-2"></div>
         <p className="text-gray-600 font-medium">Auto refresh every 1 min</p>
-        <div className="flex items-center gap-[2.5px] pl-6 cursor-pointer">
-          {refreshing ? (
-            <SpinningRefresh />
-          ) : (
-            <RedoIcon onClick={onRefreshClick} className="text-blue-500 text-[20px]" />
-          )}
+        <div onClick={onRefreshClick} className="flex items-center gap-[2.5px] pl-6 cursor-pointer">
+          {refreshing ? <SpinningRefresh /> : <RedoIcon className="text-blue-500 text-[20px]" />}
 
           <span className="text-blue-500">Refresh</span>
         </div>
