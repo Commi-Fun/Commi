@@ -32,6 +32,8 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
     duration: 0,
   })
   const { publicKey, sendTransaction } = useWallet()
+
+  console.log('publicKey', publicKey)
   const { setCampaigns } = useContext(GlobalContext)
   const { connection } = useConnection()
 
@@ -100,6 +102,7 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
 
       alert(`转账成功！交易签名: ${txSignature}`)
     } catch (err) {
+      console.log('transaltion error', err)
     } finally {
     }
   }
@@ -119,7 +122,7 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
       await new Promise(resolve => {
         setTimeout(resolve, 2000)
       })
-      setCampaigns((prev: any) => [...prev, dummyAddedCampaign])
+      setCampaigns((prev: any) => [dummyAddedCampaign, ...prev])
 
       onClose()
     } catch (e) {

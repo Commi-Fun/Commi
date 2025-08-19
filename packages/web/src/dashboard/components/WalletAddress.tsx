@@ -4,9 +4,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import Image from 'next/image'
 
 export const WalletAddress = ({ showIcon, address }: { showIcon?: boolean; address: string }) => {
-  const { connect, publicKey, wallet, ...rest } = useWallet()
-  console.log('wallet', wallet)
-  console.log('rest', rest)
+  const { wallet } = useWallet()
 
   const copyToClipboard = async () => {
     navigator.clipboard.writeText(address)

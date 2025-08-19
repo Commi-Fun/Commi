@@ -60,8 +60,8 @@ const Card = (props: any) => {
       <div>
         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
 
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center border-2 overflow-hidden border-white/30">
+        <div className="flex gap-3 mb-4">
+          <div className="w-10 h-10 bg-white/20 rounded-full flex shrink-0 items-center justify-center border-2 overflow-hidden border-white/30">
             <img width={40} height={40} alt="" src={props.imgUrl} />
           </div>
           <div className="flex flex-col gap-2">
@@ -78,6 +78,10 @@ const Card = (props: any) => {
       </div>
 
       <div className="absolute bottom-4 right-4 text-right">
+        {props.rank === 1 && <p className="text-3xl text-amber-200 font-extrabold">1st</p>}
+        {props.rank === 2 && <p className="text-3xl font-extrabold">2nd</p>}
+        {props.rank === 3 && <p className="text-3xl text-orange-100 font-extrabold">3rd</p>}
+
         <div className="text-xs opacity-80">Rewards</div>
         <div className="text-lg font-semibold">{props.rewards}</div>
       </div>

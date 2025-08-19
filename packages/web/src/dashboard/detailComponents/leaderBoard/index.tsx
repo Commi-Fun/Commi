@@ -5,7 +5,7 @@ import { dummyLeaders } from '@/lib/constants'
 
 const LeaderBoards = ({ address }: { address: string }) => {
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col pb-6">
       <LeaderBoardTitle />
       {dummyLeaders?.length > 0 ? (
         <div className="flex px-10 gap-6">

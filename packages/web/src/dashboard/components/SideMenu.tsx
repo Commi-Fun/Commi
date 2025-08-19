@@ -23,7 +23,7 @@ const ProfileInfo = () => {
   return (
     <>
       <CustomConnectModal open={isConnectModalOpen} onClose={() => setConnectModalOpen(false)} />
-      <div className="w-full">
+      <div className="grow">
         <div className="flex flex-col pl-2 gap-2">
           <div className="flex gap-2">
             <p className="font-bold text-[18px]">{session?.user?.name}</p>
@@ -68,8 +68,8 @@ export default function SideMenu() {
   return (
     <div className="w-75 border-r-main-Black border-r shrink-0">
       <div className="w-full h-25 flex items-center px-5 border-b-lime-700 border-b">
-        <div className="rounded-full w-12 h-12">
-          <Image src={userImage} alt="" width={48} height={48} />
+        <div className="rounded-full w-12 h-12 overflow-hidden">
+          <img src={userImage} alt="" width={48} height={48} />
         </div>
         {isAuthenticated ? <ProfileInfo /> : <UnloginProfileInfo />}
       </div>

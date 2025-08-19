@@ -17,7 +17,7 @@ const LeaderboardTable = ({ address }: { address: string }) => {
   const [activeTab, setActiveTab] = useState<'total' | 'last30min'>('total')
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden">
+    <div className="bg-white rounded-2xl overflow-hidden min-w-150">
       {/* Tabs */}
       <div className="flex justify-end">
         <button
