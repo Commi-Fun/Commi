@@ -1,6 +1,5 @@
 'use client'
 import * as React from 'react'
-import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import JoinedCampaignList from './JoinedCampainList'
 import CommiButton from '@/components/CommiButton'
@@ -11,6 +10,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { LoginButton } from './LoginButton'
 import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
 import { WalletAddress } from './WalletAddress'
+import Image from 'next/image'
 
 const ProfileInfo = () => {
   const { data: session } = useSession()
@@ -63,14 +63,14 @@ export default function SideMenu() {
   const args = useSession()
 
   const isAuthenticated = args.status === 'authenticated'
-  const userImage =
-    args.data?.user?.image ||
-    'https://images.steamusercontent.com/ugc/1637611602253477558/8D6958D1C1CF006D6D461206E0059C1FD4D00B2A/?imw=637&imh=358&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=true'
+  const userImage = args.data?.user?.image || '/images/unauthHead.png'
 
   return (
-    <div className="w-75 border-r-main-Black border-r">
+    <div className="w-75 border-r-main-Black border-r shrink-0">
       <div className="w-full h-25 flex items-center px-5 border-b-lime-700 border-b">
-        <Avatar alt="Riley Carter" src={userImage} sx={{ width: 48, height: 48 }} />
+        <div className="rounded-full w-12 h-12">
+          <Image src={userImage} alt="" width={48} height={48} />
+        </div>
         {isAuthenticated ? <ProfileInfo /> : <UnloginProfileInfo />}
       </div>
       <Box

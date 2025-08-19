@@ -18,7 +18,7 @@ const CampaignsContainer = () => {
   }
 
   return (
-    <div className="flex px-7 bg-blue-100 grow flex-col pb-6">
+    <div className="flex px-7 bg-blue-100 grow flex-col pb-6 w-full">
       <div className="flex items-center gap-3 py-6 justify-between">
         <Tabs value={value} onChange={handleChange} aria-label="campaign categories">
           <Tab value="one" label="All" />
@@ -26,7 +26,7 @@ const CampaignsContainer = () => {
           <Tab value="three" label="Campaign" />
         </Tabs>
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 overflow-auto">
         {campaigns.map((item: Record<string, string>, index: number) => (
           <CampaignCard
             key={index}

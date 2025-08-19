@@ -3,21 +3,11 @@ import CommiModal from '@/components/CommiModal'
 import CommiTypo from '@/components/CommiTypo'
 import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
 import { XWithBorderIcon } from '@/components/icons/XWithBorderIcon'
-import { customColors, primaryLinear } from '@/shared-theme/themePrimitives'
-import { Box, Stack, styled } from '@mui/material'
+import { customColors } from '@/shared-theme/themePrimitives'
+import { Stack } from '@mui/material'
 import { signIn } from 'next-auth/react'
 import Image from 'next/image'
 import React from 'react'
-
-const StyledStack = styled(Stack)(() => ({
-  borderRadius: '8px',
-  position: 'absolute',
-  backgroundColor: customColors.blue[1000],
-  top: '1px',
-  left: '1px',
-  bottom: '1px',
-  right: '1px',
-}))
 
 export const LoginButton = ({
   children,
@@ -58,29 +48,26 @@ export const LoginButton = ({
       {renderButton()}
 
       <CommiModal open={openSignInModal} onClose={() => setOpenSignInModal(false)} size="small">
-        <Stack className="p-6" direction={'column'} alignItems="center" justifyContent="center">
+        <Stack className="" direction={'column'} alignItems="center" justifyContent="center">
           <div className="flex items-end gap-2">
             <Image alt="" width={33.78} height={57.49} src={'/images/logoBlackSroke.svg'} />
             <Image src="/Commi.svg" width={139} height={31} alt="logo"></Image>
           </div>
-          <span className="text-green-300 text-[24px] font-extrabold">Log in / Sign up</span>
+          <span className="text-lime-500 text-[24px] font-extrabold mt-3">Log in / Sign up</span>
           <p className="font-semibold text-gray-400 text-[18px]">
             Link your Twitter and start earning rewards
           </p>
 
-          <div className="h-[94px] rounded-2xl relative w-full">
-            <div className="flex p-3 items-center justify-between bg-blue-1000 h-full rounded-lg">
+          <div className="h-[94px] rounded-lg relative w-full bg-blue-100 mt-8">
+            <div className="flex py-3 px-6 items-center justify-between bg-blue-1000 h-full rounded-lg">
               <Stack direction={'row'} alignItems={'center'} gap={2}>
                 <XWithBorderIcon />
                 <CommiTypo type="content" weight="semibold" color={customColors.main.White}>
                   Twitter
                 </CommiTypo>
               </Stack>
-              <CommiButton
-                size="medium"
-                className="bg-green-500 text-red-400 w-40"
-                onClick={connectWithX}>
-                <span>Start</span>
+              <CommiButton size="medium" onClick={connectWithX} className="rounded-lg w-30">
+                <span className="text-lg font-bold">Start</span>
                 <ArrowCircleRight className="text-[18px]" />
               </CommiButton>
             </div>
