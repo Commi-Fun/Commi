@@ -56,7 +56,7 @@ const dummyCards: any[] = [
 
 const Card = (props: any) => {
   return (
-    <div className={`flex flex-col p-4 relative w-full h-full`}>
+    <div className={`flex flex-col p-4 relative w-full h-full overflow-hidden`}>
       <div>
         <div className="absolute top-0 right-0 w-24 h-24 bg-white/10 rounded-full -translate-y-8 translate-x-8"></div>
 

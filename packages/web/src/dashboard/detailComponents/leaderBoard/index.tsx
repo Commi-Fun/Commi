@@ -3,10 +3,16 @@ import LeaderboardTable from '@/dashboard/components/LeaderboardTable'
 import LeaderboardCards from './LeaderboardCards'
 import { dummyLeaders } from '@/lib/constants'
 
-const LeaderBoards = ({ address }: { address: string }) => {
+const LeaderBoards = ({
+  address,
+  setStatus,
+}: {
+  address: string
+  setStatus: (arf: string) => void
+}) => {
   return (
     <div className="w-full flex flex-col pb-6">
-      <LeaderBoardTitle />
+      <LeaderBoardTitle setStatus={setStatus} />
       {dummyLeaders?.length > 0 ? (
         <div className="flex px-10 gap-6">
           <LeaderboardTable address={address} />

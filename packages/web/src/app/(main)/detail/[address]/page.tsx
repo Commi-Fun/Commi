@@ -6,7 +6,7 @@ import { ChevronLeft } from '@/components/icons/Chevron_Left'
 import { Divider } from '@mui/material'
 import LeaderBoards from '@/dashboard/detailComponents/leaderBoard'
 import { useParams, useRouter } from 'next/navigation'
-import { useContext } from 'react'
+import { useContext, useState } from 'react'
 import { GlobalContext } from '@/context/GlobalContext'
 
 const Detail = () => {
@@ -17,6 +17,7 @@ const Detail = () => {
   const taretCampaign = campaigns.find(
     (campaign: { address: string }) => campaign.address === address,
   )
+  const [status, setStatus] = useState<string>('init')
 
   return (
     <div className="w-full h-full flex flex-col grow">
@@ -26,7 +27,7 @@ const Detail = () => {
       <div className="flex gap-6 px-10 justify-between">
         <CampaignDetailCard {...taretCampaign} />
         <div className="flex-shrink-0">
-          <PoolInfoCard address={address} />
+          <PoolInfoCard address={address} status={status} setStatus={setStatus} />
         </div>
       </div>
       <div className="mt-12">
@@ -34,7 +35,7 @@ const Detail = () => {
       </div>
       {/* Leaderboard Section */}
       <div className="flex grow">
-        <LeaderBoards address={address} />
+        <LeaderBoards setStatus={setStatus} address={address} />
       </div>
     </div>
   )

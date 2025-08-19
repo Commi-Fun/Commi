@@ -128,19 +128,30 @@ export const dummyCampaigns: any = [
 
 export const joinedCampaigns = [dummyCampaigns[0]]
 
-export const dummyAddedCampaign: any = {
-  name: 'heihei',
-  address: '',
-  imgUrl: 'https://pbs.twimg.com/profile_images/1956639049609097216/IKoWF2hl_normal.jpg',
-  tokenAmount: 0,
-  duraion: 6,
-  description: '',
-  communityLink: '',
-  twitterLink: '',
-  poolSize: 999,
-  MCap: '100K',
-  price: '222',
-  members: [],
+export const dummyAddedCampaign = {
+  name: 'Cup ',
+  address: 'dLwtEzPY2vdBunYvN3s86EZgcAjy28gVpump',
+  MCap: '$1000000',
+  price: '$0.0001',
+  poolSize: 10000,
+  poolValue: '$1.00',
+  startDate: '2025-08-20T10:00:00Z',
+  endDate: '2025-08-20T16:00:00Z',
+  endingIn: '6H',
+  totalAmount: 10000000000,
+  imgUrl: 'https://pbs.twimg.com/media/Gxw-ZyPbsAQvsF7?format=jpg&name=medium',
+  members: [
+    // {
+    //   imgUrl: 'https://pbs.twimg.com/media/GyrW1nhWYAMpsyb?format=jpg&name=4096x4096',
+    // },
+    // {
+    //   imgUrl:
+    //     'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmmmlb-bO0-sy2K98amnTmF6SLGFMOikEDAg&s',
+    // },
+    // {
+    //   imgUrl: 'https://pbs.twimg.com/profile_images/1902372646249234432/T4kNyTq0_400x400.jpg',
+    // },
+  ],
 }
 
 export const dummyLeaders: any = [

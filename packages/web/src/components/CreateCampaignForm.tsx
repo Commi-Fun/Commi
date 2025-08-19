@@ -13,7 +13,19 @@ import { getAssociatedTokenAddress, createTransferInstruction } from '@solana/sp
 const tokenList = [
   {
     tokenAddress: 'x0012344',
-    tokenName: 'PEPE',
+    tokenName: 'Cup',
+  },
+  {
+    tokenAddress: 'x0012344',
+    tokenName: 'Superteam Degens',
+  },
+  {
+    tokenAddress: 'x0012344',
+    tokenName: 'Bali Ape Boom',
+  },
+  {
+    tokenAddress: 'x0012344',
+    tokenName: 'xBonk',
   },
 ]
 
@@ -109,15 +121,6 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
 
   const handleCreateCampaign = async () => {
     try {
-      // const result = await (
-      //   await fetch('/api/campaign/create', {
-      //     method: 'POST',
-      //     body: JSON.stringify({
-      //       ...formData,
-      //       walletAddress: publicKey?.toBase58(),
-      //     }),
-      //   })
-      // ).json()
       await sendTrans()
       await new Promise(resolve => {
         setTimeout(resolve, 2000)
