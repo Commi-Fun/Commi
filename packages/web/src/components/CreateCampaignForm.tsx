@@ -4,11 +4,12 @@ import React, { useContext, useState } from 'react'
 import { Divider } from '@mui/material'
 import { WalletAddress } from '@/dashboard/components/WalletAddress'
 import { ArrowCircleRight } from './icons/ArrowCircleRight'
-import { useWallet } from '@solana/wallet-adapter-react'
+import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { resolve } from 'path'
 import { dummyAddedCampaign, dummyCampaigns } from '@/lib/constants'
 import { GlobalContext } from '@/context/GlobalContext'
-
+import { PublicKey, Transaction } from '@solana/web3.js'
+import { getAssociatedTokenAddress, createTransferInstruction } from '@solana/spl-token'
 const tokenList = [
   {
     tokenAddress: 'x0012344',
@@ -30,8 +31,9 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
     twitterLink: '',
     duration: 0,
   })
-  const { publicKey } = useWallet()
+  const { publicKey, sendTransaction } = useWallet()
   const { setCampaigns } = useContext(GlobalContext)
+  const { connection } = useConnection()
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -54,6 +56,54 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
     )
   }
 
+  const sendTrans = async () => {
+    if (!publicKey) {
+      return
+    }
+    try {
+      // 1. 将地址字符串转换为 PublicKey 对象
+      const recipientPubKey = new PublicKey('7GF8EZRresw2QH26XLSvc5WK9mEwEqho55PEbHc1MwPM')
+      const mintPubKey = new PublicKey('9jK7su8LmSi3DUcKZfYJYdvycUkvRQa1EokcusNkpump')
+
+      // 注意：代币数量需要处理精度。这里假设代币有 6 位小数
+      // 在真实应用中，你应该先查询 mint 地址来获取实际的精度
+      const tokenDecimals = 6
+      const amountInSmallestUnit = parseFloat(formData.totalAmount) * Math.pow(10, tokenDecimals)
+
+      // 2. 找到发送者和接收者的关联代币账户 (ATA)
+      // 发送者的 ATA
+      const fromAta = await getAssociatedTokenAddress(mintPubKey, publicKey)
+      // 接收者的 ATA
+      const toAta = await getAssociatedTokenAddress(mintPubKey, recipientPubKey)
+
+      // 3. 创建一个新的交易
+      const transaction = new Transaction()
+
+      // 4. 创建转账指令
+      // 这是一个核心步骤，它描述了要执行的操作
+      const transferInstruction = createTransferInstruction(
+        fromAta, // 从哪个账户转出
+        toAta, // 转入哪个账户
+        publicKey, // 谁是所有者 (签名者)
+        amountInSmallestUnit, // 转账数量 (最小单位)
+      )
+
+      // 5. 将指令添加到交易中
+      transaction.add(transferInstruction)
+
+      // 6. 使用 wallet-adapter 的 sendTransaction 方法发送交易
+      // 它会自动处理 blockhash 和签名流程
+      const txSignature = await sendTransaction(transaction, connection)
+
+      // 7. (可选) 等待交易确认
+      await connection.confirmTransaction(txSignature, 'processed')
+
+      alert(`转账成功！交易签名: ${txSignature}`)
+    } catch (err) {
+    } finally {
+    }
+  }
+
   const handleCreateCampaign = async () => {
     try {
       // const result = await (
@@ -65,6 +115,7 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
       //     }),
       //   })
       // ).json()
+      await sendTrans()
       await new Promise(resolve => {
         setTimeout(resolve, 2000)
       })

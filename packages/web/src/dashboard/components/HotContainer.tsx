@@ -10,14 +10,16 @@ const HotContainer = () => {
   return (
     <div className="flex flex-col relative">
       <div className="flex gap-12 justify-center py-10 px-6 relative">
-        {campaigns.slice(0, 3).map((item: Record<string, string>, index: number) => (
-          <HotCampaignCard
-            imgSrc={item.imgUrl}
-            tokenName={item.name}
-            tokenAddress={item.address}
-            key={index}
-          />
-        ))}
+        {campaigns
+          .slice(campaigns.length - 3, campaigns.length)
+          .map((item: Record<string, string>, index: number) => (
+            <HotCampaignCard
+              imgSrc={item.imgUrl}
+              tokenName={item.name}
+              tokenAddress={item.address}
+              key={index}
+            />
+          ))}
       </div>
 
       <div className="absolute left-6 right-6 bottom-6 -z-10">
