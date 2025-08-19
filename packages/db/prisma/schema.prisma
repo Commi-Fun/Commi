@@ -268,3 +268,26 @@ model Referral {
   @@unique([referrerId, refereeId])
   @@unique([referrerTwitterId, refereeTwitterId])
 }
+
+model TokenInformation {
+  id                   Int      @id @default(autoincrement())
+  mint                 String   @unique @db.VarChar(44) // Token mint address (unique identifier)
+  name                 String?  // Token name
+  symbol               String?  // Token symbol (e.g., "BONK")
+  uri                  String?  // Metadata URI
+  platform             String   @default("pumpfun") // Platform (e.g., "pumpfun")
+  marketValue          Float    // Market value in USD
+  virtualSolReserves   BigInt   // Virtual SOL reserves in lamports
+  virtualTokenReserves BigInt   // Virtual token reserves
+  realSolReserves      BigInt   // Real SOL reserves in lamports
+  realTokenReserves    BigInt   // Real token reserves
+  isComplete           Boolean  @default(false) // Whether token graduated to Raydium
+  lastTransactionType  String?  // Last transaction type: "trade", "create", "complete"
+  blockTime            Int?     // Block time of last update
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  @@index([symbol])
+  @@index([marketValue])
+  @@index([isComplete])
+  @@index([platform])
+}

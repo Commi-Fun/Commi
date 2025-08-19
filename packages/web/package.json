@@ -58,6 +58,7 @@
     "rxjs": "^7.8.2",
     "siwe": "^3.0.0",
     "styled,": "link:@emotion/styled,",
+    "tailwind-merge": "^3.3.1",
     "viem": "^2.31.7",
     "wagmi": "^2.15.6",
     "x-charts,": "link:@mui/x-charts,",
@@ -69,6 +70,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@next/eslint-plugin-next": "^15.3.5",
+    "@prisma/nextjs-monorepo-workaround-plugin": "6.13.0",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
@@ -79,7 +81,6 @@
     "jest": "^29.7.0",
     "tailwindcss": "^4",
     "ts-jest": "^29.1.2",
-    "typescript": "^5",
-    "@prisma/nextjs-monorepo-workaround-plugin": "6.13.0"
+    "typescript": "^5"
   }
 }

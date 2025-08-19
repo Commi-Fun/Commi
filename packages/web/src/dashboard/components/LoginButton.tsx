@@ -1,6 +1,7 @@
 import CommiButton from '@/components/CommiButton'
 import CommiModal from '@/components/CommiModal'
 import CommiTypo from '@/components/CommiTypo'
+import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
 import { XWithBorderIcon } from '@/components/icons/XWithBorderIcon'
 import { customColors, primaryLinear } from '@/shared-theme/themePrimitives'
 import { Box, Stack, styled } from '@mui/material'
@@ -11,7 +12,7 @@ import React from 'react'
 const StyledStack = styled(Stack)(() => ({
   borderRadius: '8px',
   position: 'absolute',
-  backgroundColor: customColors.blue['500'],
+  backgroundColor: customColors.blue[1000],
   top: '1px',
   left: '1px',
   bottom: '1px',
@@ -46,8 +47,8 @@ export const LoginButton = ({
     }
 
     return (
-      <CommiButton variant="outlined" size="small" onClick={() => setOpenSignInModal(true)}>
-        Log in
+      <CommiButton size="small" onClick={() => setOpenSignInModal(true)}>
+        Log in With X
       </CommiButton>
     )
   }
@@ -57,33 +58,18 @@ export const LoginButton = ({
       {renderButton()}
 
       <CommiModal open={openSignInModal} onClose={() => setOpenSignInModal(false)} size="small">
-        <Stack
-          className="p-6"
-          direction={'column'}
-          alignItems="center"
-          justifyContent="center"
-          spacing={2}>
-          <Image alt="" width={180} height={60} src={'/images/commiLogoAndFont.png'} />
-          <CommiTypo color="white" type="heading-h1">
-            Log in / Sign up
-          </CommiTypo>
-          <CommiTypo type="title" weight="semibold" color={customColors.blue[200]}>
+        <Stack className="p-6" direction={'column'} alignItems="center" justifyContent="center">
+          <div className="flex items-end gap-2">
+            <Image alt="" width={33.78} height={57.49} src={'/images/logoBlackSroke.svg'} />
+            <Image src="/Commi.svg" width={139} height={31} alt="logo"></Image>
+          </div>
+          <span className="text-green-300 text-[24px] font-extrabold">Log in / Sign up</span>
+          <p className="font-semibold text-gray-400 text-[18px]">
             Link your Twitter and start earning rewards
-          </CommiTypo>
+          </p>
 
-          <Box
-            sx={{
-              width: '100%',
-              position: 'relative',
-              background: primaryLinear,
-              borderRadius: '8px',
-            }}
-            height={'94px'}>
-            <StyledStack
-              sx={{ px: 3 }}
-              direction={'row'}
-              alignItems={'center'}
-              justifyContent={'space-between'}>
+          <div className="h-[94px] rounded-2xl relative w-full">
+            <div className="flex p-3 items-center justify-between bg-blue-1000 h-full rounded-lg">
               <Stack direction={'row'} alignItems={'center'} gap={2}>
                 <XWithBorderIcon />
                 <CommiTypo type="content" weight="semibold" color={customColors.main.White}>
@@ -91,16 +77,14 @@ export const LoginButton = ({
                 </CommiTypo>
               </Stack>
               <CommiButton
-                theme="primaryLinear"
                 size="medium"
-                sx={{ width: '160px' }}
-                onClick={connectWithX}
-                color={customColors.main.Black}
-                weight="bold">
-                Start
+                className="bg-green-500 text-red-400 w-40"
+                onClick={connectWithX}>
+                <span>Start</span>
+                <ArrowCircleRight className="text-[18px]" />
               </CommiButton>
-            </StyledStack>
-          </Box>
+            </div>
+          </div>
         </Stack>
       </CommiModal>
     </>
