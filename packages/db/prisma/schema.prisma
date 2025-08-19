@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma/client"
@@ -17,7 +11,6 @@ datasource db {
 model User {
   id              Int      @id @default(autoincrement())
   twitterId       String   @unique @db.VarChar(20)
-  handle          String   @unique @db.VarChar(20)
   name            String
   profileImageUrl String?
   verified        Boolean  @default(false)
@@ -28,12 +21,13 @@ model User {
   listedCount     Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  handle          String   @unique @db.VarChar(20)
 }
 
 model Tweet {
   tweetId        String   @db.VarChar(20)
   text           String
-  twitterId      String   @db.VarChar(20)
+  createdAt      DateTime @default(now())
   retweetCount   Int      @default(0)
   replyCount     Int      @default(0)
   likeCount      Int      @default(0)
@@ -44,12 +38,12 @@ model Tweet {
   isQuote        Boolean  @default(false)
   isReply        Boolean  @default(false)
   hasMedia       Boolean  @default(false)
-  tickerSymbols  String[] // Array of ticker symbols mentioned
-  parentTweetId  String?
+  tickerSymbols  String[]
   fetchedAt      DateTime
-  tweetCreatedAt DateTime
-  createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  parentTweetId  String?
+  tweetCreatedAt DateTime
+  twitterId      String   @db.VarChar(20)
 
   @@id([tweetId, fetchedAt])
   @@index([twitterId])
@@ -96,19 +90,6 @@ model SystemConfig {
   updatedAt   DateTime @updatedAt
 }
 
-enum CrawlerTaskType {
-  USER_FETCH
-  TWEET_FETCH
-  COMMUNITY_FETCH
-}
-
-enum CrawlerTaskStatus {
-  QUEUED
-  PROCESSING
-  SUCCESS
-  FAILED
-}
-
 model CrawlerTask {
   id          Int               @id @default(autoincrement())
   type        CrawlerTaskType
@@ -129,6 +110,154 @@ model CrawlerTask {
   @@index([completedAt])
 }
 
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  address   String   @unique @db.VarChar(44)
+  isPrimary Boolean  @default(false)
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model Campaign {
+  id              Int            @id @default(autoincrement())
+  name            String?
+  description     String
+  tokenAddress    String         @db.VarChar(44)
+  tokenName       String
+  totalAmount     BigInt
+  remainingAmount BigInt
+  marketCap       BigInt?
+  startTime       DateTime
+  endTime         DateTime
+  tags            String[]
+  socialLinks     Json
+  creatorId       Int
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  ticker          String
+  txHash          String         @db.VarChar(88)
+  status          CampaignStatus
+
+  @@index([tokenAddress])
+  @@index([startTime])
+  @@index([endTime])
+  @@index([creatorId])
+  @@index([tags], type: Gin)
+}
+
+model TokenPool {
+  id         Int           @id @default(autoincrement())
+  campaignId Int
+  txHash     String        @db.VarChar(88)
+  amount     BigInt
+  creatorId  Int
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+  type       TokenPoolType
+
+  @@index([campaignId])
+  @@index([creatorId])
+  @@index([txHash])
+}
+
+model Participation {
+  id             Int      @id @default(autoincrement())
+  campaignId     Int
+  userId         Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  influenceScore Float?
+  twitterId      String   @db.VarChar(20)
+
+  @@unique([userId, campaignId])
+  @@unique([twitterId, campaignId])
+  @@index([campaignId])
+}
+
+model ClaimRecord {
+  id         Int      @id @default(autoincrement())
+  campaignId Int
+  userId     Int
+  amount     BigInt
+  claimed    Boolean
+  txHash     String?  @db.VarChar(88)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([campaignId])
+  @@index([userId])
+  @@index([txHash])
+}
+
+model Whitelist {
+  id           Int       @id @default(autoincrement())
+  userId       Int       @unique
+  twitterId    String    @unique @db.VarChar(20)
+  referralCode String    @unique
+  status       String    @default("registered") @db.VarChar(15)
+  claimedAt    DateTime?
+  createdAt    DateTime  @default(now())
+  followedAt   DateTime?
+  postLink     String?
+  postedAt     DateTime?
+  referredAt   DateTime?
+  registeredAt DateTime? @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Referral {
+  id                Int      @id @default(autoincrement())
+  referrerId        Int
+  referrerTwitterId String   @db.VarChar(20)
+  refereeId         Int
+  refereeTwitterId  String   @db.VarChar(20)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([referrerId, refereeId])
+  @@unique([referrerTwitterId, refereeTwitterId])
+}
+
+model TokenInformation {
+  id                   Int      @id @default(autoincrement())
+  mint                 String   @unique @db.VarChar(44)
+  name                 String?
+  symbol               String?
+  uri                  String?
+  platform             String   @default("pumpfun")
+  marketValue          Float
+  virtualSolReserves   BigInt
+  virtualTokenReserves BigInt
+  realSolReserves      BigInt
+  realTokenReserves    BigInt
+  isComplete           Boolean  @default(false)
+  lastTransactionType  String?
+  blockTime            Int?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime
+
+  @@index([isComplete])
+  @@index([marketValue])
+  @@index([platform])
+  @@index([symbol])
+}
+
+enum CrawlerTaskType {
+  USER_FETCH
+  TWEET_FETCH
+  COMMUNITY_FETCH
+}
+
+enum CrawlerTaskStatus {
+  QUEUED
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
 enum DistributionStatus {
   PENDING
   PROCESSING
@@ -145,17 +274,6 @@ enum Blockchain {
   OPTIMISM
 }
 
-model Wallet {
-  id        Int      @id @default(autoincrement())
-  address   String   @unique @db.VarChar(44)
-  isPrimary Boolean  @default(false)
-  userId    Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-}
-
 enum CampaignStatus {
   UPCOMING
   ONGOING
@@ -163,108 +281,7 @@ enum CampaignStatus {
   CANCELED
 }
 
-model Campaign {
-  id              Int            @id @default(autoincrement())
-  description     String
-  tokenAddress    String         @db.VarChar(44)
-  tokenName       String
-  ticker          String?
-  totalAmount     BigInt
-  remainingAmount BigInt
-  marketCap       BigInt?
-  startTime       DateTime
-  endTime         DateTime
-  tags            String[]
-  socialLinks     Json
-  status          CampaignStatus
-  creatorId       Int
-  txHash          String?        @db.VarChar(88)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-
-  @@index(tokenAddress)
-  @@index(startTime)
-  @@index(endTime)
-  @@index(creatorId)
-  @@index([tags], type: Gin)
-}
-
 enum TokenPoolType {
   LAUNCH
   FUND
-}
-
-model TokenPool {
-  id         Int           @id @default(autoincrement())
-  campaignId Int
-  txHash     String        @db.VarChar(88)
-  amount     BigInt
-  type       TokenPoolType
-  creatorId  Int
-  createdAt  DateTime      @default(now())
-  updatedAt  DateTime      @updatedAt
-
-  @@index(campaignId)
-  @@index(creatorId)
-  @@index(txHash)
-}
-
-model Participation {
-  id             Int      @id @default(autoincrement())
-  campaignId     Int
-  userId         Int
-  twitterId      String   @db.VarChar(20)
-  influenceScore Float?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  @@unique([userId, campaignId])
-  @@unique([twitterId, campaignId])
-  @@index(campaignId)
-}
-
-model ClaimRecord {
-  id         Int      @id @default(autoincrement())
-  campaignId Int
-  userId     Int
-  amount     BigInt
-  claimed    Boolean
-  txHash     String?  @db.VarChar(88)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  @@index(campaignId)
-  @@index(userId)
-  @@index(txHash)
-}
-
-model Whitelist {
-  id           Int     @id @default(autoincrement())
-  userId       Int     @unique
-  twitterId    String  @unique @db.VarChar(20)
-  referralCode String  @unique
-  status       String  @default("registered") @db.VarChar(15) // 'registered', 'can_claim', 'claimed'
-  postLink     String?
-
-  registeredAt DateTime? @default(now())
-  followedAt   DateTime?
-  postedAt     DateTime?
-  referredAt   DateTime?
-  claimedAt    DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Referral {
-  id                Int      @id @default(autoincrement())
-  referrerId        Int
-  referrerTwitterId String   @db.VarChar(20)
-  refereeId         Int
-  refereeTwitterId  String   @db.VarChar(20)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  @@unique([referrerId, refereeId])
-  @@unique([referrerTwitterId, refereeTwitterId])
 }
