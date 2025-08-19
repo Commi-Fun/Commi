@@ -13,26 +13,6 @@ export function useOverviewStats() {
   });
 }
 
-export function useUserStats() {
-  return useQuery({
-    queryKey: ['user-stats'],
-    queryFn: async () => {
-      const { data } = await axios.get('/api/stats/users');
-      return data;
-    },
-  });
-}
-
-export function useWhitelistStats() {
-  return useQuery({
-    queryKey: ['whitelist-stats'],
-    queryFn: async () => {
-      const { data } = await axios.get('/api/stats/whitelist');
-      return data;
-    },
-  });
-}
-
 export function useReferralStats() {
   return useQuery({
     queryKey: ['referral-stats'],
