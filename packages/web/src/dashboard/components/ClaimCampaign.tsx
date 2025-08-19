@@ -61,11 +61,11 @@ const ClaimCampaign = ({
             </div>
           </div>
         </div>
-        {!disabled && (
+        {/* {!disabled && (
           <CommiButton size="small" variant={variant}>
             {buttonText}
           </CommiButton>
-        )}
+        )} */}
       </div>
     </div>
   )

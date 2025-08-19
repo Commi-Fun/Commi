@@ -9,33 +9,41 @@ const useCountdown = (targetDate: Date) => {
   const [countDown, setCountDown] = useState(countDownDate - new Date().getTime())
 
   useEffect(() => {
-    // 每秒执行一次的 interval
-    const interval = setInterval(() => {
-      setCountDown(countDownDate - new Date().getTime())
-    }, 1000)
+    const callback = () => {
+      const countDown = targetDate.getTime() - new Date().getTime()
+      setCountDown(countDown)
+      requestAnimationFrame(callback)
+    }
 
-    // 清理函数，在组件卸载时清除 interval
-    return () => clearInterval(interval)
-  }, [countDownDate]) // 依赖项是目标时间
+    requestAnimationFrame(() => {
+      callback()
+    })
+  }, [targetDate]) // 依赖项是目标时间
 
   // 将毫秒数转换为天、小时、分钟和秒
-  return getReturnValues(countDown)
+  return formatDuration(countDown)
 }
 
-// 将剩余时间（毫秒）转换为易于阅读的格式
-const getReturnValues = (countDown: number) => {
-  // 计算天、小时、分钟、秒
-  const days = Math.floor(countDown / (1000 * 60 * 60 * 24))
-  const hours = Math.floor((countDown % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
-  const minutes = Math.floor((countDown % (1000 * 60 * 60)) / (1000 * 60))
-  const seconds = Math.floor((countDown % (1000 * 60)) / 1000)
-
-  // 如果倒计时结束，所有值都应为0
-  if (countDown < 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+function formatDuration(ms: number) {
+  // 1. 处理无效输入或负数
+  if (ms < 0 || typeof ms !== 'number') {
+    return '00:00'
   }
 
-  return { days, hours, minutes, seconds }
+  // 2. 将总毫秒数转换为总秒数
+  const totalSeconds = Math.floor(ms / 1000)
+
+  // 3. 计算分钟数
+  const minutes = Math.floor(totalSeconds / 60)
+
+  // 4. 计算剩余的秒数
+  const seconds = totalSeconds % 60
+
+  // 5. 使用 padStart 补零，确保数字是两位数
+  const formattedMinutes = String(minutes).padStart(2, '0')
+  const formattedSeconds = String(seconds).padStart(2, '0')
+
+  return `${formattedMinutes}:${formattedSeconds}`
 }
 
 export { useCountdown }
