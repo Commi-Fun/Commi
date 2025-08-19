@@ -1,7 +1,6 @@
 'use client';
 
-import { Box, Grid, Paper, Typography, CircularProgress } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Grid, Paper, Typography, CircularProgress, Avatar } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useReferralStats } from '@/hooks/useApi';
 
@@ -26,34 +25,11 @@ export default function ReferralsPage() {
 
   if (!stats) return null;
 
-  const referrerColumns: GridColDef[] = [
-    { field: 'referrerTwitterId', headerName: 'Twitter ID', width: 150 },
-    { field: 'handle', headerName: 'Handle', width: 150 },
-    { field: 'name', headerName: 'Name', width: 200 },
-    { field: 'referralCount', headerName: 'Referrals', width: 120, type: 'number' },
-    { field: 'verified', headerName: 'Verified', width: 100, type: 'boolean' },
-  ];
-
-  const recentColumns: GridColDef[] = [
-    {
-      field: 'referrerHandle',
-      headerName: 'Referrer',
-      width: 200,
-      valueGetter: (value: any, row: any) => row.referrer?.handle || row.referrerTwitterId,
-    },
-    {
-      field: 'refereeHandle',
-      headerName: 'Referee',
-      width: 200,
-      valueGetter: (value: any, row: any) => row.referee?.handle || row.refereeTwitterId,
-    },
-    { field: 'referrerTwitterId', headerName: 'Referrer ID', width: 150 },
-    { field: 'refereeTwitterId', headerName: 'Referee ID', width: 150 },
-  ];
-
   const chartData = stats.topReferrers.slice(0, 10).map((r: any) => ({
-    handle: r.handle || r.referrerTwitterId,
+    handle: r.handle ? `@${r.handle}` : '@',
     count: r.referralCount,
+    profileImageUrl: r.profileImageUrl,
+    displayName: r.handle ? `@${r.handle}` : '@',
   }));
 
   return (
@@ -112,62 +88,32 @@ export default function ReferralsPage() {
             <Typography variant="h6" gutterBottom>
               Top 10 Referrers
             </Typography>
-            <BarChart
-              xAxis={[{ 
-                scaleType: 'band', 
-                data: chartData.map((d: any) => d.handle),
-                tickLabelStyle: {
-                  angle: -45,
-                  textAnchor: 'end',
-                },
-              }]}
-              series={[{ 
-                data: chartData.map((d: any) => d.count),
-                label: 'Referrals',
-              }]}
-              height={400}
-              margin={{ bottom: 100 }}
-            />
-          </Paper>
-        </Grid>
-
-        <Grid size={12}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Top Referrers Leaderboard
-            </Typography>
-            <DataGrid
-              rows={stats.topReferrers}
-              columns={referrerColumns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 10 },
-                },
-              }}
-              pageSizeOptions={[10]}
-              disableRowSelectionOnClick
-              autoHeight
-            />
-          </Paper>
-        </Grid>
-
-        <Grid size={12}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant="h6" gutterBottom>
-              Recent Referrals
-            </Typography>
-            <DataGrid
-              rows={stats.recentReferrals}
-              columns={recentColumns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 10 },
-                },
-              }}
-              pageSizeOptions={[10, 20]}
-              disableRowSelectionOnClick
-              autoHeight
-            />
+            
+            {/* Bar Chart */}
+            <Box sx={{ 
+              width: '100%', 
+              overflowX: 'auto',
+              '& .MuiChartsAxis-tickLabel': {
+                fontSize: { xs: 10, sm: 12 }
+              }
+            }}>
+              <BarChart
+                xAxis={[{ 
+                  scaleType: 'band', 
+                  data: chartData.map((d: any) => d.displayName),
+                  tickLabelStyle: {
+                    angle: -45,
+                    textAnchor: 'end',
+                  },
+                }]}
+                series={[{ 
+                  data: chartData.map((d: any) => d.count),
+                  label: 'Referrals',
+                }]}
+                height={400}
+                margin={{ bottom: 100 }}
+              />
+            </Box>
           </Paper>
         </Grid>
       </Grid>
