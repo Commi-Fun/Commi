@@ -18,18 +18,23 @@ export async function GET() {
       take: 10,
     });
 
-    const referrersWithUsers = await Promise.all(
+    const referrersWithInfo = await Promise.all(
       topReferrers.map(async (referrer) => {
-        const user = await prisma.user.findFirst({
-          where: { twitterId: referrer.referrerTwitterId },
-          select: { handle: true, name: true, verified: true },
+        const user = await prisma.user.findUnique({
+          where: { id: referrer.referrerId },
+          select: {
+            handle: true,
+            profileImageUrl: true,
+          },
         });
+        
         return {
           id: referrer.referrerId,
           referrerId: referrer.referrerId,
           referrerTwitterId: referrer.referrerTwitterId,
           referralCount: referrer._count.refereeId,
-          ...user,
+          handle: user?.handle,
+          profileImageUrl: user?.profileImageUrl,
         };
       })
     );
@@ -38,26 +43,6 @@ export async function GET() {
       orderBy: { id: 'desc' },
       take: 20,
     });
-
-    const recentReferralsWithUsers = await Promise.all(
-      recentReferrals.map(async (referral) => {
-        const [referrer, referee] = await Promise.all([
-          prisma.user.findFirst({
-            where: { twitterId: referral.referrerTwitterId },
-            select: { handle: true, name: true },
-          }),
-          prisma.user.findFirst({
-            where: { twitterId: referral.refereeTwitterId },
-            select: { handle: true, name: true },
-          }),
-        ]);
-        return {
-          ...referral,
-          referrer,
-          referee,
-        };
-      })
-    );
 
     const uniqueReferrers = await prisma.referral.findMany({
       distinct: ['referrerId'],
@@ -68,8 +53,8 @@ export async function GET() {
 
     return NextResponse.json({
       totalReferrals,
-      topReferrers: referrersWithUsers,
-      recentReferrals: recentReferralsWithUsers,
+      topReferrers: referrersWithInfo,
+      recentReferrals,
       uniqueReferrersCount: uniqueReferrers.length,
       avgReferralsPerReferrer,
     });
