@@ -304,11 +304,9 @@ const Page = () => {
             <div className="block lg:hidden ">
               <CommiButton
                 size="medium"
-                theme="primaryLinear"
                 color={customColors.main.Black}
                 onClick={claim}
-                className="gradient-border-custom"
-                weight="bold">
+                className="gradient-border-custom">
                 <span className="px-15 font-bold text-[18px]">Claim</span>
               </CommiButton>
             </div>

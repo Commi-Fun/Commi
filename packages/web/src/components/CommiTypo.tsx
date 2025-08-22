@@ -27,7 +27,7 @@ const CommiTypo = ({
     ...(type === 'title' && { fontSize: '1.125rem' }),
     ...(type === 'button' && { fontSize: '1rem', fontWeight: 'bold' }),
     ...(type === 'heading-alert3' && { fontSize: '1.125rem', fontWeight: '800' }),
-    ...(type === 'body' && { fontSize: '0.875rem' }),
+    // ...(type === 'body' && { fontSize: '0.875rem' }),
     ...(type === 'alert2' && { fontSize: '1.75rem', fontWeight: '800' }),
   }
 
@@ -36,25 +36,25 @@ const CommiTypo = ({
     ...(rest.weight === 'semibold' && { fontWeight: '600' }),
   }
 
-  let colorSx: SxProps<Theme> = {}
-  if (color) {
-    colorSx = {
-      color,
-    }
-  } else if (colorType) {
-    colorSx = {
-      color:
-        colorType === 'main'
-          ? customColors.main.White
-          : colorType === 'secondary'
-          ? customColors.blue['200']
-          : customColors.blue['300'],
-    }
-  }
+  // let colorSx: SxProps<Theme> = {}
+  // if (color) {
+  //   colorSx = {
+  //     color,
+  //   }
+  // } else if (colorType) {
+  //   colorSx = {
+  //     color:
+  //       colorType === 'main'
+  //         ? customColors.main.White
+  //         : colorType === 'secondary'
+  //         ? customColors.blue['200']
+  //         : customColors.blue['300'],
+  //   }
+  // }
 
   return (
     <Typography
-      sx={[typeSx, colorSx, weightSx, ...(Array.isArray(incomingSx) ? incomingSx : [incomingSx])]}
+      sx={[typeSx, weightSx, ...(Array.isArray(incomingSx) ? incomingSx : [incomingSx])]}
       {...rest}>
       {children}
     </Typography>

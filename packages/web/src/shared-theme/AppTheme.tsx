@@ -1,7 +1,7 @@
 'use client'
 import * as React from 'react'
 import { ThemeProvider, createTheme, alpha } from '@mui/material/styles'
-import { typography, shadows, shape, brand, orange, red, green, gray } from './themePrimitives'
+import { shadows, shape, brand, orange, red, green, gray } from './themePrimitives'
 import { customColors } from '@/shared-theme/themePrimitives'
 import MuiSearch from './themeComponents/MuiSearch'
 
@@ -15,20 +15,54 @@ interface AppThemeProps {
 
 const themeComponents = {
   ...MuiSearch,
-  MuiTypography: {
-    styleOverrides: {
-      root: { color: customColors.main.White },
-    },
-  },
   MuiDialog: {
     styleOverrides: {
       paper: {
-        backgroundColor: customColors.blue['500'],
-        boxShadow: `inset 0px 0px 0px 1px ${customColors.blue['400']}`,
+        borderRadius: '16px',
       },
     },
   },
-}
+  MuiTabs: {
+    styleOverrides: {
+      root: {
+        minHeight: '48px',
+        borderBottom: `1px solid ${alpha(gray[300], 0.2)}`, // 底部边框
+        '& .MuiTabs-flexContainer': {
+          gap: '8px', // Tab 之间的间距
+        },
+      },
+      indicator: {
+        backgroundColor: '#84cc16',
+        height: '3px',
+        borderRadius: '2px',
+        // 移除了 transition 动画
+      },
+    },
+  },
+  MuiTab: {
+    defaultProps: {
+      disableRipple: true, // 禁用点击波纹效果
+    },
+    styleOverrides: {
+      root: {
+        textTransform: 'none', // 禁用大写转换
+        fontWeight: 500,
+        fontSize: '16px',
+        color: gray[500], // 未选中状态的文本颜色（灰色）
+        minHeight: '48px',
+        padding: '12px 20px',
+        minWidth: 0,
+        // 移除了所有动画相关的属性
+
+        // 选中状态
+        '&.Mui-selected': {
+          color: customColors.main.Black, // 选中状态的文本颜色（绿色）
+          fontWeight: 700,
+        },
+      },
+    },
+  },
+} as any
 
 export default function AppTheme(props: AppThemeProps) {
   const { children } = props
@@ -74,20 +108,11 @@ export default function AppTheme(props: AppThemeProps) {
             ...gray,
           },
           divider: alpha(gray[700], 0.6),
-          background: {
-            default: gray[900],
-            paper: 'hsl(220, 30%, 7%)',
-          },
-          text: {
-            primary: 'hsl(0, 0%, 100%)',
-            secondary: gray[400],
-          },
           action: {
             hover: alpha(gray[600], 0.2),
             selected: alpha(gray[600], 0.3),
           },
         },
-        typography,
         shadows,
         shape,
         components: {
@@ -120,7 +145,7 @@ export default function AppTheme(props: AppThemeProps) {
     [],
   )
   return (
-    <ThemeProvider theme={theme} defaultMode={'dark'} disableTransitionOnChange>
+    <ThemeProvider theme={theme} disableTransitionOnChange>
       {children}
     </ThemeProvider>
   )

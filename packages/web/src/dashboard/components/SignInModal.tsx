@@ -21,11 +21,8 @@ const SignInModal = ({ open, handleClose }: SignInModalProps) => {
 
   return (
     <CommiModal title="Log in or Sign up" onClose={handleClose} open={open}>
-      <div className="flex flex-col gap-4">
-        <CommiButton
-          onClick={connectWithX}
-          className="bg-black text-white hover:bg-gray-800"
-        >
+      <div className="flex gap-4">
+        <CommiButton onClick={connectWithX} className="bg-black text-white hover:bg-gray-800">
           Continue with X
         </CommiButton>
       </div>
