@@ -54,14 +54,7 @@ export const nextAuthOptions: NextAuthOptions = {
           },
         })
 
-        if (process.env.IS_HOME_PAGE) {
-          const wallets = await prisma.wallet.findMany({
-            where: {
-              userId: dbUser.id
-            }
-          })
-          user.wallets = wallets.map(w => w.address)
-        } else {
+        if (process.env.ACTIVE_HOME_PAGE === 'invite') {
           // 创建 whitelist
           let whitelist = await prisma.whitelist.findFirst({
             where: {
@@ -75,7 +68,7 @@ export const nextAuthOptions: NextAuthOptions = {
                 twitterId: dbUser.twitterId,
                 referralCode: nanoid(6),
                 status: WhitelistStatus.REGISTERED,
-                registeredAt: new Date()
+                registeredAt: new Date(),
               },
             })
             user.isNew = true

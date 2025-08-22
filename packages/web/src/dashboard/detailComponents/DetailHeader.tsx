@@ -3,7 +3,7 @@ import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import Button from '@mui/material/Button'
-import ChevronRightRoundedIcon from '@/components/icons/ChevronRightMD'
+import { ChevronRightMD } from '@/components/icons/ChevronRightMD'
 import { customColors } from '@/shared-theme/themePrimitives'
 import Users from '@/components/icons/Users'
 import CopyIcon from '@/components/icons/CopyIcon'
@@ -28,7 +28,7 @@ const DetailHeader = () => {
         <Typography color={customColors.blue['300']} variant="h1" fontSize={'24px'}>
           Campaign
         </Typography>
-        <ChevronRightRoundedIcon />
+        <ChevronRightMD />
         <Typography variant="h1" fontSize={'24px'}>
           Token Name
         </Typography>

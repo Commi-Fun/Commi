@@ -1,147 +1,112 @@
-import Card from '@mui/material/Card'
-import Stack from '@mui/material/Stack'
-import Avatar from '@mui/material/Avatar'
-import Typography from '@mui/material/Typography'
-import ContentCopyIcon from '@mui/icons-material/ContentCopy'
-import { gray, customColors } from '@/shared-theme/themePrimitives'
-import Button from '@mui/material/Button'
-import Users from '@/components/icons/Users'
-import ExternalLinkIcon from '@/components/icons/ExternalLinkIcon'
-import Box from '@mui/material/Box'
-import { XIcon } from '@/components/icons/XIcon'
+import React from 'react'
+import { WalletAddress } from './WalletAddress'
+import { useRouter } from 'next/navigation'
 
 function truncateMiddle(text: string): string {
-  return text.slice(0, 5) + '...' + text.slice(-3)
+  return text.slice(0, 6) + '...' + text.slice(-4)
 }
 
 interface Props {
+  tokenName?: string
+  tokenImage?: string
   address: string
-  members: Record<string, string>[]
+  marketCap?: string
+  changePercent?: number
+  currentAmount?: number
+  totalAmount?: number
+  members: { src: string }[]
 }
 
-const CampaignCard = ({ address, members }: Props) => {
+const CampaignCard = ({
+  tokenName = 'Token Name',
+  tokenImage = '/images/campaign_image.png',
+  address,
+  marketCap = '$123.45K',
+  changePercent = 0,
+  currentAmount = 0,
+  totalAmount = 123.45,
+  members,
+}: any) => {
+  const router = useRouter()
+  const progressPercentage = totalAmount > 0 ? (currentAmount / totalAmount) * 100 : 0
+
+  const copyToClipboard = async () => {
+    try {
+      await navigator.clipboard.writeText(address)
+      console.log('Address copied to clipboard')
+    } catch (err) {
+      console.error('Failed to copy address:', err)
+    }
+  }
+
+  const handleCampaignClick = () => {
+    router.push(`/detail/${address}`)
+  }
+
   return (
-    <Card
-      style={{
-        backgroundColor: customColors.blue['1200'],
-        position: 'relative',
-        borderRadius: '20px',
-        width: '408px',
-        height: 'fit-content',
-      }}
-      sx={{ p: 3 }}>
-      <Box sx={{ position: 'absolute', top: '10px', right: '10px' }}>
-        <ExternalLinkIcon />
-      </Box>
-      <Stack direction={'row'} gap={2} alignItems={'center'}>
-        <Avatar
-          variant={'rounded'}
-          sx={{ width: '64px', height: '64px' }}
-          src={'/images/campaign_image.png'}
-        />
-        <Stack gap={0.75} justifyContent={'start'}>
-          <Stack direction={'row'} alignItems={'center'} gap={0.5}>
-            <Typography fontSize={'1.125rem'} fontWeight={'bold'} pr={0.5}>
-              Token name
-            </Typography>
-            <XIcon color={customColors.blue[500]} className="text-[1.5rem]" />
-            <Users />
-            <Typography
-              sx={{
-                color: customColors.main['Green01'],
-                fontSize: '1rem',
-                pl: 0.5,
-              }}>
-              1.0M
-            </Typography>
-            <Typography
-              sx={{
-                fontSize: '0.75rem',
-                mb: '-0.2rem',
-              }}
-              color={customColors.blue[200]}>
-              / 1.5M
-            </Typography>
-          </Stack>
-          <Stack direction={'row'} gap={1} alignItems={'center'}>
-            <Typography sx={{ fontSize: '0.875rem', color: customColors.green02[800] }}>
-              MCap $39.7M
-            </Typography>
-            {members.map((mem, index) => (
-              <Avatar
+    <div
+      onClick={handleCampaignClick}
+      className="bg-white rounded-3xl w-fit p-6 shadow-lg border border-gray-100 cursor-pointer">
+      {/* Token Icon - Large centered */}
+      <div className="flex justify-center mb-4">
+        <div className="w-60 h-60 rounded-lg  flex items-center justify-center">
+          <img src={tokenImage} alt="Token" className="w-60 h-60" />
+        </div>
+      </div>
+
+      {/* Token Name */}
+      <p className="text-lg font-bold text-black mb-2">{tokenName}</p>
+
+      {/* Market Cap and Address Row */}
+      <div className="flex justify-between items-center mb-2">
+        <span className="text-[0.875rem] font-bold text-red-600">MCap {marketCap}</span>
+
+        <WalletAddress showIcon={false} address={address} />
+      </div>
+
+      {/* Change Percentage */}
+      <div className="mb-4">
+        <span
+          className={`inline-block px-3 py-1 rounded-md text-xs font-bold text-white ${
+            changePercent >= 0 ? 'bg-green-500' : 'bg-red-500'
+          }`}>
+          {changePercent > 0 ? '+' : ''}
+          {changePercent}%
+        </span>
+      </div>
+
+      {/* Progress Section */}
+      <div className="flex justify-between items-center mb-2">
+        <div className="text-xl font-bold text-black">
+          {currentAmount} <span className="text-gray-400 text-base">/ {totalAmount}K</span>
+        </div>
+
+        <div className="flex items-center gap-1">
+          <span className="text-sm text-gray-600">{members.length} Joined</span>
+          <div className="flex">
+            {members.slice(0, 3).map((member: any, index: number) => (
+              <img
                 key={index}
-                sx={{
-                  width: '1rem',
-                  height: '1rem',
-                  ml: index === 0 ? 0 : '-0.75rem',
+                src={member.imgUrl}
+                alt={`Member ${index + 1}`}
+                className={`w-6 h-6 rounded-full border-2 border-white ${index > 0 ? '-ml-2' : ''}`}
+                onError={e => {
+                  e.currentTarget.src = `https://ui-avatars.com/api/?name=User${index}&background=random`
                 }}
-                src={mem.src}
               />
             ))}
-            <Stack direction={'row'} gap={0.5} pl={1}>
-              <Typography
-                sx={{
-                  color: customColors.blue[300],
-                  alignSelf: 'end',
-                  fontSize: '0.75rem',
-                }}>
-                {truncateMiddle(address)}
-              </Typography>
-              <ContentCopyIcon
-                sx={{
-                  fontSize: '0.75rem',
-                  cursor: 'pointer',
-                  alignSelf: 'end',
-                  color: gray[300],
-                  mb: '0.25rem',
-                }}
-              />
-            </Stack>
-          </Stack>
-          <Stack>
-            <Typography color={customColors.blue[300]} variant="caption">
-              描述
-            </Typography>
-          </Stack>
-        </Stack>
-      </Stack>
+          </div>
+        </div>
+      </div>
 
-      <Stack
-        justifyContent={'space-between'}
-        direction={'row'}
-        sx={{ mt: 1 }}
-        gap={1}
-        alignItems={'center'}>
-        <Typography variant="subtitle2" color={customColors.blue[200]}>
-          {`{X} LPS`}
-        </Typography>
-        <Stack direction={'row'} gap={1} alignItems={'center'}>
-          <Typography variant="subtitle2" color={customColors.main['Green01']}>
-            {`{X}`} Members Joined
-          </Typography>
-          {members.map((mem, index) => (
-            <Avatar
-              key={index}
-              sx={{
-                width: '1rem',
-                height: '1rem',
-                ml: index === 0 ? 0 : '-0.75rem',
-              }}
-              src={mem.src}
-            />
-          ))}
-        </Stack>
-      </Stack>
-
-      <Button
-        variant={'outlined'}
-        sx={{
-          mt: 1,
-        }}
-        fullWidth>
-        Earn now
-      </Button>
-    </Card>
+      {/* Progress Bar */}
+      <div className="w-full bg-gray-200 rounded-full h-3">
+        <div
+          className="bg-black h-3 rounded-full transition-all duration-300"
+          style={{ width: `${Math.min(progressPercentage, 100)}%` }}
+        />
+      </div>
+    </div>
   )
 }
 

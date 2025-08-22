@@ -9,6 +9,7 @@ import SideMenu from '@/dashboard/components/SideMenu'
 import AppTheme from '@/shared-theme/AppTheme'
 import Divider from '@mui/material/Divider'
 import { customColors } from '@/shared-theme/themePrimitives'
+import MainGrid from './components/MainGrid'
 
 export default function DashboardLayout({
   children,
@@ -28,31 +29,12 @@ export default function DashboardLayout({
   return (
     <AppTheme>
       <CssBaseline />
-      <Box
-        sx={{
-          display: 'flex',
-          backgroundColor: customColors.main.Black,
-          height: '100vh',
-        }}>
-        <SideMenu />
-        <AppNavbar />
-        <Box
-          sx={{
-            flexGrow: 1,
-            overflow: 'auto',
-          }}>
-          <Stack
-            spacing={2}
-            sx={{
-              alignItems: 'center',
-              pb: 5,
-            }}>
-            <Header />
-            <Divider sx={{ width: '100%' }} style={{ marginTop: '10px' }} />
-            {children}
-          </Stack>
-        </Box>
-      </Box>
+      <div className="min-h-svh flex flex-col">
+        <div>
+          <Header />
+        </div>
+        <div className="flex grow flex-col">{children}</div>
+      </div>
     </AppTheme>
   )
 }

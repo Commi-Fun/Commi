@@ -181,14 +181,6 @@ export const colorSchemes = {
         ...gray,
       },
       divider: alpha(gray[700], 0.6),
-      background: {
-        default: gray[900],
-        paper: 'hsl(220, 30%, 7%)',
-      },
-      text: {
-        primary: 'hsl(0, 0%, 100%)',
-        secondary: gray[400],
-      },
       action: {
         hover: alpha(gray[600], 0.2),
         selected: alpha(gray[600], 0.3),
@@ -230,10 +222,6 @@ export const colorSchemes = {
         ...gray,
       },
       divider: alpha(gray[300], 0.4),
-      background: {
-        default: 'hsl(0, 0%, 99%)',
-        paper: 'hsl(220, 35%, 97%)',
-      },
       text: {
         primary: gray[800],
         secondary: gray[600],
@@ -246,56 +234,6 @@ export const colorSchemes = {
       baseShadow:
         'hsla(220, 30%, 5%, 0.07) 0px 4px 16px 0px, hsla(220, 25%, 10%, 0.07) 0px 8px 16px -5px',
     },
-  },
-}
-
-export const typography = {
-  fontFamily: 'Nunito Sans',
-  h1: {
-    fontSize: defaultTheme.typography.pxToRem(48),
-    fontWeight: 600,
-    lineHeight: 1.2,
-    letterSpacing: -0.5,
-  },
-  h2: {
-    fontSize: defaultTheme.typography.pxToRem(36),
-    fontWeight: 600,
-    lineHeight: 1.2,
-  },
-  h3: {
-    fontSize: defaultTheme.typography.pxToRem(30),
-    lineHeight: 1.2,
-  },
-  h4: {
-    fontSize: defaultTheme.typography.pxToRem(24),
-    fontWeight: 600,
-    lineHeight: 1.5,
-  },
-  h5: {
-    fontSize: defaultTheme.typography.pxToRem(20),
-    fontWeight: 600,
-  },
-  h6: {
-    fontSize: defaultTheme.typography.pxToRem(18),
-    fontWeight: 600,
-  },
-  subtitle1: {
-    fontSize: defaultTheme.typography.pxToRem(18),
-  },
-  subtitle2: {
-    fontSize: defaultTheme.typography.pxToRem(14),
-    fontWeight: 500,
-  },
-  body1: {
-    fontSize: defaultTheme.typography.pxToRem(14),
-  },
-  body2: {
-    fontSize: defaultTheme.typography.pxToRem(14),
-    fontWeight: 400,
-  },
-  caption: {
-    fontSize: defaultTheme.typography.pxToRem(12),
-    fontWeight: 400,
   },
 }
 
