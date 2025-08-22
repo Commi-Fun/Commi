@@ -7,7 +7,6 @@ const RedoIcon = (props: IconType) => {
       height="1em"
       viewBox="0 0 20 21"
       fill="none"
-      fontSize={'24px'}
       {...props}
       xmlns="http://www.w3.org/2000/svg">
       <path

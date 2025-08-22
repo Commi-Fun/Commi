@@ -27,8 +27,10 @@ const sizeStyles = {
     maxHeight: '800px',
   },
   large: {
-    width: '1208px',
-    height: '740px',
+    width: '1000px',
+    minHeight: '680px',
+    maxWidth: '90vw',
+    maxHeight: '90vh',
   },
 }
 
@@ -44,7 +46,7 @@ export default function CommiModal({
   if (size === 'small') {
     closeIconPosition = 'right-2 lg:right-4 top-2 lg:top-5'
   } else if (size === 'medium') {
-    closeIconPosition = 'right-2 top-2 lg:right-3 lg:top-3'
+    closeIconPosition = 'right-2 top-2 lg:right-6 lg:top-6'
   } else {
     closeIconPosition = 'right-8 top-8'
   }
@@ -67,10 +69,9 @@ export default function CommiModal({
       )}
       <CloseLgIcon
         onClick={onClose}
-        color={customColors.blue[300]}
-        className={`absolute cursor-pointer ${closeIconPosition}`}
+        className={`absolute cursor-pointer ${closeIconPosition} text-[24px]`}
       />
-      {children}
+      <div className="w-full h-fit p-6">{children}</div>
     </Dialog>
   )
 }

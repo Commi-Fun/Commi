@@ -7,7 +7,7 @@
   --color-main-Red: #f76472;
   --color-main-Green02: #078b5a;
   --color-main-Green01: #c9f572;
-  --color-main-Green04: #078B5A;
+  --color-main-Green04: #078b5a;
   --color-green01-100: #14190b;
   --color-green01-200: #384520;
   --color-green01-300: #5c7134;
@@ -30,7 +30,7 @@
   --color-green02-900: #57f7bb;
   --color-green02-1000: #e6fabd;
   --color-green02-1100: #cefdeb;
-  --color-red-100: #190a0b;
+  /* --color-red-100: #190a0b;
   --color-red-200: #451c20;
   --color-red-300: #722e35;
   --color-red-400: #9e4049;
@@ -53,7 +53,7 @@
   --color-blue-1000: #81cff3;
   --color-blue-1100: #d0edfb;
   --color-blue-1200: #172028;
-  --color-blue-1300: #152026;
+  --color-blue-1300: #152026; */
 
   /* 自定义字体大小 */
   --font-size-3_5xl: 56px;
@@ -114,7 +114,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    /* --background: #0a0a0a; */
     --foreground: #ededed;
   }
 }
@@ -128,10 +128,11 @@ body {
 }
 
 .MuiTypography-root {
-  font-family: Nunito Sans, Nunito Sans Fallback;
-  color: '#F3FBFF';
+  font-family:
+    Nunito Sans,
+    Nunito Sans Fallback;
 }
 
 .primary-linear {
-  background: linear-gradient(to right, #48B98E 0%, #D1F791 100%);
+  background: linear-gradient(to right, #48b98e 0%, #d1f791 100%);
 }
