@@ -103,12 +103,12 @@ const Page = () => {
         disableRestoreFocus
         disableEnforceFocus>
         <div
-          className="bg-blue-500 p-9"
+          className="bg-main-White p-9 text-black"
           // onMouseEnter={() => setAnchorEl(anchorEl)} // 保持弹框打开
           onMouseLeave={handlePopoverClose} // 鼠标离开时关闭
         >
           <div className="min-w-50 flex flex-col">
-            <div className="text-main-White font-bold text-[1.125rem]">
+            <div className="text-black font-bold text-[1.125rem]">
               {invitedFriends.length} friends joined🧃
             </div>
             <div className="flex flex-col gap-4 mt-6">
@@ -121,7 +121,7 @@ const Page = () => {
                     src={item.profileImageUrl}
                     alt=""
                   />
-                  <span className="text-[1.125rem] font-bold text-blue-200">@{item.handle}</span>
+                  <span className="text-[1.125rem] font-bold text-black">@{item.handle}</span>
                 </div>
               ))}
             </div>
