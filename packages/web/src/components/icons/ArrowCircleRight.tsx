@@ -1,12 +1,6 @@
-import { customColors } from '@/shared-theme/themePrimitives'
 import { SVGProps } from 'react'
 
-export const ArrowCircleRight = ({
-  color = customColors.blue[200],
-  fontSize = '24px',
-  style,
-  ...rest
-}: SVGProps<SVGSVGElement>) => {
+export const ArrowCircleRight = ({ style, ...rest }: SVGProps<SVGSVGElement>) => {
   return (
     <svg
       viewBox="0 0 50 51"

@@ -12,9 +12,7 @@ import { sign } from 'crypto'
 import { signOut, useSession } from 'next-auth/react'
 import React, { useMemo } from 'react'
 import { NoWallet } from './NoWallet'
-import { WalletList } from './WalletList'
 import ConnectWalletButton from '../ConnectWalletButton'
-import { useSolanaMultiWallet } from '@/hooks/useSolanaMultiWallet'
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets'
 
 interface UserSettingProps {
@@ -25,7 +23,6 @@ export const UserSetting = () => {
   const [open, setOpen] = React.useState(false)
   const { data } = useSession()
   const { image: userImage, name, username, ...rest } = data?.user || {}
-  const { connectedWallets } = useSolanaMultiWallet()
 
   const { select, connect } = useWallet()
 
@@ -65,9 +62,6 @@ export const UserSetting = () => {
             <ConnectWalletButton />
           </Stack>
           {/* <CommiButton onClick={() => phantomAdapter.disconnect()}>disconnect phantom</CommiButton> */}
-          <div className="py-[24px]">
-            <WalletList />
-          </div>
           <Stack mt={6}>
             <CommiDivider />
             <Stack

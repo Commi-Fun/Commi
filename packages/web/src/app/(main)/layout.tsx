@@ -1,31 +1,19 @@
-import '../globals.css'
 import DashboardLayout from '@/dashboard/DashboardLayout'
 import React from 'react'
 import { Web3Provider } from '@/components/Web3Provider'
-import { NextAuthProvider } from '@/components/NextAuthProvider'
 import { SolanaProvider } from '@/components/SolanaProvider'
 import '@solana/wallet-adapter-react-ui/styles.css'
-import { GlobalWalletProvider } from '@/context/GlobalWalletProvider'
+import { GlobalContextProvider } from '@/context/GlobalContext'
 
-type MyComponentProps = React.PropsWithChildren<{
-  title: string
-}>
-
-const Layout: React.FC<MyComponentProps> = ({ children }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html>
-      <body className={'font-sans'}>
-        <Web3Provider>
-          <SolanaProvider>
-            <NextAuthProvider>
-              <GlobalWalletProvider>
-                <DashboardLayout>{children}</DashboardLayout>
-              </GlobalWalletProvider>
-            </NextAuthProvider>
-          </SolanaProvider>
-        </Web3Provider>
-      </body>
-    </html>
+    <Web3Provider>
+      <SolanaProvider>
+        <GlobalContextProvider>
+          <DashboardLayout>{children}</DashboardLayout>
+        </GlobalContextProvider>
+      </SolanaProvider>
+    </Web3Provider>
   )
 }
 

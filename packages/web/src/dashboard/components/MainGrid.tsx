@@ -6,9 +6,9 @@ import CampaignsContainer from '@/dashboard/CampaignsContainer'
 
 export default function MainGrid() {
   return (
-    <Box sx={{ width: '100%', px: '1.875rem' }}>
+    <div className="h-full flex flex-col">
       <HotContainer />
       <CampaignsContainer />
-    </Box>
+    </div>
   )
 }

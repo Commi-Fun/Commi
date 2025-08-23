@@ -13,10 +13,11 @@ import React, { useMemo } from 'react'
 
 export function SolanaProvider({ children }: { children: React.ReactNode }) {
   // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
-  const network = WalletAdapterNetwork.Devnet
+  const network = WalletAdapterNetwork.Mainnet
 
   // You can also provide a custom RPC endpoint.
-  const endpoint = useMemo(() => clusterApiUrl(network), [network])
+  const endpoint =
+    'https://wild-alien-research.solana-devnet.quiknode.pro/5ae8068881013394ea9deeca9c155c87dda05917/'
 
   const wallets = useMemo(
     () => [new PhantomWalletAdapter(), new SolflareWalletAdapter(), new TorusWalletAdapter()],

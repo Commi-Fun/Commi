@@ -54,34 +54,36 @@ export const nextAuthOptions: NextAuthOptions = {
           },
         })
 
-        // 创建 whitelist
-        let whitelist = await prisma.whitelist.findFirst({
-          where: {
-            userId: dbUser.id,
-          },
-        })
-        if (whitelist === null) {
-          whitelist = await prisma.whitelist.create({
-            data: {
+        if (process.env.ACTIVE_HOME_PAGE === 'invite') {
+          // 创建 whitelist
+          let whitelist = await prisma.whitelist.findFirst({
+            where: {
               userId: dbUser.id,
-              twitterId: dbUser.twitterId,
-              referralCode: nanoid(6),
-              status: WhitelistStatus.REGISTERED,
-              registeredAt: new Date()
             },
           })
-          user.isNew = true
-        } else {
-          user.isNew = false
+          if (whitelist === null) {
+            whitelist = await prisma.whitelist.create({
+              data: {
+                userId: dbUser.id,
+                twitterId: dbUser.twitterId,
+                referralCode: nanoid(6),
+                status: WhitelistStatus.REGISTERED,
+                registeredAt: new Date(),
+              },
+            })
+            user.isNew = true
+          } else {
+            user.isNew = false
+          }
+          user.referralCode = whitelist.referralCode
+          user.status = whitelist.status
+          user.registered = whitelist.registeredAt !== null
+          user.followed = whitelist.followedAt !== null
+          user.posted = whitelist.postedAt !== null
+          user.referred = whitelist.referredAt !== null
+          user.claimed = whitelist.claimedAt !== null
         }
         user.userId = dbUser.id
-        user.referralCode = whitelist.referralCode
-        user.status = whitelist.status
-        user.registered = whitelist.registeredAt !== null
-        user.followed = whitelist.followedAt !== null
-        user.posted = whitelist.postedAt !== null
-        user.referred = whitelist.referredAt !== null
-        user.claimed = whitelist.claimedAt !== null
 
         return true // 允许登录
       } catch (error) {
@@ -104,6 +106,7 @@ export const nextAuthOptions: NextAuthOptions = {
         token.posted = user.posted
         token.referred = user.referred
         token.claimed = user.claimed
+        token.wallets = user.wallets
         if (user.username) {
           token.username = user.username
         }
@@ -132,7 +135,7 @@ export const nextAuthOptions: NextAuthOptions = {
       session.user.posted = token.posted
       session.user.referred = token.referred
       session.user.claimed = token.claimed
-
+      session.user.wallets = token.wallets
       // Pass the username from the token to the session
       if (token.username) {
         session.user.username = token.username

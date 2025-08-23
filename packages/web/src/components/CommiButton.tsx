@@ -1,97 +1,45 @@
-import { Button, ButtonProps as MuiButtonProps } from '@mui/material'
-import { SxProps, Theme } from '@mui/material/styles'
-import { customColors, primaryLinear } from '@/shared-theme/themePrimitives'
-import CommiTypo from './CommiTypo'
+import { classnameMerge } from '@/lib/utils/classnameMerge'
+import clsx from 'clsx'
 
-interface CommiButtonProps extends Omit<MuiButtonProps, 'variant' | 'size' | 'color'> {
+interface CommiButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode
   size?: 'small' | 'medium' | 'large'
-  variant?: 'contained' | 'outlined'
-  theme?: 'primary' | 'primaryLinear' | 'default'
-  color?: string
-  weight?: 'bold' | 'semibold'
-}
-
-const themeSx = {
-  primary: {
-    backgroundColor: customColors.main.Green01,
-    color: customColors.main.Black,
-  },
-  primaryLinear: {
-    background: primaryLinear,
-    color: customColors.main.Black,
-  },
-  default: {
-    backgroundColor: 'unset',
-    color: customColors.main.White,
-  },
+  variant?: 'filled' | 'outline'
 }
 
 const CommiButton = ({
   children,
   size = 'medium',
-  variant = 'contained',
-  color = '',
-  weight,
-  sx: incomingSx,
-  theme = 'default',
-  ...rest
+  variant = 'filled',
+  className = '',
+  disabled,
+  ...props
 }: CommiButtonProps) => {
-  const sizeSx: SxProps<Theme> = {
-    ...(size === 'small' && {
-      height: '24px',
-      fontSize: '0.875rem',
-      px: 1.125,
-      fontWeight: '600',
-      borderRadius: '60px',
-      justifyContent: 'center',
-    }),
-    ...(size === 'medium' && {
-      height: {
-        xs: '32px',
-        lg: '40px',
-      },
-      borderRadius: '20px',
-      fontSize: {
-        xs: '14px',
-        lg: '1rem',
-      },
-      minWidth: '120px',
-    }),
-    ...(size === 'large' &&
-      {
-        // height: '48px',
-        // fontSize: '1.125rem',
-      }),
-  }
+  const sizeClasses = clsx({
+    'px-6 py-2.5 font-bold text-[18px] rounded-[8px]': size === 'large',
+    'px-2.5 py-[2.5px] font-semibold text-[14px] rounded-3xl': size === 'small',
+    'px-2.5 py-2.5 font-bold text-[14px] rounded-[20px] text-1xl min-w-[100px]': size === 'medium',
+  })
 
-  const fontSx: Record<string, string> =
-    size === 'medium'
-      ? {
-          type: 'content' as const,
-          weight: 'bold' as const,
-        }
-      : {}
+  const baseClasses = 'flex gap-2 items-center justify-center cursor-pointer'
 
-  const cusSx: SxProps<Theme> = {
-    justifyContent: 'center !important',
-  }
+  const getVariantClasses = () => {
+    if (disabled) {
+      return variant === 'filled'
+        ? 'bg-gray-600 text-gray-400'
+        : 'border border-gray-400 text-gray-400'
+    }
 
-  const colorSx = { ...(themeSx[theme] || {}) }
-
-  if (variant === 'outlined') {
-    colorSx.color = customColors.main.Green01
-  }
-
-  const finalSx = [sizeSx, colorSx, cusSx]
-  if (incomingSx) {
-    finalSx.push(incomingSx as never)
+    return variant === 'filled' ? 'bg-black text-lime-300' : 'border border-black text-black'
   }
 
   return (
-    <Button variant={variant} sx={finalSx} {...rest}>
+    <button
+      className={classnameMerge(baseClasses, getVariantClasses(), sizeClasses, className)}
+      disabled={disabled}
+      {...props}>
       {children}
-    </Button>
+    </button>
   )
 }
 

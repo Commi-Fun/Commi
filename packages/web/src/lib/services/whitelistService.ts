@@ -128,8 +128,7 @@ export async function post(data: UserDTO, postLink: string): Promise<ServiceResu
   }
 }
 
-export async function refer(data: UserDTO, referralCode?: string): Promise<ServiceResult<any>> {
-  console.log('refer api', referralCode)
+export async function refer(user: UserDTO, referralCode?: string): Promise<ServiceResult<any>> {
   try {
     if (!referralCode) {
       throw new BadRequestError('Invalid referral code')
@@ -138,7 +137,7 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
     await prisma.$transaction(async tx => {
       const referrer = await findWhitelistByReferralCode(tx, referralCode)
 
-      if (data.userId === referrer?.userId) {
+      if (user.userId === referrer?.userId) {
         throw new ForbiddenError('Cannot refer yourself')
       }
 
@@ -148,12 +147,9 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
 
       const hasRefered = await tx.referral.findFirst({
         where: {
-          referrerId: referrer.userId,
-          refereeId: data.userId,
+          refereeId: user.userId,
         },
       })
-
-      console.log('refer api hasRefered', hasRefered)
 
       if (hasRefered) {
         throw new BadRequestError('Already referred')
@@ -161,12 +157,10 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
 
       const mutuallyRefer = await tx.referral.findFirst({
         where: {
-          referrerId: data.userId,
+          referrerId: user.userId,
           refereeId: referrer.userId,
         },
       })
-
-      console.log('refer api mutuallyRefer', mutuallyRefer)
 
       if (mutuallyRefer) {
         throw new BadRequestError('Cannot get mutually refer')
@@ -175,13 +169,11 @@ export async function refer(data: UserDTO, referralCode?: string): Promise<Servi
       const referralDomain: ReferralDomain = {
         referrerId: referrer.userId,
         referrerTwitterId: referrer.twitterId,
-        refereeId: data.userId as number,
-        refereeTwitterId: data.twitterId,
+        refereeId: user.userId as number,
+        refereeTwitterId: user.twitterId,
       }
 
       const referralResult = await referralService.createReferral(tx, referralDomain)
-
-      console.log('refer api referralResult', referralResult)
 
       if (!referralResult) throw new DatabaseError('Failed to create referral')
 

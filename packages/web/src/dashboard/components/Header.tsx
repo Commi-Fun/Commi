@@ -8,22 +8,10 @@ import { customColors } from '@/shared-theme/themePrimitives'
 import { useState } from 'react'
 import LaunchPoolModal from '@/dashboard/components/LaunchPoolModal'
 import AddPlus from '@/components/icons/AddPlusIcon'
-
-const RedButton = styled(Button)({
-  backgroundColor: customColors.red['300'],
-  color: customColors.red[800],
-  fontSize: '1.125rem',
-  height: '46px',
-  padding: '0 24px',
-})
-
-const GreenButton = styled(Button)({
-  backgroundColor: customColors.green02['300'],
-  color: customColors.green02['800'],
-  fontSize: '1.125rem',
-  height: '46px',
-  padding: '0 24px',
-})
+import Image from 'next/image'
+import CommiButton from '@/components/CommiButton'
+import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
+import { CreateCampaignButton } from './CreateCampaignButton'
 
 export default function Header() {
   const [open, setOpen] = useState(false)
@@ -33,17 +21,8 @@ export default function Header() {
   }
 
   return (
-    <Stack
-      direction="row"
-      sx={{
-        width: '100%',
-        py: 3,
-        px: '1.875rem',
-      }}
-      spacing={2}
-      justifyContent={'space-between'}
-      alignItems={'center'}>
-      <Stack direction={'row'} gap={2}>
+    <div className="px-5 py-6 border-b-2 border-black flex justify-between">
+      {/* <Stack direction={'row'} gap={2}>
         <RedButton>
           <span
             style={{
@@ -86,8 +65,8 @@ export default function Header() {
             }}></span>
           {`{Campaign Name}`}
         </GreenButton>
-      </Stack>
-      <Stack direction="row" sx={{ gap: 1 }}>
+      </Stack> */}
+      {/* <Stack direction="row" sx={{ gap: 1 }}>
         <Button
           variant="contained"
           size={'small'}
@@ -105,7 +84,21 @@ export default function Header() {
         </Button>
         <Search />
       </Stack>
-      <LaunchPoolModal onSubmit={onSubmit} open={open} setOpen={setOpen} />
-    </Stack>
+      <LaunchPoolModal onSubmit={onSubmit} open={open} setOpen={setOpen} /> */}
+
+      <div className="flex gap-2 items-end">
+        <Image src="/images/logoBlackSroke.svg" width={30} height={51} alt="logo"></Image>
+        <div className="pb-[2px]">
+          <Image src="/Commi.svg" width={76.8} height={17} alt="logo"></Image>
+        </div>
+        <div className="bg-lime-400 flex items-center justify-center px-2 rounded h-[25px]">
+          <span className="text-[18px] font-extrabold text-main-Black">MVP</span>
+        </div>
+      </div>
+
+      <div>
+        <CreateCampaignButton />
+      </div>
+    </div>
   )
 }

@@ -7,9 +7,6 @@ import { Stack } from '@mui/material'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { ArrayRightMd } from '@/components/icons/ArrayRightMd'
 import Image from 'next/image'
-import truncateAddress from '@/lib/utils/truncateAddress'
-import { useSolanaMultiWallet } from '@/hooks/useSolanaMultiWallet'
-import { WalletName } from '@solana/wallet-adapter-base'
 
 interface ItemProps {
   wallet: Wallet
@@ -71,8 +68,6 @@ const WalletListItem = ({ wallet, onClick, status }: ItemProps) => {
 
 export default function ConnectWalletButton() {
   const [open, setOpen] = React.useState(false)
-  const { availableWallets, connectedWallets, activeWallet, connectWallet, setActiveWallet } =
-    useSolanaMultiWallet()
 
   const handleItemClick = (wallet: Wallet) => {
     const walletName = wallet.adapter.name
@@ -95,21 +90,6 @@ export default function ConnectWalletButton() {
 
   return (
     <>
-      <CommiModal open={open} onClose={() => setOpen(false)} title="Connect or Switch Wallet">
-        <Stack gap={2}>
-          {availableWallets
-            // .filter(wallet => wallet.readyState === 'Installed')
-            .map(wallet => (
-              <WalletListItem
-                key={wallet.adapter.name}
-                wallet={wallet}
-                onClick={() => handleItemClick(wallet)}
-                status={'connected'}
-              />
-            ))}
-        </Stack>
-      </CommiModal>
-
       {/* {activeWallet ? (
         <CommiButton size={'small'} variant={'outlined'} onClick={() => setOpen(true)}>
           {truncateAddress(activeWallet.address)}
@@ -119,7 +99,7 @@ export default function ConnectWalletButton() {
           Connect Wallet
         </CommiButton>
       )} */}
-      <CommiButton size={'small'} variant={'outlined'} onClick={() => setOpen(true)}>
+      <CommiButton size={'small'} onClick={() => setOpen(true)}>
         Connect Wallet
       </CommiButton>
     </>
