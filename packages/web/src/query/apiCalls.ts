@@ -8,6 +8,7 @@ export const API_URLS = {
   CAMPAIGN_CREATE: 'api/campaign/create',
   CAMPAIGN_LIST: 'api/campaign/list',
   CAMPAIGN_DETAIL: 'api/campaign/get',
+  CAMPAIGN_CREATED: 'api/campaign/created',
 }
 
 // API call functions
@@ -48,6 +49,13 @@ export const getCampaignDetail = async (id: number): Promise<AxiosResponse<Campa
         id,
       },
     },
+  })
+
+  return response
+}
+export const getCampaignCreated = async (): Promise<AxiosResponse<Campaign[]>> => {
+  const response: AxiosResponse<Campaign[]> = await axiosGet({
+    url: API_URLS.CAMPAIGN_CREATED,
   })
 
   return response

@@ -1,5 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { connectUser, createCampaign, getCampaignDetail, getCampaignList } from './apiCalls'
+import {
+  connectUser,
+  createCampaign,
+  getCampaignCreated,
+  getCampaignDetail,
+  getCampaignList,
+} from './apiCalls'
 import { UserConnectRequest, connectedUser } from '../types/user'
 import { CampaignCreateRequest, Campaign } from '../types/campaign'
 
@@ -13,6 +19,7 @@ export const queryKeys = {
     all: ['campaign'] as const,
     list: () => [...queryKeys.campaign.all, 'list'] as const,
     detail: (id: number) => [...queryKeys.campaign.all, 'detail', id] as const,
+    created: () => [...queryKeys.campaign.all, 'created'] as const,
   },
 } as const
 
@@ -71,6 +78,12 @@ export const useCampaign = (id: number) => {
     queryKey: queryKeys.campaign.detail(id),
     queryFn: () => getCampaignDetail(id), // You'll need to implement this API call
     enabled: !!id, // Only run query if id is provided
+  })
+}
+export const useCampaignCreated = () => {
+  return useQuery({
+    queryKey: queryKeys.campaign.created(),
+    queryFn: () => getCampaignCreated(), // You'll need to implement this API call
   })
 }
 
