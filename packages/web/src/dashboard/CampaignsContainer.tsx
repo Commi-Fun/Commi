@@ -4,14 +4,14 @@ import * as React from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
 import { GlobalContext } from '@/context/GlobalContext'
+import { useCampaigns } from '@/query/query'
 
 const CampaignsContainer = () => {
   const [value, setValue] = React.useState('one')
   const { campaigns } = React.useContext(GlobalContext)
 
-  React.useEffect(() => {
-    fetch('/api/campaign/list')
-  }, [])
+  const { data: compaginList } = useCampaigns()
+  console.log('🚀 ~ CampaignsContainer ~ compagins:', compaginList)
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
