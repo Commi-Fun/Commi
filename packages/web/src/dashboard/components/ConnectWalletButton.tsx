@@ -1,107 +1,43 @@
 import * as React from 'react'
-import { Wallet } from '@solana/wallet-adapter-react'
-import CommiModal from '@/components/CommiModal'
+import { useWallet } from '@solana/wallet-adapter-react'
 import CommiButton from '@/components/CommiButton'
-import CommiTypo from '@/components/CommiTypo'
-import { Stack } from '@mui/material'
-import { customColors } from '@/shared-theme/themePrimitives'
-import { ArrayRightMd } from '@/components/icons/ArrayRightMd'
-import Image from 'next/image'
+import { CustomConnectModal } from '@/components/CustomConnectModal'
+import truncateAddress from '@/lib/utils/truncateAddress'
 
-interface ItemProps {
-  wallet: Wallet
-  onClick: () => void
-  status: 'connected' | 'active' | 'disconnected'
-}
 
-const WalletListItem = ({ wallet, onClick, status }: ItemProps) => {
-  const isActive = status === 'active'
-  const isConnected = status === 'connected' || isActive
-
-  return (
-    <Stack
-      onClick={onClick}
-      direction="row"
-      alignItems="center"
-      justifyContent="space-between"
-      sx={{
-        height: '94px',
-        width: '100%',
-        borderRadius: '8px',
-        backgroundColor: customColors.blue[1300],
-        padding: '0 24px',
-        cursor: 'pointer',
-        border: isActive ? `1px solid ${customColors.green01[600]}` : 'none',
-        transition: 'background-color 0.2s, color 0.2s, border 0.2s',
-        '& .wallet-name, & .wallet-arrow': {
-          transition: 'color 0.2s',
-        },
-        '.wallet-arrow': { color: customColors.blue[300] },
-        '&:hover': {
-          backgroundColor: customColors.green01[300],
-          '& .wallet-name, & .wallet-arrow': {
-            color: customColors.main.White,
-          },
-        },
-      }}>
-      <Stack direction="row" alignItems="center" gap="16px">
-        <Image src={wallet.adapter.icon} alt={wallet.adapter.name} width={46} height={46} />
-        <CommiTypo
-          className="wallet-name"
-          type={'title'}
-          weight="bold"
-          color={customColors.blue[200]}>
-          {wallet.adapter.name}
-        </CommiTypo>
-        {isConnected && (
-          <CommiTypo
-            type="body"
-            color={isActive ? customColors.green01[600] : customColors.blue[300]}>
-            {isActive ? '(Active)' : '(Connected)'}
-          </CommiTypo>
-        )}
-      </Stack>
-      <ArrayRightMd className="wallet-arrow" />
-    </Stack>
-  )
-}
 
 export default function ConnectWalletButton() {
   const [open, setOpen] = React.useState(false)
+  const { publicKey, connected, disconnect } = useWallet()
 
-  const handleItemClick = (wallet: Wallet) => {
-    const walletName = wallet.adapter.name
-    // if (connectedWallets[walletName]) {
-    //   setActiveWallet(walletName)
-    // } else {
-    //   connectWallet(walletName)
-    // }
+  const handleDisconnect = async () => {
+    try {
+      await disconnect()
+    } catch (error) {
+      console.error('Failed to disconnect wallet:', error)
+    }
   }
-
-  // const getWalletStatus = (walletName: WalletName): 'connected' | 'active' | 'disconnected' => {
-  //   if (activeWallet?.name === walletName) {
-  //     return 'active'
-  //   }
-  //   if (connectedWallets[walletName]) {
-  //     return 'connected'
-  //   }
-  //   return 'disconnected'
-  // }
 
   return (
     <>
-      {/* {activeWallet ? (
-        <CommiButton size={'small'} variant={'outlined'} onClick={() => setOpen(true)}>
-          {truncateAddress(activeWallet.address)}
+      {connected && publicKey ? (
+        <CommiButton 
+          size={'small'} 
+          variant={'outline'} 
+          onClick={handleDisconnect}
+        >
+          {truncateAddress(publicKey.toBase58())}
         </CommiButton>
       ) : (
-        <CommiButton size={'small'} variant={'outlined'} onClick={() => setOpen(true)}>
+        <CommiButton size={'small'} onClick={() => setOpen(true)}>
           Connect Wallet
         </CommiButton>
-      )} */}
-      <CommiButton size={'small'} onClick={() => setOpen(true)}>
-        Connect Wallet
-      </CommiButton>
+      )}
+      
+      <CustomConnectModal 
+        open={open} 
+        onClose={() => setOpen(false)} 
+      />
     </>
   )
 }
