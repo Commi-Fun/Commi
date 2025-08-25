@@ -30,3 +30,26 @@
 用途:
 
 开发者自测: 这个分支的内容可以随意更改。push -f。使用时在 dev channel 里通知
+
+4. 本地开发
+
+   本地绕过授权登录需要复制线上环境的 token
+
+- 本地的 packages/web/.env.local 中添加环境变量
+
+  NEXTAUTH_SECRET=
+
+  NEXTAUTH_URL="http://localhost:3000"
+
+  DATABASE_URL=
+
+- 登录 https://dev.commi.fun. 打开控制台复制 token
+  ![alt text](image.png)
+- 本地 pnpm web:dev 启动后。在控制台执行
+
+```
+const token = "<your_token>";
+
+document.cookie = `next-auth.session-token=${token}; path=/; max-age=2592000; samesite=lax`;
+location.reload();
+```
