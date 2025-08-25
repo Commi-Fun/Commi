@@ -4,6 +4,7 @@ import React from 'react'
 import { Web3Provider } from '@/components/Web3Provider'
 import { NextAuthProvider } from '@/components/NextAuthProvider'
 import { SolanaProvider } from '@/components/SolanaProvider'
+import { QueryProvider } from '@/components/QueryProvider'
 import '@solana/wallet-adapter-react-ui/styles.css'
 import '../globals.css'
 import { Nunito } from 'next/font/google'
@@ -46,15 +47,17 @@ const Layout: React.FC<MyComponentProps> = ({ children }) => {
   return (
     <html className={nunito.variable}>
       <body className={nunito.className}>
-        <Web3Provider>
-          <SolanaProvider>
-            <NextAuthProvider>
-              <GlobalContextProvider>
-                <DashboardLayout>{children}</DashboardLayout>
-              </GlobalContextProvider>
-            </NextAuthProvider>
-          </SolanaProvider>
-        </Web3Provider>
+        <QueryProvider>
+          <Web3Provider>
+            <SolanaProvider>
+              <NextAuthProvider>
+                <GlobalContextProvider>
+                  <DashboardLayout>{children}</DashboardLayout>
+                </GlobalContextProvider>
+              </NextAuthProvider>
+            </SolanaProvider>
+          </Web3Provider>
+        </QueryProvider>
       </body>
     </html>
   )
