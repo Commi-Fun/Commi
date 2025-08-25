@@ -128,11 +128,16 @@ export async function post(data: UserDTO, postLink: string): Promise<ServiceResu
   }
 }
 
-export async function refer(user: UserDTO, referralCode?: string): Promise<ServiceResult<any>> {
+export async function refer(
+  user: UserDTO,
+  referralCode?: string,
+): Promise<ServiceResult<{ referrerId: number; referrerTwitterId: string } | null>> {
   try {
     if (!referralCode) {
       throw new BadRequestError('Invalid referral code')
     }
+
+    let referrerInfo: { referrerId: number; referrerTwitterId: string } | null = null
 
     await prisma.$transaction(async tx => {
       const referrer = await findWhitelistByReferralCode(tx, referralCode)
@@ -177,6 +182,12 @@ export async function refer(user: UserDTO, referralCode?: string): Promise<Servi
 
       if (!referralResult) throw new DatabaseError('Failed to create referral')
 
+      // Store referrer info for return
+      referrerInfo = {
+        referrerId: referrer.userId,
+        referrerTwitterId: referrer.twitterId,
+      }
+
       if (!referrer.referredAt) {
         const updateResult = await tx.whitelist.update({
           where: {
@@ -190,7 +201,7 @@ export async function refer(user: UserDTO, referralCode?: string): Promise<Servi
         if (!updateResult) console.log('Update referrer status error:', referralDomain)
       }
     })
-    return createSuccessResult(null)
+    return createSuccessResult(referrerInfo)
   } catch (error: any) {
     return createErrorResult(error.message || 'Failed to process referral')
   }

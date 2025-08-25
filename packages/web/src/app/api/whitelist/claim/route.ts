@@ -3,6 +3,7 @@ import { withErrorHandler } from '@/lib/utils/withErrorHandler'
 import { success, error } from '@/lib/utils/response'
 import { getServerSession } from 'next-auth'
 import { nextAuthOptions } from '../../auth/[...nextauth]/route'
+import { sseManager } from '@/lib/utils/sseManager'
 
 export const POST = withErrorHandler(async () => {
   const session = await getServerSession(nextAuthOptions)
@@ -14,6 +15,19 @@ export const POST = withErrorHandler(async () => {
 
   if (!result.success) {
     return error(result.error || 'Failed to claim', 500)
+  }
+
+  // Broadcast SSE event for successful claim
+  try {
+    sseManager.broadcastToUser(session.user.twitterId, {
+      type: 'whitelist_update',
+      twitterId: session.user.twitterId,
+      data: {
+        claimed: true,
+      },
+    })
+  } catch (sseError) {
+    console.error('Failed to broadcast claim SSE event:', sseError)
   }
 
   return success(result.data)

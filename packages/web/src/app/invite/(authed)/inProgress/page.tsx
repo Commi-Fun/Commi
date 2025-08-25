@@ -9,8 +9,9 @@ import { customColors } from '@/shared-theme/themePrimitives'
 import { WhitelistStatus } from '@/types/whitelist'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
+import { useWhitelistSSE } from '@/hooks/useWhitelistSSE'
 
 const Page = () => {
   const [copied, setCopied] = useState(false)
@@ -24,6 +25,28 @@ const Page = () => {
   const [verifyLoading, setVerifyLoading] = useState(false)
   const [verifyError, setVerifyError] = useState(false)
   const verifyButtonDisabled = !postUrl || verifyLoading
+
+  const onStatusUpdate = useCallback(statusUpdate => {
+    console.log('Received status update:', statusUpdate)
+    setWhitelistStatus(prev => ({
+      ...prev,
+      ...statusUpdate,
+    }))
+  }, [])
+
+  // SSE connection for real-time updates
+  const { isConnected, connectionStatus, reconnect } = useWhitelistSSE({
+    enabled: true,
+    onStatusUpdate,
+    // onError: error => {
+    //   console.error('SSE connection error:', error)
+    // },
+    // onReconnect: () => {
+    //   console.log('SSE reconnected, fetching latest status')
+    //   // Fetch latest status when reconnected
+    //   handleCheck()
+    // },
+  })
 
   const handleCopy = async () => {
     try {
@@ -43,21 +66,19 @@ const Page = () => {
     }
   }, [router, whitelistStatus?.claimed])
 
+  // Initial status fetch on component mount
   useEffect(() => {
-    const fetchStatus = () =>
-      fetch('/api/whitelist/check')
-        .then(value => value.json())
-        .then(response => {
-          setWhitelistStatus(response.data)
-        })
-        .catch(error => {
-          if (error instanceof Error) console.error('Failed to check:', error.message)
-        })
-        .finally(() => {
-          setTimeout(() => {
-            fetchStatus()
-          }, 10000)
-        })
+    const fetchStatus = async () => {
+      try {
+        const result = await fetch('/api/whitelist/check')
+        const data = await result.json()
+        if (data.status === 200) {
+          setWhitelistStatus(data.data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch initial status:', error)
+      }
+    }
 
     fetchStatus()
   }, [])
@@ -148,8 +169,13 @@ const Page = () => {
 
   const canClaim = whitelistStatus.followed && whitelistStatus.posted && whitelistStatus.referred
 
+  const pushEvent = () => {
+    fetch('/api/whitelist/test')
+  }
+
   return (
     <div className="">
+      <button onClick={pushEvent}>push event</button>
       <p className="text-[40px] lg:text-[46px] 2xl:text-[72px] text-main-Black font-extrabold mobile-font-shdow-white lg:font-shadow-white">
         3 STEPS
       </p>
@@ -169,6 +195,29 @@ const Page = () => {
             className={`text-[18px] lg:text-[28px] ${isSpinning ? 'animate-spin' : ''}`}
           />
           <span className="text-green01-200 text-[14px] lg:text-[24px] font-bold">Check</span>
+          {/* SSE Connection Status Indicator */}
+          <div className="ml-2 flex items-center gap-1">
+            <div
+              className={`w-2 h-2 rounded-full ${
+                connectionStatus === 'connected'
+                  ? 'bg-green-500'
+                  : connectionStatus === 'connecting'
+                    ? 'bg-yellow-500 animate-pulse'
+                    : 'bg-red-500'
+              }`}
+              title={`SSE Status: ${connectionStatus}${isConnected ? ' (Live Updates)' : ''}`}></div>
+            {connectionStatus === 'error' && (
+              <button
+                onClick={e => {
+                  e.stopPropagation()
+                  reconnect()
+                }}
+                className="text-xs text-red-500 hover:text-red-400"
+                title="Reconnect live updates">
+                Reconnect
+              </button>
+            )}
+          </div>
         </div>
       </div>
 

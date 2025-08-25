@@ -4,6 +4,7 @@ import { copyText, url_prefix } from '@/lib/constants'
 import { Popover } from '@mui/material'
 import { useSession } from 'next-auth/react'
 import React, { useEffect, useState } from 'react'
+import { useWhitelistSSE } from '@/hooks/useWhitelistSSE'
 
 const Page = () => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
@@ -14,6 +15,31 @@ const Page = () => {
   const { data } = useSession()
 
   const referalUrl = `${url_prefix}/invite/${data?.user.referralCode}`
+
+  // SSE connection for real-time referee updates
+  const { isConnected, connectionStatus } = useWhitelistSSE({
+    enabled: true,
+    onRefereeUpdate: referee => {
+      console.log('Received referee update:', referee)
+      // Add new referee to the list if not already present
+      setInvitedFriends(prev => {
+        const exists = prev.some(friend => friend.handle === referee.handle)
+        if (!exists) {
+          return [
+            ...prev,
+            {
+              profileImageUrl: referee.profileImageUrl,
+              handle: referee.handle,
+            },
+          ]
+        }
+        return prev
+      })
+    },
+    onError: error => {
+      console.error('SSE connection error:', error)
+    },
+  })
 
   const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
     if (invitedFriends.length === 0) {
@@ -36,21 +62,21 @@ const Page = () => {
     }
   }
 
+  // Initial fetch of referees on component mount
   useEffect(() => {
-    const getReferees = () => {
-      fetch('/api/whitelist/referees')
-        .then(value => value.json())
-        .then(value => {
-          setInvitedFriends(value?.data || [])
-        })
-        .catch(error => {
-          console.error('Failed to check:', error)
-        })
+    const getReferees = async () => {
+      try {
+        const response = await fetch('/api/whitelist/referees')
+        const result = await response.json()
+        if (result.status === 200) {
+          setInvitedFriends(result.data || [])
+        }
+      } catch (error) {
+        console.error('Failed to fetch referees:', error)
+      }
     }
+
     getReferees()
-    setInterval(() => {
-      getReferees()
-    }, 3000)
   }, [])
 
   const open = Boolean(anchorEl)
@@ -85,6 +111,16 @@ const Page = () => {
         <span onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}>
           {invitedFriends.length} friends joined🧃
         </span>
+        {/* SSE Connection Status Indicator */}
+        <div
+          className={`inline-block ml-2 w-2 h-2 rounded-full ${
+            connectionStatus === 'connected'
+              ? 'bg-green-500'
+              : connectionStatus === 'connecting'
+                ? 'bg-yellow-500 animate-pulse'
+                : 'bg-red-500'
+          }`}
+          title={`Live updates: ${connectionStatus}${isConnected ? ' (Active)' : ''}`}></div>
       </p>
       <Popover
         id="mouse-over-popover"
