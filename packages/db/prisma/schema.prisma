@@ -11,7 +11,7 @@ datasource db {
 model User {
   id              Int      @id @default(autoincrement())
   twitterId       String   @unique @db.VarChar(20)
-  handle String @unique @db.VarChar(20)
+  handle          String   @unique @db.VarChar(20)
   name            String
   profileImageUrl String?
   verified        Boolean  @default(false)
@@ -138,6 +138,7 @@ enum Blockchain {
   ARBITRUM
   OPTIMISM
 }
+
 model Wallet {
   id        Int      @id @default(autoincrement())
   address   String   @unique @db.VarChar(44)
@@ -145,6 +146,7 @@ model Wallet {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  
   @@index([userId])
 }
 
@@ -214,7 +216,6 @@ model Participation {
   @@unique([twitterId, campaignId])
   @@index(campaignId)
 }
-
 
 model ClaimRecord {
   id         Int      @id @default(autoincrement())
