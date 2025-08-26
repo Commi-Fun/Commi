@@ -71,7 +71,7 @@ export const useCreateCampaignMutation = () => {
 export const useCampaigns = () => {
   return useQuery({
     queryKey: queryKeys.campaign.list(),
-    queryFn: () => getCampaignList(), // You'll need to implement this API call
+    queryFn: () => getCampaignList(),
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 }
@@ -79,20 +79,20 @@ export const useCampaigns = () => {
 export const useCampaign = (id: number) => {
   return useQuery({
     queryKey: queryKeys.campaign.detail(id),
-    queryFn: () => getCampaignDetail(id), // You'll need to implement this API call
+    queryFn: () => getCampaignDetail(id),
     enabled: !!id, // Only run query if id is provided
   })
 }
 export const useCampaignCreated = () => {
   return useQuery({
     queryKey: queryKeys.campaign.created(),
-    queryFn: () => getCampaignCreated(), // You'll need to implement this API call
+    queryFn: () => getCampaignCreated(),
   })
 }
 export const useUserConnected = (address: string | undefined) => {
   return useQuery({
     queryKey: queryKeys.user.isConnected(address),
-    queryFn: async () => (address ? await checkUserConnected(address) : false), // You'll need to implement this API call
+    queryFn: async () => (address ? await checkUserConnected(address) : false),
   })
 }
 
