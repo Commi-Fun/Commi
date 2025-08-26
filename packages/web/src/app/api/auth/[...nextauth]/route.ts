@@ -54,35 +54,33 @@ export const nextAuthOptions: NextAuthOptions = {
           },
         })
 
-        if (process.env.ACTIVE_HOME_PAGE === 'invite') {
-          // 创建 whitelist
-          let whitelist = await prisma.whitelist.findFirst({
-            where: {
+        // 创建 whitelist
+        let whitelist = await prisma.whitelist.findFirst({
+          where: {
+            userId: dbUser.id,
+          },
+        })
+        if (whitelist === null) {
+          whitelist = await prisma.whitelist.create({
+            data: {
               userId: dbUser.id,
+              twitterId: dbUser.twitterId,
+              referralCode: nanoid(6),
+              status: WhitelistStatus.REGISTERED,
+              registeredAt: new Date(),
             },
           })
-          if (whitelist === null) {
-            whitelist = await prisma.whitelist.create({
-              data: {
-                userId: dbUser.id,
-                twitterId: dbUser.twitterId,
-                referralCode: nanoid(6),
-                status: WhitelistStatus.REGISTERED,
-                registeredAt: new Date(),
-              },
-            })
-            user.isNew = true
-          } else {
-            user.isNew = false
-          }
-          user.referralCode = whitelist.referralCode
-          user.status = whitelist.status
-          user.registered = whitelist.registeredAt !== null
-          user.followed = whitelist.followedAt !== null
-          user.posted = whitelist.postedAt !== null
-          user.referred = whitelist.referredAt !== null
-          user.claimed = whitelist.claimedAt !== null
+          user.isNew = true
+        } else {
+          user.isNew = false
         }
+        user.referralCode = whitelist.referralCode
+        user.status = whitelist.status
+        user.registered = whitelist.registeredAt !== null
+        user.followed = whitelist.followedAt !== null
+        user.posted = whitelist.postedAt !== null
+        user.referred = whitelist.referredAt !== null
+        user.claimed = whitelist.claimedAt !== null
         user.userId = dbUser.id
 
         return true // 允许登录
