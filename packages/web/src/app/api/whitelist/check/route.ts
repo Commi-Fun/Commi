@@ -11,6 +11,8 @@ export const GET = withErrorHandler(async () => {
     return error('Invalid token.', 401)
   }
 
+  console.log('sessionInfo.user.twitterId', sessionInfo.user.twitterId)
+
   const result = await whitelistService.getWhitelist(sessionInfo.user.twitterId)
 
   if (!result.success) {
