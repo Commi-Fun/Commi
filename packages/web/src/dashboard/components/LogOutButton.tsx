@@ -41,9 +41,7 @@ export const LogOutButton = (props: IconType) => {
             <span className="text-[18px]  lg:text-[1.5rem]">Log out of Twitter?</span>
           </div>
           <div className="flex justify-center w-full gap-4">
-            <CommiButton className="h-8" onClick={logOut}>
-              log out
-            </CommiButton>
+            <CommiButton onClick={logOut}>log out</CommiButton>
             <CommiButton onClick={() => setOpen(false)}>stay here</CommiButton>
           </div>
         </div>

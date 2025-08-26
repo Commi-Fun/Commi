@@ -298,7 +298,7 @@ const Page = () => {
                   width={35}
                   height={60}
                 />
-                <span className="font-bold text-[18px]">Calim</span>
+                <span className="font-bold text-[18px]">Claim</span>
               </div>
             </div>
             <div className="block lg:hidden ">

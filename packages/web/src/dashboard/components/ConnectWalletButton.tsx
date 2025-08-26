@@ -4,8 +4,6 @@ import CommiButton from '@/components/CommiButton'
 import { CustomConnectModal } from '@/components/CustomConnectModal'
 import truncateAddress from '@/lib/utils/truncateAddress'
 
-
-
 export default function ConnectWalletButton() {
   const [open, setOpen] = React.useState(false)
   const { publicKey, connected, disconnect } = useWallet()
@@ -21,11 +19,7 @@ export default function ConnectWalletButton() {
   return (
     <>
       {connected && publicKey ? (
-        <CommiButton 
-          size={'small'} 
-          variant={'outline'} 
-          onClick={handleDisconnect}
-        >
+        <CommiButton size={'small'} variant={'outline'} onClick={handleDisconnect}>
           {truncateAddress(publicKey.toBase58())}
         </CommiButton>
       ) : (
@@ -33,11 +27,8 @@ export default function ConnectWalletButton() {
           Connect Wallet
         </CommiButton>
       )}
-      
-      <CustomConnectModal 
-        open={open} 
-        onClose={() => setOpen(false)} 
-      />
+
+      <CustomConnectModal open={open} onClose={() => setOpen(false)} />
     </>
   )
 }
