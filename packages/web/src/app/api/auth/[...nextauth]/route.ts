@@ -11,6 +11,13 @@ export const nextAuthOptions: NextAuthOptions = {
       clientId: process.env.X_CLIENT_ID as string,
       clientSecret: process.env.X_CLIENT_SECRET as string,
       version: '2.0',
+      authorization: {
+        params: {
+          scope: 'users.read tweet.read offline.access',
+          prompt: 'select_user',
+          force_login: true,
+        },
+      },
       profile(profile) {
         const userProfile = profile.data
         const standardizedUser = {
@@ -93,7 +100,7 @@ export const nextAuthOptions: NextAuthOptions = {
       }
     },
 
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id // Twitter ID
         token.twitterId = user.id // Twitter ID
@@ -113,11 +120,6 @@ export const nextAuthOptions: NextAuthOptions = {
           token.username = user.username
         }
       }
-
-      // 当调用update()时触发
-      // if (trigger === 'update' && session) {
-      //   token = { ...token, ...session }
-      // }
 
       return token
     },
