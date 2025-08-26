@@ -45,7 +45,7 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
     if (publicKey && signMessage && !isUserAddressConnected) {
       try {
         // Create a message to sign
-        const message = `Connect wallet ${publicKey.toBase58()} to Commi. Timestamp: ${Date.now()}`
+        const message = `Connect wallet ${publicKey.toBase58()} to Commi.`
         const messageBytes = new TextEncoder().encode(message)
 
         // Sign the message

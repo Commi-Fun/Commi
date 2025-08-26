@@ -200,6 +200,13 @@ importers:
         version: 5.8.3
 
   packages/common:
+    dependencies:
+      '@solana/web3.js':
+        specifier: ^1.87.6
+        version: 1.95.5(bufferutil@4.0.9)(encoding@0.1.13)(utf-8-validate@5.0.10)
+      tweetnacl:
+        specifier: ^1.0.3
+        version: 1.0.3
     devDependencies:
       '@types/node':
         specifier: ^20.11.0
