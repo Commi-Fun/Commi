@@ -85,6 +85,8 @@ export const nextAuthOptions: NextAuthOptions = {
         }
         user.userId = dbUser.id
 
+        console.log('user', user)
+
         return true // 允许登录
       } catch (error) {
         return false // 拒绝登录
