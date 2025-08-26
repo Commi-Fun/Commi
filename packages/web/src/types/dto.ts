@@ -36,9 +36,9 @@ export interface CampaignResponseDto {
   tokenAddress: string
   tokenName: string
   ticker: string
-  totalAmount: bigint
-  remainingAmount: bigint
-  marketCap: bigint
+  totalAmount: number
+  remainingAmount: number
+  marketCap: number
   startTime: Date
   endTime: Date
   status: string
