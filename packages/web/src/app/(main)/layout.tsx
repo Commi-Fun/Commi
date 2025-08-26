@@ -8,13 +8,15 @@ import { GlobalContextProvider } from '@/context/GlobalContext'
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <Web3Provider>
-      <SolanaProvider>
-        <GlobalContextProvider>
-          <DashboardLayout>{children}</DashboardLayout>
-        </GlobalContextProvider>
-      </SolanaProvider>
-    </Web3Provider>
+    <QueryProvider>
+      <Web3Provider>
+        <SolanaProvider>
+          <GlobalContextProvider>
+            <DashboardLayout>{children}</DashboardLayout>
+          </GlobalContextProvider>
+        </SolanaProvider>
+      </Web3Provider>
+    </QueryProvider>
   )
 }
 
