@@ -5,7 +5,7 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import CommiModal from './CommiModal'
 import Image from 'next/image'
 import { ArrayRightMd } from './icons/ArrayRightMd'
-import { useConnectUserMutation } from '@/query/query'
+import { useConnectUserMutation, useUserConnected } from '@/query/query'
 import { useSession } from 'next-auth/react'
 
 interface CustomConnectModalProps {
@@ -17,6 +17,7 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
   const { wallets, select, connect, publicKey, signMessage } = useWallet()
   const { data: session } = useSession()
   const connectUserMutation = useConnectUserMutation()
+  const isUserAddressConnected = useUserConnected(publicKey?.toBase58())
 
   const handleWalletConnect = async (walletName: string) => {
     try {
@@ -40,34 +41,34 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
     }
   }
 
-  // Handle wallet connection and user connect mutation
-  useEffect(() => {
-    const handleUserConnect = async () => {
-      if (publicKey && signMessage && session?.user?.userId) {
-        try {
-          // Create a message to sign
-          const message = `Connect wallet ${publicKey.toBase58()} to Commi. Timestamp: ${Date.now()}`
-          const messageBytes = new TextEncoder().encode(message)
+  const handleUserConnect = async () => {
+    if (publicKey && signMessage && !isUserAddressConnected) {
+      try {
+        // Create a message to sign
+        const message = `Connect wallet ${publicKey.toBase58()} to Commi. Timestamp: ${Date.now()}`
+        const messageBytes = new TextEncoder().encode(message)
 
-          // Sign the message
-          const signature = await signMessage(messageBytes)
-          const signatureBase58 = Buffer.from(signature).toString('base64')
+        // Sign the message
+        const signature = await signMessage(messageBytes)
+        const signatureBase58 = Buffer.from(signature).toString('base64')
 
-          // Call the connect user mutation
-          await connectUserMutation.mutateAsync({
-            address: publicKey.toBase58(),
-            signature: signatureBase58,
-          })
+        // Call the connect user mutation
+        await connectUserMutation.mutateAsync({
+          address: publicKey.toBase58(),
+          signature: signatureBase58,
+        })
 
-          console.log('Wallet connected and user updated successfully')
-        } catch (error) {
-          console.error('Failed to connect user:', error)
-        }
+        console.log('Wallet connected and user updated successfully')
+      } catch (error) {
+        console.error('Failed to connect user:', error)
       }
     }
+  }
 
+  // Handle wallet connection and user connect mutation
+  useEffect(() => {
     handleUserConnect()
-  }, [publicKey, signMessage, session?.user?.userId, connectUserMutation])
+  }, [publicKey, signMessage, isUserAddressConnected])
 
   return (
     <CommiModal open={open} onClose={onClose} size="medium">

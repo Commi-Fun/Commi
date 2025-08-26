@@ -5,6 +5,7 @@ import { AxiosResponse } from '../types/axios'
 
 export const API_URLS = {
   USER_CONNECT: 'api/user/connect',
+  USER_CONNECTED: 'api/user/connected',
   CAMPAIGN_CREATE: 'api/campaign/create',
   CAMPAIGN_LIST: 'api/campaign/list',
   CAMPAIGN_DETAIL: 'api/campaign/get',
@@ -56,6 +57,16 @@ export const getCampaignDetail = async (id: number): Promise<AxiosResponse<Campa
 export const getCampaignCreated = async (): Promise<AxiosResponse<Campaign[]>> => {
   const response: AxiosResponse<Campaign[]> = await axiosGet({
     url: API_URLS.CAMPAIGN_CREATED,
+  })
+
+  return response
+}
+export const checkUserConnected = async (address: string): Promise<AxiosResponse<boolean>> => {
+  const response: AxiosResponse<boolean> = await axiosPost({
+    url: API_URLS.USER_CONNECTED,
+    data: {
+      address,
+    },
   })
 
   return response

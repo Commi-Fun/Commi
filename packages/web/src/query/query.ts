@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import {
+  checkUserConnected,
   connectUser,
   createCampaign,
   getCampaignCreated,
@@ -14,6 +15,8 @@ export const queryKeys = {
   user: {
     all: ['user'] as const,
     connected: () => [...queryKeys.user.all, 'connected'] as const,
+    isConnected: (address: string | undefined) =>
+      [...queryKeys.user.all, 'isConnected', address] as const,
   },
   campaign: {
     all: ['campaign'] as const,
@@ -84,6 +87,12 @@ export const useCampaignCreated = () => {
   return useQuery({
     queryKey: queryKeys.campaign.created(),
     queryFn: () => getCampaignCreated(), // You'll need to implement this API call
+  })
+}
+export const useUserConnected = (address: string | undefined) => {
+  return useQuery({
+    queryKey: queryKeys.user.isConnected(address),
+    queryFn: async () => (address ? await checkUserConnected(address) : false), // You'll need to implement this API call
   })
 }
 
