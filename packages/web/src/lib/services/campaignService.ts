@@ -19,7 +19,7 @@ export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>>
     // Get participation counts
     const counts = await prisma.$queryRaw<
       Array<{ campaignId: number; count: bigint }>
-    >`SELECT p.campaignId, count(*) as count FROM Participation p WHERE p.campaignId in (${Prisma.join(campaignIds)}) GROUP BY p.campaignId`
+    >`SELECT p."campaignId", count(*) as count FROM public."Participation" p WHERE p."campaignId" in (${Prisma.join(campaignIds)}) GROUP BY p."campaignId"`
     for (const c of counts) {
       participationCountMap.set(c.campaignId, Number(c.count))
     }
@@ -111,7 +111,6 @@ export async function create(
     }
 
     const campaignDomain = toCampaignDomain(data, dbUser.id)
-    console.log('campaignDomain', campaignDomain)
     const result = await createCampaign(campaignDomain)
 
     return createSuccessResult({ id: result.id })
