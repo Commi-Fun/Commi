@@ -196,6 +196,7 @@ model Participation {
   campaignId     Int
   userId         Int
   twitterId      String   @db.VarChar(20)
+  handle String @unique @db.VarChar(20)
   influenceScore Float?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
@@ -203,6 +204,16 @@ model Participation {
   @@unique([userId, campaignId])
   @@unique([twitterId, campaignId])
   @@index(campaignId)
+}
+
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  address   String   @unique @db.VarChar(44)
+  isPrimary Boolean  @default(false)
+  userId    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  @@index([userId])
 }
 
 model ClaimRecord {
