@@ -24,7 +24,7 @@ export interface CreateCampaignRequestDto {
   description: string
   tokenAddress: string
   tokenName: string
-  totalAmount: bigint
+  totalAmount: number
   duration: number // hours
   socialLinks: any
 }

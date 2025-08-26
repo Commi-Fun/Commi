@@ -18,8 +18,8 @@ export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>>
 
     // Get participation counts
     const counts = await prisma.$queryRaw<
-      { campaignId: number; count: bigint }[]
-    >`SELECT p."campaignId", count(*) as count FROM "Participation" p WHERE p."campaignId" = ANY(${campaignIds}) GROUP BY p."campaignId"`
+      Array<{ campaignId: number; count: bigint }>
+    >`SELECT p.campaignId, count(*) as count FROM Participation p WHERE p.campaignId in (${Prisma.join(campaignIds)}) GROUP BY p.campaignId`
     for (const c of counts) {
       participationCountMap.set(c.campaignId, Number(c.count))
     }
@@ -165,9 +165,9 @@ export async function createCampaign(data: CampaignDomain) {
       tokenAddress: data.tokenAddress,
       tokenName: data.tokenName,
       ticker: data.ticker,
-      marketCap: data.marketCap,
-      totalAmount: data.totalAmount,
-      remainingAmount: data.totalAmount,
+      marketCap: data.marketCap.toString(),
+      totalAmount: data.totalAmount.toString(),
+      remainingAmount: data.totalAmount.toString(),
       startTime: data.startTime,
       endTime: data.endTime,
       tags: data.tags,
@@ -184,7 +184,6 @@ export async function findCampaignById(id: number) {
 }
 
 export async function findActiveCampaigns() {
-  console.log('🚀 ~ findActiveCampaigns ~ prisma:', prisma.url)
   return prisma.campaign.findMany({
     where: { status: CampaignStatus.ONGOING },
     orderBy: { startTime: 'asc' },
@@ -216,8 +215,8 @@ function toCampaignResponseDto(
     tokenName: campaign.tokenName,
     ticker: campaign.ticker ?? '',
     marketCap: campaign.marketCap ? Number(campaign.marketCap) : 0,
-    totalAmount: Number(campaign.totalAmount),
-    remainingAmount: Number(campaign.remainingAmount),
+    totalAmount: campaign.totalAmount ? Number(campaign.totalAmount) : 0,
+    remainingAmount: campaign.remainingAmount ? Number(campaign.remainingAmount) : 0,
     startTime: campaign.startTime,
     endTime: campaign.endTime,
     status: campaign.status,
@@ -240,6 +239,7 @@ function toCampaignDomain(
     tokenName: campaignRequest.tokenName,
     totalAmount: campaignRequest.totalAmount,
     remainingAmount: campaignRequest.totalAmount,
+    marketCap: 0,
     startTime: startTime.toDate(),
     endTime: endTime.toDate(),
     status: CampaignStatus.ONGOING,

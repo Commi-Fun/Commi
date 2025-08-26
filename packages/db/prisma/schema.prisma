@@ -151,9 +151,9 @@ model Campaign {
   tokenAddress    String         @db.VarChar(44)
   tokenName       String
   ticker          String?
-  totalAmount     BigInt
-  remainingAmount BigInt
-  marketCap       BigInt?
+  totalAmount     String
+  remainingAmount String
+  marketCap       String?
   startTime       DateTime
   endTime         DateTime
   tags            String[]
@@ -180,7 +180,7 @@ model TokenPool {
   id         Int           @id @default(autoincrement())
   campaignId Int
   txHash     String        @db.VarChar(88)
-  amount     BigInt
+  amount     String
   type       TokenPoolType
   creatorId  Int
   createdAt  DateTime      @default(now())
@@ -209,7 +209,7 @@ model ClaimRecord {
   id         Int      @id @default(autoincrement())
   campaignId Int
   userId     Int
-  amount     BigInt
+  amount     String
   claimed    Boolean
   txHash     String?  @db.VarChar(88)
   createdAt  DateTime @default(now())
@@ -259,10 +259,10 @@ model TokenInformation {
   uri                  String?
   platform             String   @default("pumpfun")
   marketValue          Float
-  virtualSolReserves   BigInt
-  virtualTokenReserves BigInt
-  realSolReserves      BigInt
-  realTokenReserves    BigInt
+  virtualSolReserves   String
+  virtualTokenReserves String
+  realSolReserves      String
+  realTokenReserves    String
   isComplete           Boolean  @default(false)
   lastTransactionType  String?
   blockTime            Int?
