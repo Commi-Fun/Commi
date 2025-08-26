@@ -48,9 +48,6 @@ const Page = () => {
         })
     }
     getReferees()
-    setInterval(() => {
-      getReferees()
-    }, 3000)
   }, [])
 
   const open = Boolean(anchorEl)

@@ -53,11 +53,6 @@ const Page = () => {
         .catch(error => {
           if (error instanceof Error) console.error('Failed to check:', error.message)
         })
-        .finally(() => {
-          setTimeout(() => {
-            fetchStatus()
-          }, 10000)
-        })
 
     fetchStatus()
   }, [])

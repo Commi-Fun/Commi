@@ -44,6 +44,8 @@ export async function getWhitelist(twitterId: string): Promise<ServiceResult<Whi
   try {
     const result = await prisma.whitelist.findUnique({ where: { twitterId: twitterId } })
 
+    console.log('result', result)
+
     if (result != null) {
       return createSuccessResult(entityToWhitelistDTO(result))
     }
