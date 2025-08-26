@@ -106,10 +106,12 @@ const Page = () => {
     })
       .then(response => response.json())
       .then(data => {
-        setWhitelistStatus(prev => ({
-          ...prev,
-          followed: !!!data?.data?.followed,
-        }))
+        if (data.status === 200) {
+          setWhitelistStatus(prev => ({
+            ...prev,
+            followed: Boolean(data?.data?.followed),
+          }))
+        }
       })
   }
 
