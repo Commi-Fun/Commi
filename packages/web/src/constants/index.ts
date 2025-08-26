@@ -1,1 +1,1 @@
-export const AIP_DOMAIN = 'http://localhost:3000/'
+export const AIP_DOMAIN = process.env.API_URL
