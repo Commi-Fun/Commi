@@ -1,1 +1,1 @@
-export const AIP_DOMAIN = 'http://localhost:5173/'
+export const AIP_DOMAIN = 'http://localhost:3000/'
