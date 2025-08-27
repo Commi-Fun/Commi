@@ -1,6 +1,5 @@
 'use client'
 import * as React from 'react'
-import Box from '@mui/material/Box'
 import HotContainer from '@/dashboard/components/HotContainer'
 import CampaignsContainer from '@/dashboard/CampaignsContainer'
 

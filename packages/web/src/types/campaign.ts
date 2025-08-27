@@ -7,8 +7,10 @@ export interface CampaignCreateRequest {
   marketCap?: string
   startTime: Date
   endTime: Date
+  duration: number
+  rewardRound: number
   tags: string[]
-  socialLinks: any // JSON type to match Prisma schema
+  socialLinks: { xCommunityLink: string; xLink: string } // JSON type to match Prisma schema
   creatorId: number
   txHash?: string
 }
@@ -30,6 +32,7 @@ export interface Campaign {
   txHash: string | null
   createdAt: Date
   updatedAt: Date
+  rewardRound: number
   // Additional fields for UI
   participationCount?: number
   creator?: string

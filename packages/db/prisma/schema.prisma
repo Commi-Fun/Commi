@@ -171,6 +171,7 @@ model Campaign {
   socialLinks     Json
   status          CampaignStatus
   creatorId       Int
+  rewardRound     Int
   txHash          String?        @db.VarChar(88)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt

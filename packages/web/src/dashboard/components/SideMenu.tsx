@@ -10,7 +10,6 @@ import { useWallet } from '@solana/wallet-adapter-react'
 import { LoginButton } from './LoginButton'
 import { ArrowCircleRight } from '@/components/icons/ArrowCircleRight'
 import { WalletAddress } from './WalletAddress'
-import Image from 'next/image'
 
 const ProfileInfo = () => {
   const { data: session } = useSession()
