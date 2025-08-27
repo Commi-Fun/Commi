@@ -35,12 +35,12 @@ export const createCampaign = async (
   return response
 }
 
-export const getCampaignList = async (): Promise<AxiosResponse<Campaign[]>> => {
-  const response: AxiosResponse<Campaign[]> = await axiosGet({
+export const getCampaignList = async (): Promise<Campaign[]> => {
+  const response = await axiosGet({
     url: API_URLS.CAMPAIGN_LIST,
   })
 
-  return response
+  return response.data.data
 }
 export const getCampaignDetail = async (id: number): Promise<AxiosResponse<Campaign>> => {
   const response: AxiosResponse<Campaign> = await axiosGet({
@@ -68,7 +68,5 @@ export const checkUserConnected = async (address: string): Promise<boolean> => {
       address,
     },
   })
-  console.log('🚀 ~ checkUserConnected ~ response:', response.data.data)
-
   return response.data.data
 }

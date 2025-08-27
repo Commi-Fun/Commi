@@ -1,37 +1,37 @@
 export interface CampaignCreateRequest {
-  name: string
   description: string
   tokenAddress: string
   tokenName: string
-  ticker: string
-  totalAmount: number
-  txHash: string
-  startTime: number
-  endTime: number
+  ticker?: string
+  totalAmount: string
+  marketCap?: string
+  startTime: Date
+  endTime: Date
   tags: string[]
-  socialLinks: {
-    twitter: string
-    website: string
-  }
+  socialLinks: any // JSON type to match Prisma schema
+  creatorId: number
+  txHash?: string
 }
 export interface Campaign {
   id: number
-  name: string
   description: string
   tokenAddress: string
   tokenName: string
-  ticker: string
+  ticker: string | null
   totalAmount: number
-  remainningAmount: number
-  startTime: number
-  endTime: number
-  status: 'ONGOING' | 'ENDED'
-  participationCount: number
-  creator: string
+  remainingAmount: number
+  marketCap: string | null
+  startTime: Date
+  endTime: Date
   tags: string[]
-  socialLinks: {
-    twitter: string
-    website: string
-  }
-  claimStatus: 'CAN_NOT_CLAIM' | 'CAN_CLAIM' | 'CLAIMED'
+  socialLinks: any // JSON type from Prisma
+  status: 'UPCOMING' | 'ONGOING' | 'ENDED' | 'CANCELED'
+  creatorId: number
+  txHash: string | null
+  createdAt: Date
+  updatedAt: Date
+  // Additional fields for UI
+  participationCount?: number
+  creator?: string
+  claimed?: boolean
 }
