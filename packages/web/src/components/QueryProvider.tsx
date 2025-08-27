@@ -33,22 +33,29 @@ export function QueryProvider({ children }: QueryProviderProps) {
             retry: false,
           },
         },
-      })
+      }),
   )
 
   const [persister] = useState(() =>
     createAsyncStoragePersister({
       storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-    })
+    }),
   )
 
   return (
     <PersistQueryClientProvider
       client={queryClient}
-      persistOptions={{ persister }}
-    >
-      {children}
+      persistOptions={{
+        persister,
+        maxAge: Infinity,
+        dehydrateOptions: {
+          shouldDehydrateQuery: query => {
+            return ((query.meta?.isPersist || false) as boolean) && query.state.status === 'success'
+          },
+        },
+      }}>
       <ReactQueryDevtools initialIsOpen={false} />
+      {children}
     </PersistQueryClientProvider>
   )
 }

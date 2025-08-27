@@ -17,7 +17,8 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
   const { wallets, select, connect, publicKey, signMessage } = useWallet()
   const { data: session } = useSession()
   const connectUserMutation = useConnectUserMutation()
-  const isUserAddressConnected = useUserConnected(publicKey?.toBase58())
+  const { data: isUserAddressConnected, isFetched } = useUserConnected(publicKey?.toBase58())
+  console.log('🚀 ~ CustomConnectModal ~ isUserAddressConnected:', isUserAddressConnected)
 
   const handleWalletConnect = async (walletName: string) => {
     try {
@@ -42,7 +43,7 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
   }
 
   const handleUserConnect = async () => {
-    if (publicKey && signMessage && !isUserAddressConnected) {
+    if (publicKey && signMessage && !isUserAddressConnected && isFetched) {
       try {
         // Create a message to sign
         const message = `Connect wallet ${publicKey.toBase58()} to Commi.`
@@ -68,7 +69,7 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
   // Handle wallet connection and user connect mutation
   useEffect(() => {
     handleUserConnect()
-  }, [publicKey, signMessage, isUserAddressConnected])
+  }, [publicKey, isFetched])
 
   return (
     <CommiModal open={open} onClose={onClose} size="medium">

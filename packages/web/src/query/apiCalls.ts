@@ -61,13 +61,14 @@ export const getCampaignCreated = async (): Promise<AxiosResponse<Campaign[]>> =
 
   return response
 }
-export const checkUserConnected = async (address: string): Promise<AxiosResponse<boolean>> => {
-  const response: AxiosResponse<boolean> = await axiosPost({
+export const checkUserConnected = async (address: string): Promise<boolean> => {
+  const response = await axiosPost({
     url: API_URLS.USER_CONNECTED,
     data: {
       address,
     },
   })
+  console.log('🚀 ~ checkUserConnected ~ response:', response.data.data)
 
-  return response
+  return response.data.data
 }
