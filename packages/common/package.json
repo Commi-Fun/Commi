@@ -10,7 +10,10 @@
     "format": "prettier --write src",
     "clean": "rimraf dist node_modules .turbo"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@solana/web3.js": "^1.87.6",
+    "tweetnacl": "^1.0.3"
+  },
   "devDependencies": {
     "@types/node": "^20.11.0",
     "rimraf": "^5.0.5",

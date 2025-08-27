@@ -1,0 +1,37 @@
+export interface CampaignCreateRequest {
+  description: string
+  tokenAddress: string
+  tokenName: string
+  ticker?: string
+  totalAmount: string
+  marketCap?: string
+  startTime: Date
+  endTime: Date
+  tags: string[]
+  socialLinks: any // JSON type to match Prisma schema
+  creatorId: number
+  txHash?: string
+}
+export interface Campaign {
+  id: number
+  description: string
+  tokenAddress: string
+  tokenName: string
+  ticker: string | null
+  totalAmount: number
+  remainingAmount: number
+  marketCap: string | null
+  startTime: Date
+  endTime: Date
+  tags: string[]
+  socialLinks: any // JSON type from Prisma
+  status: 'UPCOMING' | 'ONGOING' | 'ENDED' | 'CANCELED'
+  creatorId: number
+  txHash: string | null
+  createdAt: Date
+  updatedAt: Date
+  // Additional fields for UI
+  participationCount?: number
+  creator?: string
+  claimed?: boolean
+}

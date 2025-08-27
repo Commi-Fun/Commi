@@ -1,10 +1,12 @@
 'use client'
 
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { useWallet } from '@solana/wallet-adapter-react'
 import CommiModal from './CommiModal'
 import Image from 'next/image'
 import { ArrayRightMd } from './icons/ArrayRightMd'
+import { useConnectUserMutation, useUserConnected } from '@/query/query'
+import { useSession } from 'next-auth/react'
 
 interface CustomConnectModalProps {
   open: boolean
@@ -12,7 +14,11 @@ interface CustomConnectModalProps {
 }
 
 export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
-  const { wallets, select, connect } = useWallet()
+  const { wallets, select, connect, publicKey, signMessage } = useWallet()
+  const { data: session } = useSession()
+  const connectUserMutation = useConnectUserMutation()
+  const { data: isUserAddressConnected, isFetched } = useUserConnected(publicKey?.toBase58())
+  console.log('🚀 ~ CustomConnectModal ~ isUserAddressConnected:', isUserAddressConnected)
 
   const handleWalletConnect = async (walletName: string) => {
     try {
@@ -24,6 +30,9 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
         // 2. 连接到钱包（这会弹出钱包授权界面）
         await connect()
 
+        // 3. 等待连接完成后获取公钥和签名
+        // Note: We need to wait for the connection to be established
+        // The actual signing and API call will happen in a useEffect
         onClose()
       } else {
         console.log(`${walletName} wallet not available`)
@@ -32,6 +41,35 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
       console.error('Failed to connect wallet:', error)
     }
   }
+
+  const handleUserConnect = async () => {
+    if (publicKey && signMessage && !isUserAddressConnected && isFetched) {
+      try {
+        // Create a message to sign
+        const message = `Connect wallet ${publicKey.toBase58()} to Commi.`
+        const messageBytes = new TextEncoder().encode(message)
+
+        // Sign the message
+        const signature = await signMessage(messageBytes)
+        const signatureBase58 = Buffer.from(signature).toString('base64')
+
+        // Call the connect user mutation
+        await connectUserMutation.mutateAsync({
+          address: publicKey.toBase58(),
+          signature: signatureBase58,
+        })
+
+        console.log('Wallet connected and user updated successfully')
+      } catch (error) {
+        console.error('Failed to connect user:', error)
+      }
+    }
+  }
+
+  // Handle wallet connection and user connect mutation
+  useEffect(() => {
+    handleUserConnect()
+  }, [publicKey, isFetched])
 
   return (
     <CommiModal open={open} onClose={onClose} size="medium">

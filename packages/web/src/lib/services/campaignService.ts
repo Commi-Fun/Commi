@@ -18,8 +18,8 @@ export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>>
 
     // Get participation counts
     const counts = await prisma.$queryRaw<
-      any[]
-    >`SELECT p.campaignId, count(*) as count FROM Participation p WHERE p.campaignId in (${Prisma.join(campaignIds)}) GROUP BY p.campaignId`
+      Array<{ campaignId: number; count: bigint }>
+    >`SELECT p."campaignId", count(*) as count FROM public."Participation" p WHERE p."campaignId" in (${Prisma.join(campaignIds)}) GROUP BY p."campaignId"`
     for (const c of counts) {
       participationCountMap.set(c.campaignId, Number(c.count))
     }
@@ -40,8 +40,9 @@ export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>>
     }
 
     return createSuccessResult(result)
-  } catch (error: any) {
-    return createErrorResult(error.message || 'Failed to get campaigns')
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to get campaigns'
+    return createErrorResult(errorMessage)
   }
 }
 
@@ -83,8 +84,9 @@ export async function get(
     const responseDto = toCampaignResponseDto(campaign, participationCount, creatorName, claimed)
 
     return createSuccessResult(responseDto)
-  } catch (error: any) {
-    return createErrorResult(error.message || 'Failed to get campaign')
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to get campaign'
+    return createErrorResult(errorMessage)
   }
 }
 
@@ -109,13 +111,13 @@ export async function create(
     }
 
     const campaignDomain = toCampaignDomain(data, dbUser.id)
-    console.log('campaignDomain', campaignDomain)
     const result = await createCampaign(campaignDomain)
 
     return createSuccessResult({ id: result.id })
-  } catch (error: any) {
+  } catch (error: unknown) {
     // console.log('error', error)
-    return createErrorResult(error.message || 'Failed to create campaign')
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create campaign'
+    return createErrorResult(errorMessage)
   }
 }
 
@@ -148,8 +150,9 @@ export async function claim(
       },
     })
     return createSuccessResult(null)
-  } catch (error: any) {
-    return createErrorResult(error.message || 'Failed to claim campaign')
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to claim campaign'
+    return createErrorResult(errorMessage)
   }
 }
 
@@ -186,7 +189,7 @@ export async function findActiveCampaigns() {
   })
 }
 
-export async function updateCampaign(id: number, data: any) {
+export async function updateCampaign(id: number, data: Prisma.CampaignUpdateInput) {
   return prisma.campaign.update({
     where: { id },
     data,
