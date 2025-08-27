@@ -8,9 +8,7 @@ import { Campaign } from '@/types/campaign'
 
 const CampaignsContainer = () => {
   const [value, setValue] = React.useState('one')
-
   const { data: compaginList } = useCampaigns()
-  console.log('🚀 ~ CampaignsContainer ~ compaginList:', compaginList)
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)

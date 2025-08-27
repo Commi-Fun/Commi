@@ -7,6 +7,7 @@ import { GlobalContext } from '@/context/GlobalContext'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import { createTransferInstruction, getAssociatedTokenAddress } from '@solana/spl-token'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
+import { useCampaigns } from '@/query/query'
 
 interface PoolInfoCardProps {
   tokenSupply?: string
@@ -17,8 +18,8 @@ interface PoolInfoCardProps {
 }
 
 const PoolInfoCard = ({ address, status, setStatus }: any) => {
-  const { campaigns } = useContext(GlobalContext)
-  const targetCapaign = campaigns.find((item: any) => item.address === address)
+  const { data: compaginList } = useCampaigns()
+  const targetCapaign = compaginList?.find((item: any) => item.tokenAddress === address)
   const [joined, setJoined] = useState(false)
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const { publicKey, sendTransaction } = useWallet()
@@ -83,17 +84,14 @@ const PoolInfoCard = ({ address, status, setStatus }: any) => {
       </div>
       <div className="space-y-4 flex flex-col">
         <p className="px-4 py-2 bg-blue-900 rounded-lg text-blue-200 font-bold text-sm">
-          Total Supply: {targetCapaign.totalAmount}
+          Total Supply: {targetCapaign?.totalAmount}
         </p>
         <div className="flex items-center gap-2 font-bold text-lg w-full">
           <div className="w-1 h-4 bg-lime-400 rounded-full"></div>
           <span>Pool Size:</span>
-          <span className="text-lime-400">{targetCapaign.poolSize}</span>
-          <span className="-ml-1">
-            {' '}
-            ({((targetCapaign.poolSize / targetCapaign.totalAmount) * 100).toFixed(2)}%)
-          </span>
-          <span className="text-lime-400">≈ {targetCapaign.poolValue}Usd</span>
+          <span className="text-lime-400">{targetCapaign?.totalAmount}</span>
+          <span className="-ml-1"> ({}%)</span>
+          <span className="text-lime-400">≈ {}Usd</span>
         </div>
 
         <div>
@@ -102,7 +100,7 @@ const PoolInfoCard = ({ address, status, setStatus }: any) => {
 
         <div className="flex justify-end mt-4">
           <span className="font-medium text-sm">
-            {targetCapaign.members.length} are sipping now
+            {targetCapaign?.participationCount} are sipping now
           </span>
           {/* <AvatorGroup members={[{ src: 'https://1.com' }, { src: 'https://2.com' }]} /> */}
         </div>
