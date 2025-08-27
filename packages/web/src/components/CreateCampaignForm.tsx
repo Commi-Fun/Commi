@@ -12,6 +12,7 @@ import { getAssociatedTokenAddress, createTransferInstruction } from '@solana/sp
 import { useForm } from '@tanstack/react-form'
 import { useCreateCampaignMutation } from '@/query/query'
 import { CampaignCreateRequest } from '@/types/campaign'
+import { useSession } from 'next-auth/react'
 const tokenList = [
   {
     tokenAddress: 'x0012344',
@@ -40,6 +41,8 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
   const { setCampaigns } = useContext(GlobalContext)
   const { connection } = useConnection()
   const createCampaignMutation = useCreateCampaignMutation()
+
+  const { data: session } = useSession()
 
   const form = useForm({
     defaultValues: {
@@ -109,7 +112,8 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
   const handleCreateCampaign = async (formData: any) => {
     try {
       // Send transaction first
-      const txSignature = await sendTrans(formData.totalAmount)
+      // const txSignature = await sendTrans(formData.totalAmount)
+      const txSignature = '123456'
 
       // Prepare campaign data
       const campaignData: CampaignCreateRequest = {
@@ -127,7 +131,7 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
           xCommunityLink: formData.socialLinks,
           xLink: formData.twitterLink,
         },
-        creatorId: 1, // TODO: Get actual user ID
+        creatorId: session?.user.userId || 0, // TODO: Get actual user ID
         txHash: txSignature,
       }
 
@@ -259,7 +263,7 @@ export function CreateCampaignForm({ onClose }: CreateCampaignFormProps) {
               <span className="text-green-500 mr-1">*</span>Campaign Duration
             </label>
             <p className="text-[12px] text-gray-500 mb-3">Starts immediately upon creation</p>
-            
+
             <div className="grid grid-cols-2 gap-4">
               {/* Campaign Duration Field */}
               <form.Field

@@ -1,3 +1,5 @@
+import { ISocialLinks } from './campaign'
+
 export interface UserDTO {
   userId?: number
   twitterId: string
@@ -25,6 +27,7 @@ export interface CreateCampaignRequestDto {
   tokenAddress: string
   tokenName: string
   totalAmount: number
+  rewardRound: number
   duration: number // hours
   socialLinks: any
 }
@@ -45,5 +48,7 @@ export interface CampaignResponseDto {
   participationCount: number
   creator: string
   tags: string[]
+  rewardRound: number
+  socialLinks: ISocialLinks
   claimed: boolean
 }

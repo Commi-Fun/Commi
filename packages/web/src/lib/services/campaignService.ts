@@ -4,6 +4,8 @@ import { Campaign, CampaignStatus, Prisma, prisma } from '@commi-dashboard/db'
 import { createErrorResult, createSuccessResult, ServiceResult } from '../utils/serviceResult'
 import { BadRequestError, NotFoundError } from '../utils/errors'
 import dayjs from 'dayjs'
+import { ISocialLinks } from '@/types/campaign'
+import { JsonObject } from '@commi-dashboard/db/generated/prisma/client/runtime/library'
 // Service Functions
 export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>> {
   try {
@@ -170,7 +172,8 @@ export async function createCampaign(data: CampaignDomain) {
       startTime: data.startTime,
       endTime: data.endTime,
       tags: data.tags,
-      socialLinks: data.socialLinks,
+      rewardRound: data.rewardRound,
+      socialLinks: data.socialLinks as unknown as JsonObject,
       status: data.status as CampaignStatus,
       creatorId: data.creatorId,
       txHash: data.txHash,
@@ -223,6 +226,8 @@ function toCampaignResponseDto(
     creator: creatorName,
     tags: campaign.tags,
     claimed: claimed,
+    rewardRound: campaign.rewardRound,
+    socialLinks: campaign.socialLinks as unknown as ISocialLinks,
   }
 }
 
@@ -243,6 +248,7 @@ function toCampaignDomain(
     endTime: endTime.toDate(),
     status: CampaignStatus.ONGOING,
     creatorId: creatorId,
+    rewardRound: campaignRequest.rewardRound,
     socialLinks: campaignRequest.socialLinks,
   }
 }

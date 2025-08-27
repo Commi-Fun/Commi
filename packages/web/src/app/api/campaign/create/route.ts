@@ -1,10 +1,10 @@
-import { NextRequest } from 'next/server';
-import * as campaignService from '@/lib/services/campaignService';
-import { withErrorHandler } from '@/lib/utils/withErrorHandler';
-import { success, error } from '@/lib/utils/response';
+import { NextRequest } from 'next/server'
+import * as campaignService from '@/lib/services/campaignService'
+import { withErrorHandler } from '@/lib/utils/withErrorHandler'
+import { success, error } from '@/lib/utils/response'
 import { getServerSession } from 'next-auth'
 import { nextAuthOptions } from '../../auth/[...nextauth]/route'
-import { CreateCampaignRequestDto } from '@/types/dto';
+import { CreateCampaignRequestDto } from '@/types/dto'
 
 export const POST = withErrorHandler(async (req: NextRequest) => {
   const session = await getServerSession(nextAuthOptions)
@@ -19,4 +19,4 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   }
 
   return success(result.data)
-}); 
+})

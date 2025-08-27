@@ -10,9 +10,13 @@ export interface CampaignCreateRequest {
   duration: number
   rewardRound: number
   tags: string[]
-  socialLinks: { xCommunityLink: string; xLink: string } // JSON type to match Prisma schema
+  socialLinks: ISocialLinks // JSON type to match Prisma schema
   creatorId: number
   txHash?: string
+}
+export interface ISocialLinks {
+  xCommunityLink: string
+  xLink: string
 }
 export interface Campaign {
   id: number
@@ -26,7 +30,7 @@ export interface Campaign {
   startTime: Date
   endTime: Date
   tags: string[]
-  socialLinks: any // JSON type from Prisma
+  socialLinks: ISocialLinks // JSON type from Prisma
   status: 'UPCOMING' | 'ONGOING' | 'ENDED' | 'CANCELED'
   creatorId: number
   txHash: string | null
