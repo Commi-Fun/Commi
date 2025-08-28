@@ -3,13 +3,14 @@ import TwitterProvider from 'next-auth/providers/twitter'
 import { prisma } from '@commi-dashboard/db'
 import { nanoid } from 'nanoid'
 import { WhitelistStatus } from '@/lib/services/whitelistService'
-
+console.log('process.env.TWITTER_API_KEY', process.env.TWITTER_API_KEY)
+console.log('process.env.TWITTER_API_SECRET', process.env.TWITTER_API_SECRET)
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     TwitterProvider({
       id: 'x',
-      clientId: process.env.X_CLIENT_ID as string,
-      clientSecret: process.env.X_CLIENT_SECRET as string,
+      clientId: process.env.TWITTER_API_KEY as string,
+      clientSecret: process.env.TWITTER_API_SECRET as string,
       version: '1.0a',
       authorization: {
         params: {
@@ -94,7 +95,7 @@ export const nextAuthOptions: NextAuthOptions = {
       }
     },
 
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id // Twitter ID
         token.twitterId = user.id // Twitter ID
@@ -114,11 +115,6 @@ export const nextAuthOptions: NextAuthOptions = {
           token.username = user.username
         }
       }
-
-      // 当调用update()时触发
-      // if (trigger === 'update' && session) {
-      //   token = { ...token, ...session }
-      // }
 
       return token
     },
