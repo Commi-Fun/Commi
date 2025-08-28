@@ -10,7 +10,12 @@ export const nextAuthOptions: NextAuthOptions = {
       id: 'x',
       clientId: process.env.X_CLIENT_ID as string,
       clientSecret: process.env.X_CLIENT_SECRET as string,
-      version: '2.0',
+      version: '1.0a',
+      authorization: {
+        params: {
+          force_login: true,
+        },
+      },
       profile(profile) {
         const userProfile = profile.data
         const standardizedUser = {
