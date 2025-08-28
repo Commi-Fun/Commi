@@ -11,7 +11,6 @@ datasource db {
 model User {
   id              Int      @id @default(autoincrement())
   twitterId       String   @unique @db.VarChar(20)
-  handle          String   @unique @db.VarChar(20)
   name            String
   profileImageUrl String?
   verified        Boolean  @default(false)
@@ -22,6 +21,7 @@ model User {
   listedCount     Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  handle          String   @unique(map: "user_unique") @db.VarChar(20)
 }
 
 model Tweet {
@@ -38,7 +38,7 @@ model Tweet {
   isQuote        Boolean  @default(false)
   isReply        Boolean  @default(false)
   hasMedia       Boolean  @default(false)
-  tickerSymbols  String[] // Array of ticker symbols mentioned
+  tickerSymbols  String[]
   parentTweetId  String?
   fetchedAt      DateTime
   tweetCreatedAt DateTime
@@ -90,19 +90,6 @@ model SystemConfig {
   updatedAt   DateTime @updatedAt
 }
 
-enum CrawlerTaskType {
-  USER_FETCH
-  TWEET_FETCH
-  COMMUNITY_FETCH
-}
-
-enum CrawlerTaskStatus {
-  QUEUED
-  PROCESSING
-  SUCCESS
-  FAILED
-}
-
 model CrawlerTask {
   id          Int               @id @default(autoincrement())
   type        CrawlerTaskType
@@ -123,22 +110,6 @@ model CrawlerTask {
   @@index([completedAt])
 }
 
-enum DistributionStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-  CANCELLED
-}
-
-enum Blockchain {
-  SOLANA
-  ETHEREUM
-  POLYGON
-  ARBITRUM
-  OPTIMISM
-}
-
 model Wallet {
   id        Int      @id @default(autoincrement())
   address   String   @unique @db.VarChar(44)
@@ -146,14 +117,8 @@ model Wallet {
   userId    Int
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  @@index([userId])
-}
 
-enum CampaignStatus {
-  UPCOMING
-  ONGOING
-  ENDED
-  CANCELED
+  @@index([userId])
 }
 
 model Campaign {
@@ -171,21 +136,16 @@ model Campaign {
   socialLinks     Json
   status          CampaignStatus
   creatorId       Int
-  rewardRound     Int
   txHash          String?        @db.VarChar(88)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
+  rewardRound     Int            @default(1)
 
-  @@index(tokenAddress)
-  @@index(startTime)
-  @@index(endTime)
-  @@index(creatorId)
+  @@index([tokenAddress])
+  @@index([startTime])
+  @@index([endTime])
+  @@index([creatorId])
   @@index([tags], type: Gin)
-}
-
-enum TokenPoolType {
-  LAUNCH
-  FUND
 }
 
 model TokenPool {
@@ -198,9 +158,9 @@ model TokenPool {
   createdAt  DateTime      @default(now())
   updatedAt  DateTime      @updatedAt
 
-  @@index(campaignId)
-  @@index(creatorId)
-  @@index(txHash)
+  @@index([campaignId])
+  @@index([creatorId])
+  @@index([txHash])
 }
 
 model Participation {
@@ -214,7 +174,7 @@ model Participation {
 
   @@unique([userId, campaignId])
   @@unique([twitterId, campaignId])
-  @@index(campaignId)
+  @@index([campaignId])
 }
 
 model ClaimRecord {
@@ -227,27 +187,25 @@ model ClaimRecord {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
 
-  @@index(campaignId)
-  @@index(userId)
-  @@index(txHash)
+  @@index([campaignId])
+  @@index([userId])
+  @@index([txHash])
 }
 
 model Whitelist {
-  id           Int     @id @default(autoincrement())
-  userId       Int     @unique
-  twitterId    String  @unique @db.VarChar(20)
-  referralCode String  @unique
-  status       String  @default("registered") @db.VarChar(15) // 'registered', 'can_claim', 'claimed'
+  id           Int       @id @default(autoincrement())
+  userId       Int       @unique
+  twitterId    String    @unique @db.VarChar(20)
+  referralCode String    @unique
+  status       String    @default("registered") @db.VarChar(15)
   postLink     String?
-
   registeredAt DateTime? @default(now())
   followedAt   DateTime?
   postedAt     DateTime?
   referredAt   DateTime?
   claimedAt    DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
 }
 
 model Referral {
@@ -285,4 +243,45 @@ model TokenInformation {
   @@index([marketValue])
   @@index([platform])
   @@index([symbol])
+}
+
+enum CrawlerTaskType {
+  USER_FETCH
+  TWEET_FETCH
+  COMMUNITY_FETCH
+}
+
+enum CrawlerTaskStatus {
+  QUEUED
+  PROCESSING
+  SUCCESS
+  FAILED
+}
+
+enum DistributionStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum Blockchain {
+  SOLANA
+  ETHEREUM
+  POLYGON
+  ARBITRUM
+  OPTIMISM
+}
+
+enum CampaignStatus {
+  UPCOMING
+  ONGOING
+  ENDED
+  CANCELED
+}
+
+enum TokenPoolType {
+  LAUNCH
+  FUND
 }
