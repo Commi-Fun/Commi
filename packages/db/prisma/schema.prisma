@@ -11,6 +11,7 @@ datasource db {
 model User {
   id              Int      @id @default(autoincrement())
   twitterId       String   @unique @db.VarChar(20)
+  handle          String   @unique @db.VarChar(20)
   name            String
   profileImageUrl String?
   verified        Boolean  @default(false)
@@ -21,7 +22,6 @@ model User {
   listedCount     Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-  handle          String   @unique(map: "user_unique") @db.VarChar(20)
 }
 
 model Tweet {
