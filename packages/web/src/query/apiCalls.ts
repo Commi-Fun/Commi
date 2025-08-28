@@ -10,6 +10,7 @@ export const API_URLS = {
   CAMPAIGN_LIST: 'api/campaign/list',
   CAMPAIGN_DETAIL: 'api/campaign/get',
   CAMPAIGN_CREATED: 'api/campaign/created',
+  CAMPAIGN_LIST_PARTICIPATED: 'api/campaign/listParticipated',
 }
 
 // API call functions
@@ -69,4 +70,18 @@ export const checkUserConnected = async (address: string): Promise<boolean> => {
     },
   })
   return response.data.data
+}
+export const getCampaignListParticipated = async (
+  userId: number,
+): Promise<AxiosResponse<Campaign[]>> => {
+  const response = await axiosGet({
+    url: API_URLS.CAMPAIGN_LIST_PARTICIPATED,
+    config: {
+      params: {
+        userId,
+      },
+    },
+  })
+
+  return response.data
 }

@@ -6,6 +6,7 @@ import {
   getCampaignCreated,
   getCampaignDetail,
   getCampaignList,
+  getCampaignListParticipated,
 } from './apiCalls'
 import { UserConnectRequest, connectedUser } from '../types/user'
 import { CampaignCreateRequest, Campaign } from '../types/campaign'
@@ -93,6 +94,17 @@ export const useUserConnected = (address: string | undefined) => {
   return useQuery({
     queryKey: queryKeys.user.isConnected(address),
     queryFn: async () => (address ? await checkUserConnected(address) : false),
+  })
+}
+export const useCampaignListParticipated = (userId: number | undefined) => {
+  return useQuery<Campaign[], Error>({
+    queryKey: [...queryKeys.campaign.all, 'participated', userId],
+    queryFn: async () => {
+      if (!userId) return []
+      const response = await getCampaignListParticipated(userId)
+      return response.data
+    },
+    enabled: !!userId,
   })
 }
 

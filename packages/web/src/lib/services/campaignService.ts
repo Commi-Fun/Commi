@@ -158,6 +158,79 @@ export async function claim(
   }
 }
 
+export async function listUserParticipatedCampaigns(
+  userId: number,
+): Promise<ServiceResult<Array<CampaignResponseDto>>> {
+  try {
+    if (!userId) {
+      throw new BadRequestError('User ID is required.')
+    }
+
+    // Find all campaigns the user has participated in
+    const participations = await prisma.participation.findMany({
+      where: { userId: userId },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    if (!participations || participations.length === 0) {
+      return createSuccessResult([])
+    }
+
+    const campaignIds = participations.map(p => p.campaignId)
+
+    // Get the campaigns
+    const campaigns = await prisma.campaign.findMany({
+      where: { id: { in: campaignIds } },
+    })
+
+    if (!campaigns || campaigns.length === 0) {
+      return createSuccessResult([])
+    }
+
+    const result: CampaignResponseDto[] = []
+
+    // Get participation counts for all campaigns
+    const participationCountMap: Map<number, number> = new Map()
+    const counts = await prisma.$queryRaw<
+      Array<{ campaignId: number; count: bigint }>
+    >`SELECT p."campaignId", count(*) as count FROM public."Participation" p WHERE p."campaignId" = ANY(${campaignIds}::int[]) GROUP BY p."campaignId"`
+    for (const c of counts) {
+      participationCountMap.set(c.campaignId, Number(c.count))
+    }
+
+    // Get creator names
+    const creatorIds = [...new Set(campaigns.map(c => c.creatorId))]
+    const creators = await prisma.user.findMany({
+      where: { id: { in: creatorIds } },
+      select: { id: true, name: true },
+    })
+    const creatorMap = new Map(creators.map(c => [c.id, c.name]))
+
+    // Check claim status for each campaign
+    const claimRecords = await prisma.claimRecord.findMany({
+      where: {
+        userId: userId,
+        campaignId: { in: campaignIds },
+      },
+    })
+    const claimMap = new Map(claimRecords.map(record => [record.campaignId, record.claimed]))
+
+    for (const campaign of campaigns) {
+      const participationCount = participationCountMap.get(campaign.id) ?? 0
+      const creatorName = creatorMap.get(campaign.creatorId) || 'Unknown'
+      const claimed = claimMap.get(campaign.id) ?? false
+
+      result.push(toCampaignResponseDto(campaign, participationCount, creatorName, claimed))
+    }
+
+    return createSuccessResult(result)
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Failed to get user participated campaigns'
+    return createErrorResult(errorMessage)
+  }
+}
+
 // Repository Functions
 export async function createCampaign(data: CampaignDomain) {
   return prisma.campaign.create({
