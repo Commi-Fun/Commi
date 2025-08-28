@@ -24,16 +24,8 @@ const CampaignsContainer = () => {
         </Tabs>
       </div>
       <div className="flex gap-4 overflow-auto">
-        {compaginList?.map((item: Campaign, index: number) => (
-          <CampaignCard
-            key={index}
-            tokenName={item.tokenName}
-            marketCap={item.marketCap}
-            address={item.tokenAddress}
-            members={[]}
-            totalAmount={item.totalAmount}
-            currentAmount={item.totalAmount - item.remainingAmount}
-          />
+        {compaginList?.map((item: Campaign) => (
+          <CampaignCard key={item.id} campaign={item} members={[]} />
         ))}
       </div>
     </div>

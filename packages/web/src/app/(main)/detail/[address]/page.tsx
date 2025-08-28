@@ -6,16 +6,17 @@ import { ChevronLeft } from '@/components/icons/Chevron_Left'
 import { Divider } from '@mui/material'
 import LeaderBoards from '@/dashboard/detailComponents/leaderBoard'
 import { useParams, useRouter } from 'next/navigation'
-import { useContext, useState } from 'react'
-import { GlobalContext } from '@/context/GlobalContext'
+import { useMemo, useState } from 'react'
+import { useCampaigns } from '@/query/query'
 
 const Detail = () => {
   const router = useRouter()
   const params = useParams()
-  const address = params.address as string
-  const { campaigns } = useContext(GlobalContext)
-  const taretCampaign = campaigns.find(
-    (campaign: { address: string }) => campaign.address === address,
+  const address = useMemo(() => params.address as string, [params.address])
+  const { data: campaigns } = useCampaigns()
+  const taretCampaign = useMemo(
+    () => campaigns?.find(campaign => campaign.id.toString() === address),
+    [campaigns, address],
   )
   const [status, setStatus] = useState<string>('init')
 
@@ -25,7 +26,7 @@ const Detail = () => {
         <ChevronLeft className="text-2xl cursor-pointer" onClick={() => router.push('/')} />
       </div>
       <div className="flex gap-6 px-10 justify-between">
-        <CampaignDetailCard {...taretCampaign} />
+        <CampaignDetailCard campaign={taretCampaign} />
         <div className="flex-shrink-0">
           <PoolInfoCard address={address} status={status} setStatus={setStatus} />
         </div>

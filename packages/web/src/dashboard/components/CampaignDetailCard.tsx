@@ -6,21 +6,27 @@ import Users from '@/components/icons/Users'
 import { customColors } from '@/shared-theme/themePrimitives'
 import { WalletAddress } from './WalletAddress'
 import { AlarmIcon } from '@/components/icons/AlarmIcon'
+import { Campaign } from '@/types/campaign'
+import moment from 'moment'
 
-const CampaignDetailCard = ({
-  name = 'MEME NAME',
-  imgUrl = '/images/campaign_image.png',
-  MCap = '$30.7M',
-  address = 'EFMFa...ump',
-  description = 'Rare Pepe is a community-driven meme token and crypto culture, designed to unite holders through first trends, bold engagement, and decentralized rewards. Fun, fun, and fueled by the internet. 🐸',
-  createdBy = 'Beta-Q',
-  startDate = '20/5/2024 08:00',
-  endDate = '20/5/2024 08:00',
-  rewardsEnding = '15:12H',
-}: any) => {
+interface Props {
+  campaign?: Campaign
+}
+
+const CampaignDetailCard = ({ campaign }: Props) => {
+  // Extract values from campaign object
+  const tokenName = campaign?.tokenName || 'Token Name'
+  const tokenImage = '/images/campaign_image.png' // Default image
+  const address = campaign?.tokenAddress
+  const marketCap = campaign?.marketCap ? `$${Number(campaign?.marketCap) / 1000}K` : '$0K'
+  const description = campaign?.description || 'No description available'
+  const createdBy = `Creator ID: ${campaign?.creatorId}`
+  const startDate = moment(campaign?.startTime || 0).format('YYYY/MM/DD HH:mm')
+  const endDate = moment(campaign?.endTime || 0).format('YYYY/MM/DD HH:mm')
+
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(address)
+      await navigator.clipboard.writeText(address || '')
       console.log('Address copied to clipboard')
     } catch (err) {
       console.error('Failed to copy address:', err)
@@ -34,8 +40,8 @@ const CampaignDetailCard = ({
         <div className="">
           <div className="w-32 h-32 rounded-2xl bg-green-500 flex items-center justify-center relative overflow-hidden">
             <img
-              src={imgUrl}
-              alt={name}
+              src={tokenImage}
+              alt={tokenName}
               className="w-20 h-20 object-contain"
               onError={e => {
                 e.currentTarget.style.display = 'none'
@@ -48,7 +54,7 @@ const CampaignDetailCard = ({
         <div className="flex-1">
           {/* Title and Icons */}
           <div className="flex items-center gap-2 mb-2">
-            <h1 className="text-[2rem] font-extrabold text-black">{name}</h1>
+            <h1 className="text-[2rem] font-extrabold text-black">{tokenName}</h1>
             <div className="flex items-center gap-2">
               <Avatar
                 sx={{
@@ -67,8 +73,8 @@ const CampaignDetailCard = ({
 
           {/* Market Cap and Address */}
           <div className="flex items-center gap-4 mb-3">
-            <span className="text-lg font-bold text-lime-300">MCap {MCap}</span>
-            <WalletAddress address={address} />
+            <span className="text-lg font-bold text-lime-300">MCap {marketCap}</span>
+            <WalletAddress address={address || ''} />
           </div>
 
           {/* Description */}

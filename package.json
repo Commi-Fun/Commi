@@ -21,6 +21,7 @@
     "db:migrate": "pnpm --filter @commi-dashboard/db migrate:dev",
     "db:migrate:prod": "pnpm --filter @commi-dashboard/db migrate:prod",
     "web:dev": "pnpm --filter @commi-dashboard/web dev",
+    "web:add": "pnpm --filter @commi-dashboard/web add",
     "web:build": "pnpm --filter @commi-dashboard/db generate && pnpm --filter @commi-dashboard/web build",
     "web:start:invite": "pnpm --filter @commi-dashboard/web start:invite",
     "web:start:dev:invite": "pnpm --filter @commi-dashboard/web start:dev:invite",
