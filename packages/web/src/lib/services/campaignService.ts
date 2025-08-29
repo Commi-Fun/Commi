@@ -1,15 +1,18 @@
 import { CampaignDomain } from '@/types/domain'
-import { UserDTO, CreateCampaignRequestDto, CampaignResponseDto } from '@/types/dto'
+import { UserDTO, CreateCampaignRequestDto, CampaignResponseDto, LeaderboardDto } from '@/types/dto'
 import { Campaign, CampaignStatus, Prisma, prisma } from '@commi-dashboard/db'
 import { createErrorResult, createSuccessResult, ServiceResult } from '../utils/serviceResult'
 import { BadRequestError, NotFoundError } from '../utils/errors'
 import dayjs from 'dayjs'
 import { ISocialLinks } from '@/types/campaign'
 import { JsonObject } from '@commi-dashboard/db/generated/prisma/client/runtime/library'
+import { nanoid } from 'nanoid'
+
+
 // Service Functions
-export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>> {
+export async function list(page: number, pageSize: number): Promise<ServiceResult<Array<CampaignResponseDto>>> {
   try {
-    const campaigns = await findActiveCampaigns()
+    const campaigns = await findOngoingCampaigns(page, pageSize)
     if (!campaigns || campaigns.length === 0) {
       return createSuccessResult([])
     }
@@ -21,24 +24,16 @@ export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>>
     // Get participation counts
     const counts = await prisma.$queryRaw<
       Array<{ campaignId: number; count: bigint }>
-    >`SELECT p."campaignId", count(*) as count FROM public."Participation" p WHERE p."campaignId" = ANY(${campaignIds}::int[]) GROUP BY p."campaignId"`
+    >`SELECT p."campaignId", count(*) as count FROM public."Participation" p WHERE p."campaignId" IN (${campaignIds}) GROUP BY p."campaignId"`
     for (const c of counts) {
       participationCountMap.set(c.campaignId, Number(c.count))
     }
 
-    // Get creator names
-    const creatorIds = [...new Set(campaigns.map(c => c.creatorId))]
-    const creators = await prisma.user.findMany({
-      where: { id: { in: creatorIds } },
-      select: { id: true, name: true },
-    })
-    const creatorMap = new Map(creators.map(c => [c.id, c.name]))
-
     for (const campaign of campaigns) {
       const participationCount = participationCountMap.get(campaign.id) ?? 0
-      const creatorName = creatorMap.get(campaign.creatorId) || 'Unknown'
-
-      result.push(toCampaignResponseDto(campaign, participationCount, creatorName, false))
+      const responseDto = toCampaignResponseDto(campaign)
+      responseDto.participationCount = participationCount
+      result.push(responseDto)
     }
 
     return createSuccessResult(result)
@@ -50,41 +45,66 @@ export async function list(): Promise<ServiceResult<Array<CampaignResponseDto>>>
 
 export async function get(
   user: UserDTO | null,
-  id: number,
+  uid: string,
 ): Promise<ServiceResult<CampaignResponseDto>> {
   try {
-    const campaign = await findCampaignById(id)
+    const campaign = await findCampaignByUid(uid)
     if (!campaign) {
       throw new NotFoundError('Campaign not found.')
     }
+    const responseDto = toCampaignResponseDto(campaign)
 
     // Get creator name
     const creator = await prisma.user.findUnique({
       where: { id: campaign.creatorId },
-      select: { name: true },
+      select: { name: true, profileImageUrl: true, handle: true, twitterId: true },
     })
-    const creatorName = creator?.name || 'Unknown'
+    responseDto.creator = {
+      twitterId: creator?.twitterId ?? '',
+      name: creator?.name,
+      profileImageUrl: creator?.profileImageUrl ?? '',
+      handle: creator?.handle,
+    }
 
     // Get participation count
     const participationCount = await prisma.participation.count({
       where: { campaignId: campaign.id },
     })
+    responseDto.participationCount = participationCount
 
-    // Check if user has claimed
-    let claimed = false
+    // Check if user claimable amount
     if (user?.userId) {
-      const unclaimed = await prisma.claimRecord.count({
+      const unclaimedRecords = await prisma.claimRecord.findMany({
         where: {
           userId: user.userId,
           campaignId: campaign.id,
           claimed: false,
         },
+        select: {
+          amount: true,
+        }
       })
-      claimed = unclaimed === 0
+      responseDto.claimed = unclaimedRecords.length > 0
+      responseDto.claimableAmount = unclaimedRecords.reduce((acc, record) => acc + Number(record.amount), 0)
     }
 
-    const responseDto = toCampaignResponseDto(campaign, participationCount, creatorName, claimed)
+    // Get leaderboard
+    const leaderboard = await prisma.leaderboard.findMany({
+      where: { campaignId: campaign.id },
+      orderBy: { score: 'desc' },
+    })
 
+    const leaderboardUsers = await prisma.$queryRaw<
+      Array<{ twitterId: string; twitterHandle: string; rank: number; score: number; airdropAmount: string; percentage: number }>
+    >`SELECT u."twitterId", u."handle" as twitterHandle, l."rank", l."score", l."airdropAmount", l."percentage" FROM public."Leaderboard" l WHERE l."campaignId" = ${campaign.id} INNER JOIN public."User" u ON l."twitterId" = u."twitterId"`
+    responseDto.leaderboard = leaderboardUsers.map((lb) => ({
+      twitterId: lb.twitterId,
+      twitterHandle: lb.twitterHandle,
+      rank: lb.rank,
+      score: lb.score,
+      airdropAmount: Number(lb.airdropAmount),
+      percentage: lb.percentage,
+    })) as LeaderboardDto[]
     return createSuccessResult(responseDto)
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to get campaign'
@@ -119,6 +139,58 @@ export async function create(
   } catch (error: unknown) {
     // console.log('error', error)
     const errorMessage = error instanceof Error ? error.message : 'Failed to create campaign'
+    return createErrorResult(errorMessage)
+  }
+}
+
+export async function joinCampaign(
+  user: UserDTO,
+  campaignId: number,
+): Promise<ServiceResult> {
+  try {
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.userId },
+    })
+    if (!dbUser) {
+      throw new NotFoundError('User not found.')
+    }
+    const campaign = await prisma.campaign.findUnique({
+      where: { id: campaignId },
+    })
+    if (!campaign) {
+      throw new NotFoundError('Campaign not found.')
+    }
+    if (campaign.status !== CampaignStatus.ONGOING) {
+      throw new BadRequestError('Campaign is not ongoing.')
+    }
+    if (dayjs(campaign.endTime).isBefore(dayjs())) {
+      throw new BadRequestError('Campaign has ended.')
+    }
+    if (Number(campaign.remainingAmount) <= 0) {
+      throw new BadRequestError('Campaign has no remaining amount.')
+    }
+
+    const existingParticipation = await prisma.participation.findFirst({
+      where: {
+        userId: dbUser.id,
+        campaignId: campaignId,
+      },
+    })
+    if (existingParticipation) {
+      throw new BadRequestError('User has already joined the campaign.')
+    }
+
+    await prisma.participation.create({
+      data: {
+        userId: dbUser.id,
+        campaignId: campaignId,
+        twitterId: user.twitterId,
+      },
+    })
+
+    return createSuccessResult(null)
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to join campaign'
     return createErrorResult(errorMessage)
   }
 }
@@ -159,16 +231,19 @@ export async function claim(
 }
 
 export async function listUserParticipatedCampaigns(
-  userId: number,
+  user: UserDTO,
 ): Promise<ServiceResult<Array<CampaignResponseDto>>> {
   try {
-    if (!userId) {
-      throw new BadRequestError('User ID is required.')
+    const dbUser = await prisma.user.findUnique({
+      where: { id: user.userId },
+    })
+    if (!dbUser) {
+      throw new NotFoundError('User not found.')
     }
 
     // Find all campaigns the user has participated in
     const participations = await prisma.participation.findMany({
-      where: { userId: userId },
+      where: { userId: dbUser.id },
       orderBy: { createdAt: 'desc' },
     })
 
@@ -189,38 +264,26 @@ export async function listUserParticipatedCampaigns(
 
     const result: CampaignResponseDto[] = []
 
-    // Get participation counts for all campaigns
-    const participationCountMap: Map<number, number> = new Map()
-    const counts = await prisma.$queryRaw<
-      Array<{ campaignId: number; count: bigint }>
-    >`SELECT p."campaignId", count(*) as count FROM public."Participation" p WHERE p."campaignId" = ANY(${campaignIds}::int[]) GROUP BY p."campaignId"`
-    for (const c of counts) {
-      participationCountMap.set(c.campaignId, Number(c.count))
-    }
-
-    // Get creator names
-    const creatorIds = [...new Set(campaigns.map(c => c.creatorId))]
-    const creators = await prisma.user.findMany({
-      where: { id: { in: creatorIds } },
-      select: { id: true, name: true },
-    })
-    const creatorMap = new Map(creators.map(c => [c.id, c.name]))
-
     // Check claim status for each campaign
-    const claimRecords = await prisma.claimRecord.findMany({
+    const canClaimRecords = await prisma.claimRecord.findMany({
       where: {
-        userId: userId,
+        userId: dbUser.id,
         campaignId: { in: campaignIds },
+        claimed: false,
       },
+      select: {
+        campaignId: true,
+        amount: true,
+      }
     })
-    const claimMap = new Map(claimRecords.map(record => [record.campaignId, record.claimed]))
+    const claimMap = new Map(canClaimRecords.map(record => [record.campaignId, record.amount]))
 
     for (const campaign of campaigns) {
-      const participationCount = participationCountMap.get(campaign.id) ?? 0
-      const creatorName = creatorMap.get(campaign.creatorId) || 'Unknown'
-      const claimed = claimMap.get(campaign.id) ?? false
-
-      result.push(toCampaignResponseDto(campaign, participationCount, creatorName, claimed))
+      const responseDto = toCampaignResponseDto(campaign)
+      const claimableAmount = claimMap.get(campaign.id) ?? '0'
+      responseDto.claimed = Number(claimableAmount) === 0
+      responseDto.claimableAmount = Number(claimableAmount)
+      result.push(responseDto)
     }
 
     return createSuccessResult(result)
@@ -235,6 +298,7 @@ export async function listUserParticipatedCampaigns(
 export async function createCampaign(data: CampaignDomain) {
   return prisma.campaign.create({
     data: {
+      uid: nanoid(32),
       description: data.description,
       tokenAddress: data.tokenAddress,
       tokenName: data.tokenName,
@@ -254,14 +318,16 @@ export async function createCampaign(data: CampaignDomain) {
   })
 }
 
-export async function findCampaignById(id: number) {
-  return prisma.campaign.findUnique({ where: { id } })
+export async function findCampaignByUid(uid: string) {
+  return prisma.campaign.findUnique({ where: { uid } })
 }
 
-export async function findActiveCampaigns() {
+export async function findOngoingCampaigns(page: number, pageSize: number) {
   return prisma.campaign.findMany({
     where: { status: CampaignStatus.ONGOING },
-    orderBy: { startTime: 'asc' },
+    orderBy: { startTime: 'desc' },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   })
 }
 
@@ -279,12 +345,23 @@ export async function deleteCampaign(id: number) {
 // Transformation functions
 function toCampaignResponseDto(
   campaign: Campaign,
-  participationCount: number,
-  creatorName: string,
-  claimed: boolean,
 ): CampaignResponseDto {
+  const campaignDuration = dayjs(campaign.endTime).diff(campaign.startTime, 'hour')
+  const roundInterval = campaignDuration / campaign.rewardRound
+  
+  const now = dayjs()
+  let nextRound = dayjs(campaign.startTime)
+  
+  while (nextRound.isBefore(now) && nextRound.isBefore(campaign.endTime)) {
+    nextRound = nextRound.add(roundInterval, 'hour')
+  }
+  
+  if (nextRound.isAfter(campaign.endTime)) {
+    nextRound = dayjs(campaign.endTime)
+  }
+
   return {
-    id: campaign.id,
+    id: campaign.uid,
     description: campaign.description,
     tokenAddress: campaign.tokenAddress,
     tokenName: campaign.tokenName,
@@ -295,12 +372,13 @@ function toCampaignResponseDto(
     startTime: campaign.startTime,
     endTime: campaign.endTime,
     status: campaign.status,
-    participationCount: participationCount,
-    creator: creatorName,
+    participationCount: 0,
     tags: campaign.tags,
-    claimed: claimed,
-    rewardRound: campaign.rewardRound,
+    claimed: false,
+    claimableAmount: 0,
+    nextRound: nextRound.toDate(),
     socialLinks: campaign.socialLinks as unknown as ISocialLinks,
+    leaderboard: [],
   }
 }
 

@@ -123,6 +123,7 @@ model Wallet {
 
 model Campaign {
   id              Int            @id @default(autoincrement())
+  uid             String        @unique
   description     String
   tokenAddress    String         @db.VarChar(44)
   tokenName       String
@@ -173,6 +174,21 @@ model Participation {
   updatedAt      DateTime @updatedAt
 
   @@unique([userId, campaignId])
+  @@unique([twitterId, campaignId])
+  @@index([campaignId])
+}
+
+model Leaderboard {
+  id             Int      @id @default(autoincrement())
+  campaignId     Int
+  twitterId      String   @db.VarChar(20)
+  rank           Int
+  score          Float
+  airdropAmount  String
+  percentage     Float
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
   @@unique([twitterId, campaignId])
   @@index([campaignId])
 }

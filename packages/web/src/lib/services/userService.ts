@@ -110,12 +110,13 @@ export async function userAndAddressConnected(
   address: string,
 ): Promise<boolean> {
   try {
-    const wallets = await prisma.wallet.findMany({
+    const count = await prisma.wallet.count({
       where: {
         userId: userId,
+        address: address,
       },
     })
-    return wallets.some(w => w.address === address)
+    return count > 0
   } catch {
     return false
   }
@@ -144,6 +145,17 @@ export async function connect(
     if (isAlreadyConnected) {
       throw new BadRequestError('Wallet already binded.')
     }
+
+    const bindedWallet = await prisma.wallet.findFirst({
+      where: {
+        address: wallet.address,
+      },
+    })
+
+    if (bindedWallet && bindedWallet.userId !== user.userId) {
+      throw new BadRequestError('Wallet already binded to another user.')
+    }
+
     const wallets = await prisma.wallet.findMany({
       where: {
         userId: user.userId as number,

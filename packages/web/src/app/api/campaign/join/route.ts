@@ -1,19 +1,21 @@
-import { error, success } from '@/lib/utils/response'
-import { withErrorHandler } from '@/lib/utils/withErrorHandler'
-import { getServerSession } from 'next-auth'
+import { NextRequest } from 'next/server'
 import * as campaignService from '@/lib/services/campaignService'
-import { NextRequest, NextResponse } from 'next/server'
+import { withErrorHandler } from '@/lib/utils/withErrorHandler'
+import { success, error } from '@/lib/utils/response'
+import { getServerSession } from 'next-auth'
 import { nextAuthOptions } from '../../auth/[...nextauth]/route'
 
-export const GET = withErrorHandler(async (req: NextRequest): Promise<NextResponse<unknown>> => {
+export const POST = withErrorHandler(async (req: NextRequest) => {
   const session = await getServerSession(nextAuthOptions)
   if (!session) {
     return error('Invalid token.', 401)
   }
   const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
-  const result = await campaignService.listUserParticipatedCampaigns(userDto)
+  const body = await req.json()
+  const { campaignId } = body
+  const result = await campaignService.joinCampaign(userDto, campaignId)
   if (!result.success) {
-    return error(result.error || 'Failed to list participated campaigns', 500)
+    return error(result.error || 'Failed to calim rewards', 500)
   }
 
   return success(result.data)

@@ -34,7 +34,7 @@ export interface CreateCampaignRequestDto {
 
 // Response DTOs - for API output
 export interface CampaignResponseDto {
-  id: number
+  id: string
   description: string
   tokenAddress: string
   tokenName: string
@@ -46,9 +46,20 @@ export interface CampaignResponseDto {
   endTime: Date
   status: string
   participationCount: number
-  creator: string
+  creator?: UserDTO
   tags: string[]
-  rewardRound: number
+  nextRound: Date
   socialLinks: ISocialLinks
   claimed: boolean
+  claimableAmount: number
+  leaderboard?: LeaderboardDto[]
+}
+
+export interface LeaderboardDto {
+  twitterId: string
+  twitterHandle: string
+  rank: number
+  score: number
+  airdropAmount: number
+  percentage: number
 }
