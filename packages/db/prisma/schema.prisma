@@ -286,3 +286,85 @@ model TokenInformation {
   @@index([platform])
   @@index([symbol])
 }
+
+model Community {
+  id              Int            @id @default(autoincrement())
+  communityId     String         @db.VarChar(20)
+  name            String
+  description     String
+  creationTime    DateTime
+  tokenAddress    String         @db.VarChar(44)
+  tokenName       String
+  ticker          String?
+  platform        String
+  memberCount     Int            @default(0)
+  moderatorCount  Int            @default(0)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+
+  @@index(communityId)
+  @@index(ticker)
+  @@index(tokenAddress)
+}
+
+model CommunityUser {
+  id              Int      @id @default(autoincrement())
+  twitterId       String   @db.VarChar(20)
+  handle          String   @db.VarChar(20)
+  name            String
+  description     String?
+  communityId     String[]
+  location        String?
+  profileImageUrl String?
+  followersCount  Int      @default(0)
+  followingCount  Int      @default(0)
+  friendsCount Int      @default(0)
+  tweetsCount     Int      @default(0)
+  listedCount     Int      @default(0)
+  favouritesCount Int      @default(0)
+  verified        Boolean  @default(false)
+  protected       Boolean  @default(false)
+  isBlueVerified  Boolean  @default(false)
+  creationTime    DateTime
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique(twitterId)
+  @@unique(handle)
+  @@index([communityId], type: Gin)
+  @@index(creationTime)
+}
+
+model CommunityTweet {
+  tweetId        String   @db.VarChar(20) @unique
+  text           String
+  twitterId      String   @db.VarChar(20)
+  communityId    String   @db.VarChar(20)
+  retweetCount   Int      @default(0)
+  replyCount     Int      @default(0)
+  likeCount      Int      @default(0)
+  quoteCount     Int      @default(0)
+  viewCount      Int      @default(0)
+  bookmarkCount  Int      @default(0)
+  isRetweet      Boolean  @default(false)
+  isQuote        Boolean  @default(false)
+  isReply        Boolean  @default(false)
+  hasMedia       Boolean  @default(false)
+  symbols  String[] // Array of ticker symbols mentioned
+  hashtags String[]
+  urls String[]
+  mentions String[]
+  lang String?
+  parentTweetId  String?
+  fetchedAt      DateTime
+  tweetCreatedAt DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@id([tweetId, fetchedAt])
+  @@index([twitterId])
+  @@index([fetchedAt])
+  @@index([symbols], type: Gin)
+  @@index([hashtags], type: Gin)
+  @@index([mentions], type: Gin)
+}
