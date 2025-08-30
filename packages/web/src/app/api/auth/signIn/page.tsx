@@ -1,9 +1,9 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect } from 'react'
 
-const Signin = () => {
+const GetSearch = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -17,7 +17,18 @@ const Signin = () => {
     }
   }, [router, searchParams])
 
-  return <div> </div>
+  return (
+    // You could have a loading skeleton as the `fallback` too
+    <div></div>
+  )
+}
+
+const Signin = () => {
+  return (
+    <Suspense>
+      <GetSearch />
+    </Suspense>
+  )
 }
 
 export default Signin
