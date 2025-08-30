@@ -22,7 +22,7 @@ interface UserSettingProps {
 export const UserSetting = () => {
   const [open, setOpen] = React.useState(false)
   const { data } = useSession()
-  const { image: userImage, name, username, ...rest } = data?.user || {}
+  const { image: userImage, name, handle, ...rest } = data?.user || {}
 
   const { select, connect } = useWallet()
 
@@ -52,7 +52,7 @@ export const UserSetting = () => {
               {name}
             </CommiTypo>
             <CommiTypo colorType="secondary" mt={1}>
-              @{username}
+              @{handle}
             </CommiTypo>
           </Stack>
           <Stack direction={'row'} alignItems="center" justifyContent="space-between" mt={4.5}>
