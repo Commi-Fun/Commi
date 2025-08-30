@@ -22,7 +22,7 @@ export const LoginButton = ({
 
   const connectWithX = async () => {
     try {
-      const result = await signIn('x', { redirect: false, callbackUrl })
+      const result = await signIn('x', { redirect: true, callbackUrl })
       console.log('Sign in with X result:', result)
     } catch (error) {
       console.error('Sign in with X failed:', error)
