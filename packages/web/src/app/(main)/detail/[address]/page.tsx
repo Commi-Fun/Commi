@@ -31,7 +31,7 @@ const Detail = () => {
       </div>
       {/* Leaderboard Section */}
       <div className="flex grow">
-        <LeaderBoards campagin={campaign} />
+        <LeaderBoards address={address} />
       </div>
     </div>
   )
