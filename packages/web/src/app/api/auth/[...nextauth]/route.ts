@@ -36,69 +36,71 @@ export const nextAuthOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
+  pages: {
+    error: '/invite',
+  },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user }) {
-      return '/invite'
-      // try {
-      //   console.log('sign in twitterId', user.twitterId)
+      try {
+        console.log('sign in twitterId', user.twitterId)
 
-      //   const twitterId = user.twitterId
+        const twitterId = user.twitterId
 
-      //   // 将用户信息存入数据库
-      //   const dbUser = await prisma.user.upsert({
-      //     where: {
-      //       twitterId: twitterId,
-      //     },
-      //     update: {
-      //       profileImageUrl: user.image || undefined,
-      //       name: user.name || 'Unknown',
-      //       handle: user.handle || 'unknown',
-      //     },
-      //     create: {
-      //       twitterId: twitterId,
-      //       profileImageUrl: user.image || undefined,
-      //       name: user.name || 'Unknown',
-      //       handle: user.handle || 'unknown',
-      //     },
-      //   })
-      //   console.log('sign in dbUser', dbUser)
+        // 将用户信息存入数据库
+        const dbUser = await prisma.user.upsert({
+          where: {
+            twitterId: twitterId,
+          },
+          update: {
+            profileImageUrl: user.image || undefined,
+            name: user.name || 'Unknown',
+            handle: user.handle || 'unknown',
+          },
+          create: {
+            twitterId: twitterId,
+            profileImageUrl: user.image || undefined,
+            name: user.name || 'Unknown',
+            handle: user.handle || 'unknown',
+          },
+        })
+        console.log('sign in dbUser', dbUser)
 
-      //   // 创建 whitelist
-      //   let whitelist = await prisma.whitelist.findFirst({
-      //     where: {
-      //       userId: dbUser.id,
-      //     },
-      //   })
-      //   if (whitelist === null) {
-      //     whitelist = await prisma.whitelist.create({
-      //       data: {
-      //         userId: dbUser.id,
-      //         twitterId: dbUser.twitterId,
-      //         referralCode: nanoid(6),
-      //         status: WhitelistStatus.REGISTERED,
-      //         registeredAt: new Date(),
-      //       },
-      //     })
-      //     user.isNew = true
-      //   } else {
-      //     user.isNew = false
-      //   }
-      //   console.log('sign in whitelist', whitelist)
+        // 创建 whitelist
+        let whitelist = await prisma.whitelist.findFirst({
+          where: {
+            userId: dbUser.id,
+          },
+        })
+        if (whitelist === null) {
+          whitelist = await prisma.whitelist.create({
+            data: {
+              userId: dbUser.id,
+              twitterId: dbUser.twitterId,
+              referralCode: nanoid(6),
+              status: WhitelistStatus.REGISTERED,
+              registeredAt: new Date(),
+            },
+          })
+          user.isNew = true
+        } else {
+          user.isNew = false
+        }
+        console.log('sign in whitelist', whitelist)
 
-      //   user.referralCode = whitelist.referralCode
-      //   user.status = whitelist.status
-      //   user.registered = whitelist.registeredAt !== null
-      //   user.followed = whitelist.followedAt !== null
-      //   user.posted = whitelist.postedAt !== null
-      //   user.referred = whitelist.referredAt !== null
-      //   user.claimed = whitelist.claimedAt !== null
-      //   user.userId = dbUser.id
+        user.referralCode = whitelist.referralCode
+        user.status = whitelist.status
+        user.registered = whitelist.registeredAt !== null
+        user.followed = whitelist.followedAt !== null
+        user.posted = whitelist.postedAt !== null
+        user.referred = whitelist.referredAt !== null
+        user.claimed = whitelist.claimedAt !== null
+        user.userId = dbUser.id
 
-      //   return true // 允许登录
-      // } catch (error) {
-      //   return '/invite'
-      // }
+        return true // 允许登录
+      } catch (error) {
+        return '/invite'
+      }
     },
 
     async jwt({ token, user }) {
