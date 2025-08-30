@@ -9,15 +9,12 @@ const useCountdown = (targetDate: Date) => {
   const [countDown, setCountDown] = useState(countDownDate - new Date().getTime())
 
   useEffect(() => {
-    const callback = () => {
+    const interval = setInterval(() => {
       const countDown = targetDate.getTime() - new Date().getTime()
       setCountDown(countDown)
-      requestAnimationFrame(callback)
-    }
+    }, 1000) // Update every second
 
-    requestAnimationFrame(() => {
-      callback()
-    })
+    return () => clearInterval(interval)
   }, [targetDate]) // 依赖项是目标时间
 
   // 将毫秒数转换为天、小时、分钟和秒

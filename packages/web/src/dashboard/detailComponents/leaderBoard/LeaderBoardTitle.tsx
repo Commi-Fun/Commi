@@ -13,7 +13,6 @@ export const LeaderBoardTitle = () => {
   const params = useParams()
   const address = useMemo(() => params.address as string, [params.address])
   const { refetch } = useCampaign(address)
-  console.log('remaining time', remainingTime)
   const [refreshing, setRefreshing] = useState(false)
 
   const onRefreshClick = async () => {
