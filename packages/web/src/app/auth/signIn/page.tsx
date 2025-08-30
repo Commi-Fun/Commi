@@ -11,10 +11,7 @@ const GetSearch = () => {
     router.push('/')
   }, [router, searchParams])
 
-  return (
-    // You could have a loading skeleton as the `fallback` too
-    <div></div>
-  )
+  return <div></div>
 }
 
 const Signin = () => {
