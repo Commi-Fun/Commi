@@ -1,5 +1,6 @@
 import { GlobalContext } from '@/context/GlobalContext'
 import { dummyLeaders } from '@/lib/constants'
+import { useLeaderboardByTime } from '@/query/query'
 import { CampaignResponseDto } from '@/types/dto'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useContext } from 'react'
@@ -91,11 +92,7 @@ const Card = (props: any) => {
 }
 
 const LeaderboardCards = ({ campaign }: { campaign?: CampaignResponseDto }) => {
-  const params = useParams()
-  const address = params.address as string
-  const { campaigns } = useContext(GlobalContext)
-
-  const targetLeaders = dummyLeaders
+  const { data: leaderBoardItems } = useLeaderboardByTime(new Date(0), campaign?.id)
 
   const getCardColor = (color: 'green' | 'red' | 'gray') => {
     switch (color) {
@@ -120,38 +117,39 @@ const LeaderboardCards = ({ campaign }: { campaign?: CampaignResponseDto }) => {
     if (rank >= 2 && rank <= 5) return 'col-span-1 row-span-1'
     return 'col-span-1 row-span-1'
   }
+  if (!leaderBoardItems?.length) return null
 
   return (
     <div className="grow grid grid-cols-12 grid-rows-12 gap-2 min-h-100">
       <div className="col-span-5 row-span-5 bg-green-400 border-2xl border-green-500  rounded-2xl">
-        <Card {...targetLeaders[0]} />
+        <Card {...leaderBoardItems[0]} />
       </div>
       <div className="col-span-4 row-span-5 bg-red-400 border-2xl border-red-500  rounded-2xl">
-        {targetLeaders[1] && <Card {...targetLeaders[1]} />}
+        {leaderBoardItems[1] && <Card {...leaderBoardItems[1]} />}
       </div>
       <div className="col-span-3 row-span-5 bg-green-400 border-2xl border-green-500  rounded-2xl">
-        {targetLeaders[2] && <Card {...targetLeaders[2]} />}
+        {leaderBoardItems[2] && <Card {...leaderBoardItems[2]} />}
       </div>
       <div className="col-span-4 row-span-5 bg-green-400 border-2xl border-green-500  rounded-2xl">
-        {targetLeaders[3] && <Card {...targetLeaders[3]} />}
+        {leaderBoardItems[3] && <Card {...leaderBoardItems[3]} />}
       </div>
       <div className="col-span-4 row-span-5 bg-red-400 border-2xl border-red-500  rounded-2xl">
-        {targetLeaders[4] && <Card {...targetLeaders[4]} />}
+        {leaderBoardItems[4] && <Card {...leaderBoardItems[4]} />}
       </div>
       <div className="col-span-4 row-span-5 bg-green-400 border-2xl border-green-500  rounded-2xl">
-        {targetLeaders[5] && <Card {...targetLeaders[5]} />}
+        {leaderBoardItems[5] && <Card {...leaderBoardItems[5]} />}
       </div>
       <div className="col-span-3 row-span-5 bg-green-400 border-2xl border-green-500  rounded-2xl">
-        {targetLeaders[6] && <Card {...targetLeaders[6]} />}
+        {leaderBoardItems[6] && <Card {...leaderBoardItems[6]} />}
       </div>
       <div className="col-span-3 row-span-5 bg-red-400 border-2xl border-red-500  rounded-2xl">
-        {targetLeaders[7] && <Card {...targetLeaders[7]} />}
+        {leaderBoardItems[7] && <Card {...leaderBoardItems[7]} />}
       </div>
       <div className="col-span-3 row-span-5 bg-green-400 border-2xl border-green-500  rounded-2xl">
-        {targetLeaders[8] && <Card {...targetLeaders[8]} />}
+        {leaderBoardItems[8] && <Card {...leaderBoardItems[8]} />}
       </div>
       <div className="col-span-3 row-span-5 bg-green-400 border-2xl border-green-500  rounded-2xl">
-        {targetLeaders[9] && <Card {...targetLeaders[9]} />}
+        {leaderBoardItems[9] && <Card {...leaderBoardItems[9]} />}
       </div>
     </div>
   )
