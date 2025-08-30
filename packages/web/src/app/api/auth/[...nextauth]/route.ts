@@ -3,23 +3,29 @@ import TwitterProvider from 'next-auth/providers/twitter'
 import { prisma } from '@commi-dashboard/db'
 import { nanoid } from 'nanoid'
 import { WhitelistStatus } from '@/lib/services/whitelistService'
-
+console.log('process.env.TWITTER_API_KEY', process.env.TWITTER_API_KEY)
+console.log('process.env.TWITTER_API_SECRET', process.env.TWITTER_API_SECRET)
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     TwitterProvider({
       id: 'x',
-      clientId: process.env.X_CLIENT_ID as string,
-      clientSecret: process.env.X_CLIENT_SECRET as string,
-      version: '2.0',
+      clientId: process.env.TWITTER_API_KEY as string,
+      clientSecret: process.env.TWITTER_API_SECRET as string,
+      version: '1.0a',
+      authorization: {
+        url: 'https://api.twitter.com/oauth/authorize',
+        params: {
+          force_login: true,
+        },
+      },
       profile(profile) {
-        const userProfile = profile.data
+        console.log('sign in profile', profile)
         const standardizedUser = {
-          id: userProfile.id,
-          twitterId: userProfile.id,
-          name: userProfile.name,
-          image: userProfile.profile_image_url,
-          username: userProfile.username,
-          email: userProfile.email,
+          id: profile.id_str,
+          twitterId: profile.id_str,
+          name: profile.name,
+          image: profile.profile_image_url,
+          handle: profile.screen_name,
           userId: -1,
         }
 
@@ -34,7 +40,9 @@ export const nextAuthOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user }) {
       try {
-        const twitterId = user.id
+        console.log('sign in twitterId', user.twitterId)
+
+        const twitterId = user.twitterId
 
         // 将用户信息存入数据库
         const dbUser = await prisma.user.upsert({
@@ -44,15 +52,16 @@ export const nextAuthOptions: NextAuthOptions = {
           update: {
             profileImageUrl: user.image || undefined,
             name: user.name || 'Unknown',
-            handle: user.username || 'unknown',
+            handle: user.handle || 'unknown',
           },
           create: {
             twitterId: twitterId,
             profileImageUrl: user.image || undefined,
             name: user.name || 'Unknown',
-            handle: user.username || 'unknown',
+            handle: user.handle || 'unknown',
           },
         })
+        console.log('sign in dbUser', dbUser)
 
         // 创建 whitelist
         let whitelist = await prisma.whitelist.findFirst({
@@ -74,6 +83,8 @@ export const nextAuthOptions: NextAuthOptions = {
         } else {
           user.isNew = false
         }
+        console.log('sign in whitelist', whitelist)
+
         user.referralCode = whitelist.referralCode
         user.status = whitelist.status
         user.registered = whitelist.registeredAt !== null
@@ -89,10 +100,10 @@ export const nextAuthOptions: NextAuthOptions = {
       }
     },
 
-    async jwt({ token, user, trigger, session }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id // Twitter ID
-        token.twitterId = user.id // Twitter ID
+        token.twitterId = user.twitterId // Twitter ID
         token.userId = user.userId
         token.name = user.name
         token.picture = user.image
@@ -105,15 +116,10 @@ export const nextAuthOptions: NextAuthOptions = {
         token.referred = user.referred
         token.claimed = user.claimed
         token.wallets = user.wallets
-        if (user.username) {
-          token.username = user.username
-        }
+        token.handle = user.handle
       }
 
-      // 当调用update()时触发
-      // if (trigger === 'update' && session) {
-      //   token = { ...token, ...session }
-      // }
+      console.log('sign in jwt token', token)
 
       return token
     },
@@ -134,10 +140,9 @@ export const nextAuthOptions: NextAuthOptions = {
       session.user.referred = token.referred
       session.user.claimed = token.claimed
       session.user.wallets = token.wallets
-      // Pass the username from the token to the session
-      if (token.username) {
-        session.user.username = token.username
-      }
+      session.user.handle = token.handle
+
+      console.log('sign in session', session)
 
       return session
     },
