@@ -88,7 +88,7 @@ export const getCampaignListParticipated = async (
   return response.data
 }
 
-export const joinCampaign = async (campaignId: number): Promise<AxiosResponse<null>> => {
+export const joinCampaign = async (campaignId: string): Promise<AxiosResponse<null>> => {
   const response: AxiosResponse<null> = await axiosPost({
     url: API_URLS.CAMPAIGN_JOIN,
     data: {

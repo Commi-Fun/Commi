@@ -114,7 +114,8 @@ export const useJoinCampaignMutation = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (campaignId: number): Promise<null> => {
+    mutationFn: async (campaignId?: string): Promise<null> => {
+      if (!campaignId) return null
       const response = await joinCampaign(campaignId)
       return response.data
     },

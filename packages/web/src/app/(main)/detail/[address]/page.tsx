@@ -23,7 +23,7 @@ const Detail = () => {
       <div className="flex gap-6 px-10 justify-between">
         <CampaignDetailCard campaign={campaign} />
         <div className="flex-shrink-0">
-          <PoolInfoCard campaign={campaign} />
+          <PoolInfoCard address={campaign?.id} />
         </div>
       </div>
       <div className="mt-12">

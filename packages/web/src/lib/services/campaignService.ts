@@ -159,7 +159,7 @@ export async function create(
   }
 }
 
-export async function joinCampaign(user: UserDTO, campaignId: number): Promise<ServiceResult> {
+export async function joinCampaign(user: UserDTO, campaignId: string): Promise<ServiceResult> {
   try {
     const dbUser = await prisma.user.findUnique({
       where: { twitterId: user.twitterId },
@@ -168,7 +168,7 @@ export async function joinCampaign(user: UserDTO, campaignId: number): Promise<S
       throw new NotFoundError('User not found.')
     }
     const campaign = await prisma.campaign.findUnique({
-      where: { id: campaignId },
+      where: { uid: campaignId },
     })
     if (!campaign) {
       throw new NotFoundError('Campaign not found.')
@@ -186,7 +186,7 @@ export async function joinCampaign(user: UserDTO, campaignId: number): Promise<S
     const existingParticipation = await prisma.participation.findFirst({
       where: {
         userId: dbUser.id,
-        campaignId: campaignId,
+        campaignId: campaign.id,
       },
     })
     if (existingParticipation) {
@@ -196,7 +196,7 @@ export async function joinCampaign(user: UserDTO, campaignId: number): Promise<S
     await prisma.participation.create({
       data: {
         userId: dbUser.id,
-        campaignId: campaignId,
+        campaignId: campaign.id,
         twitterId: user.twitterId,
       },
     })
