@@ -18,6 +18,7 @@
     "clean": "pnpm -r run clean && rimraf node_modules",
     "db:generate": "pnpm --filter @commi-dashboard/db generate",
     "db:push": "pnpm --filter @commi-dashboard/db push",
+    "db:push:dev": "pnpm --filter @commi-dashboard/db push:dev",
     "db:migrate": "pnpm --filter @commi-dashboard/db migrate:dev",
     "db:migrate:prod": "pnpm --filter @commi-dashboard/db migrate:prod",
     "web:dev": "pnpm --filter @commi-dashboard/web dev",
