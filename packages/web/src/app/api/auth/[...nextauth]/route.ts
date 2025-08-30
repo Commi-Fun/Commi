@@ -14,9 +14,9 @@ export const nextAuthOptions: NextAuthOptions = {
       version: '1.0a',
       authorization: {
         url: 'https://api.twitter.com/oauth/authorize',
-        // params: {
-        //   force_login: true,
-        // },
+        params: {
+          force_login: true,
+        },
       },
       profile(profile) {
         console.log('sign in profile', profile)
@@ -37,7 +37,7 @@ export const nextAuthOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   pages: {
-    error: '/invite',
+    signIn: '/auth/signin',
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
@@ -157,7 +157,6 @@ export const nextAuthOptions: NextAuthOptions = {
         return '/' // 跳转到首页
       }
       return url.startsWith('/') ? new URL(url, baseUrl).href : url
-      return '/'
     },
   },
 }
