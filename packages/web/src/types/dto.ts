@@ -63,4 +63,5 @@ export interface LeaderboardDto {
   score: number
   airdropAmount: number
   percentage: number
+  timestamp: Date
 }

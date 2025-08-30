@@ -8,6 +8,7 @@ import {
   getCampaignList,
   getCampaignListParticipated,
   joinCampaign,
+  getLeaderboardByTime,
 } from './apiCalls'
 import { UserConnectRequest, connectedUser } from '../types/user'
 import { CampaignCreateRequest, Campaign } from '../types/campaign'
@@ -25,6 +26,8 @@ export const queryKeys = {
     list: () => [...queryKeys.campaign.all, 'list'] as const,
     detail: (uid: string) => [...queryKeys.campaign.all, 'detail', uid] as const,
     created: () => [...queryKeys.campaign.all, 'created'] as const,
+    leaderboardByTime: (campaignId: string, afterTime: string) =>
+      [...queryKeys.campaign.all, 'leaderboardByTime', campaignId, afterTime] as const,
   },
 } as const
 
@@ -126,6 +129,18 @@ export const useJoinCampaignMutation = () => {
     onError: error => {
       console.error('Failed to join campaign:', error)
     },
+  })
+}
+
+export const useLeaderboardByTime = (afterTime: Date, campaignId?: string) => {
+  return useQuery({
+    queryKey: queryKeys.campaign.leaderboardByTime(campaignId!, afterTime.toUTCString()),
+    queryFn: async () => {
+      const response = await getLeaderboardByTime(campaignId!, afterTime)
+      return response.data.data
+    },
+    enabled: !!campaignId && !!afterTime,
+    staleTime: 1 * 60 * 1000, // 1 minute
   })
 }
 

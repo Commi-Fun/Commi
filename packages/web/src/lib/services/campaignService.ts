@@ -111,6 +111,7 @@ export async function get(
         score: number
         airdropAmount: string
         percentage: number
+        updateAt: Date
       }>
     >`SELECT u."twitterId", u."handle" as twitterHandle, l."rank", l."score", l."airdropAmount", l."percentage" FROM public."Leaderboard" l INNER JOIN public."User" u ON l."twitterId" = u."twitterId" WHERE l."campaignId" = ${campaign.id}`
     responseDto.leaderboard = leaderboardUsers.map(lb => ({
@@ -120,6 +121,7 @@ export async function get(
       score: lb.score,
       airdropAmount: Number(lb.airdropAmount),
       percentage: lb.percentage,
+      timestamp: lb.updateAt,
     })) as LeaderboardDto[]
     return createSuccessResult(responseDto)
   } catch (error: unknown) {
@@ -239,6 +241,41 @@ export async function claim(
     return createSuccessResult(null)
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to claim campaign'
+    return createErrorResult(errorMessage)
+  }
+}
+
+export async function getLeaderboardByTime(
+  campaignId: string,
+  afterTime: Date,
+): Promise<ServiceResult<LeaderboardDto[]>> {
+  try {
+    const leaderboardUsers = await prisma.$queryRaw<
+      Array<{
+        twitterId: string
+        twitterHandle: string
+        rank: number
+        score: number
+        airdropAmount: string
+        percentage: number
+        updateAt: Date
+      }>
+    >`SELECT u."twitterId", u."handle" as twitterHandle, l."rank", l."score", l."airdropAmount", l."percentage", l."updatedAt" as updateAt FROM public."Leaderboard" l INNER JOIN public."User" u ON l."twitterId" = u."twitterId" WHERE l."campaignId" = ${parseInt(campaignId)} AND l."updatedAt" >= ${afterTime}`
+
+    const leaderboard = leaderboardUsers.map(lb => ({
+      twitterId: lb.twitterId,
+      twitterHandle: lb.twitterHandle,
+      rank: lb.rank,
+      score: lb.score,
+      airdropAmount: Number(lb.airdropAmount),
+      percentage: lb.percentage,
+      timestamp: lb.updateAt,
+    })) as LeaderboardDto[]
+
+    return createSuccessResult(leaderboard)
+  } catch (error: unknown) {
+    const errorMessage =
+      error instanceof Error ? error.message : 'Failed to get leaderboard by time'
     return createErrorResult(errorMessage)
   }
 }

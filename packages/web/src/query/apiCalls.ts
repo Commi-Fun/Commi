@@ -2,7 +2,7 @@ import { UserConnectRequest, connectedUser } from '../types/user'
 import { CampaignCreateRequest, Campaign } from '../types/campaign'
 import { axiosGet, axiosPost } from '../utils/axios'
 import { AxiosResponse } from '../types/axios'
-import { CampaignResponseDto } from '@/types/dto'
+import { CampaignResponseDto, LeaderboardDto } from '@/types/dto'
 
 export const API_URLS = {
   USER_CONNECT: 'api/user/connect',
@@ -13,6 +13,7 @@ export const API_URLS = {
   CAMPAIGN_CREATED: 'api/campaign/created',
   CAMPAIGN_LIST_PARTICIPATED: 'api/campaign/listParticipated',
   CAMPAIGN_JOIN: 'api/campaign/join',
+  CAMPAIGN_LEADERBOARD_BY_TIME: 'api/campaign/leaderboardByTime',
 }
 
 // API call functions
@@ -97,4 +98,19 @@ export const joinCampaign = async (campaignId: string): Promise<AxiosResponse<nu
   })
 
   return response
+}
+
+export const getLeaderboardByTime = async (
+  campaignId: string,
+  afterTime: Date,
+): Promise<AxiosResponse<LeaderboardDto[]>> => {
+  const response = await axiosPost({
+    url: API_URLS.CAMPAIGN_LEADERBOARD_BY_TIME,
+    data: {
+      campaignId,
+      afterTime,
+    },
+  })
+
+  return response.data
 }
