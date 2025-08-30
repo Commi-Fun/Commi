@@ -15,10 +15,9 @@ interface CustomConnectModalProps {
 
 export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
   const { wallets, select, connect, publicKey, signMessage } = useWallet()
-  const { data: session } = useSession()
   const connectUserMutation = useConnectUserMutation()
+  const { data: session } = useSession()
   const { data: isUserAddressConnected, isFetched } = useUserConnected(publicKey?.toBase58())
-  console.log('🚀 ~ CustomConnectModal ~ isUserAddressConnected:', isUserAddressConnected)
 
   const handleWalletConnect = async (walletName: string) => {
     try {
@@ -57,6 +56,7 @@ export function CustomConnectModal({ open, onClose }: CustomConnectModalProps) {
         await connectUserMutation.mutateAsync({
           address: publicKey.toBase58(),
           signature: signatureBase58,
+          twitterId: session?.user?.id,
         })
 
         console.log('Wallet connected and user updated successfully')

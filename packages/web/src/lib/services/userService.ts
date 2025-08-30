@@ -134,7 +134,7 @@ export async function connect(
 
     const u = await prisma.user.findUnique({
       where: {
-        id: user.userId,
+        twitterId: user.twitterId,
       },
     })
     if (!u) {

@@ -8,8 +8,8 @@ import { Campaign } from '@/types/campaign'
 
 const JoinedCampaignList = () => {
   const { data: session } = useSession()
-  const { data: campaigns } = useCampaignListParticipated(session?.user?.userId)
-  console.log('🚀 ~ JoinedCampaignList ~ campaigns:', campaigns)
+  const { data: campaigns } = useCampaignListParticipated(session?.user?.id)
+  console.log('🚀 ~ JoinedCampaignList ~ campaigns:', session?.user)
 
   return (
     <CollapsibleSection title="Campaign Joined" defaultOpen={true}>

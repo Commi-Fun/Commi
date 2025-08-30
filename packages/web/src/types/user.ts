@@ -1,6 +1,7 @@
 export interface UserConnectRequest {
   address: string
   signature: string
+  twitterId?: string
 }
 
 export interface connectedUser {

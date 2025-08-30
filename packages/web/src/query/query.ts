@@ -96,7 +96,7 @@ export const useUserConnected = (address: string | undefined) => {
     queryFn: async () => (address ? await checkUserConnected(address) : false),
   })
 }
-export const useCampaignListParticipated = (userId: number | undefined) => {
+export const useCampaignListParticipated = (userId: string | undefined) => {
   return useQuery<Campaign[], Error>({
     queryKey: [...queryKeys.campaign.all, 'participated', userId],
     queryFn: async () => {

@@ -72,13 +72,13 @@ export const checkUserConnected = async (address: string): Promise<boolean> => {
   return response.data.data
 }
 export const getCampaignListParticipated = async (
-  userId: number,
+  userId: string,
 ): Promise<AxiosResponse<Campaign[]>> => {
   const response = await axiosGet({
     url: API_URLS.CAMPAIGN_LIST_PARTICIPATED,
     config: {
       params: {
-        userId,
+        twitterId: userId,
       },
     },
   })

@@ -8,9 +8,11 @@ import { ISocialLinks } from '@/types/campaign'
 import { JsonObject } from '@commi-dashboard/db/generated/prisma/client/runtime/library'
 import { nanoid } from 'nanoid'
 
-
 // Service Functions
-export async function list(page: number, pageSize: number): Promise<ServiceResult<Array<CampaignResponseDto>>> {
+export async function list(
+  page: number,
+  pageSize: number,
+): Promise<ServiceResult<Array<CampaignResponseDto>>> {
   try {
     const campaigns = await findOngoingCampaigns(page, pageSize)
     if (!campaigns || campaigns.length === 0) {
@@ -24,7 +26,7 @@ export async function list(page: number, pageSize: number): Promise<ServiceResul
     // Get participation counts
     const counts = await prisma.$queryRaw<
       Array<{ campaignId: number; count: bigint }>
-    >`SELECT p."campaignId", count(*) as count FROM public."Participation" p WHERE p."campaignId" IN (${campaignIds}) GROUP BY p."campaignId"`
+    >`SELECT p."campaignId", count(*) as count FROM public."Participation" p WHERE p."campaignId" = ANY(${campaignIds}::int[]) GROUP BY p."campaignId"`
     for (const c of counts) {
       participationCountMap.set(c.campaignId, Number(c.count))
     }
@@ -76,28 +78,38 @@ export async function get(
     if (user?.userId) {
       const unclaimedRecords = await prisma.claimRecord.findMany({
         where: {
-          userId: user.userId,
+          userId: Number(user.userId),
           campaignId: campaign.id,
           claimed: false,
         },
         select: {
           amount: true,
-        }
+        },
       })
       responseDto.claimed = unclaimedRecords.length > 0
-      responseDto.claimableAmount = unclaimedRecords.reduce((acc, record) => acc + Number(record.amount), 0)
+      responseDto.claimableAmount = unclaimedRecords.reduce(
+        (acc, record) => acc + Number(record.amount),
+        0,
+      )
     }
 
     // Get leaderboard
-    const leaderboard = await prisma.leaderboard.findMany({
-      where: { campaignId: campaign.id },
-      orderBy: { score: 'desc' },
-    })
+    // const leaderboard = await prisma.leaderboard.findMany({
+    //   where: { campaignId: campaign.id },
+    //   orderBy: { score: 'desc' },
+    // })
 
     const leaderboardUsers = await prisma.$queryRaw<
-      Array<{ twitterId: string; twitterHandle: string; rank: number; score: number; airdropAmount: string; percentage: number }>
+      Array<{
+        twitterId: string
+        twitterHandle: string
+        rank: number
+        score: number
+        airdropAmount: string
+        percentage: number
+      }>
     >`SELECT u."twitterId", u."handle" as twitterHandle, l."rank", l."score", l."airdropAmount", l."percentage" FROM public."Leaderboard" l WHERE l."campaignId" = ${campaign.id} INNER JOIN public."User" u ON l."twitterId" = u."twitterId"`
-    responseDto.leaderboard = leaderboardUsers.map((lb) => ({
+    responseDto.leaderboard = leaderboardUsers.map(lb => ({
       twitterId: lb.twitterId,
       twitterHandle: lb.twitterHandle,
       rank: lb.rank,
@@ -118,7 +130,7 @@ export async function create(
 ): Promise<ServiceResult<{ id: number }>> {
   try {
     const dbUser = await prisma.user.findUnique({
-      where: { id: user.userId },
+      where: { twitterId: user.twitterId },
     })
     if (!dbUser) {
       throw new NotFoundError('User not found.')
@@ -143,10 +155,7 @@ export async function create(
   }
 }
 
-export async function joinCampaign(
-  user: UserDTO,
-  campaignId: number,
-): Promise<ServiceResult> {
+export async function joinCampaign(user: UserDTO, campaignId: number): Promise<ServiceResult> {
   try {
     const dbUser = await prisma.user.findUnique({
       where: { id: user.userId },
@@ -235,7 +244,7 @@ export async function listUserParticipatedCampaigns(
 ): Promise<ServiceResult<Array<CampaignResponseDto>>> {
   try {
     const dbUser = await prisma.user.findUnique({
-      where: { id: user.userId },
+      where: { twitterId: user.twitterId },
     })
     if (!dbUser) {
       throw new NotFoundError('User not found.')
@@ -243,7 +252,7 @@ export async function listUserParticipatedCampaigns(
 
     // Find all campaigns the user has participated in
     const participations = await prisma.participation.findMany({
-      where: { userId: dbUser.id },
+      where: { twitterId: dbUser.twitterId },
       orderBy: { createdAt: 'desc' },
     })
 
@@ -274,7 +283,7 @@ export async function listUserParticipatedCampaigns(
       select: {
         campaignId: true,
         amount: true,
-      }
+      },
     })
     const claimMap = new Map(canClaimRecords.map(record => [record.campaignId, record.amount]))
 
@@ -343,19 +352,17 @@ export async function deleteCampaign(id: number) {
 }
 
 // Transformation functions
-function toCampaignResponseDto(
-  campaign: Campaign,
-): CampaignResponseDto {
+function toCampaignResponseDto(campaign: Campaign): CampaignResponseDto {
   const campaignDuration = dayjs(campaign.endTime).diff(campaign.startTime, 'hour')
   const roundInterval = campaignDuration / campaign.rewardRound
-  
+
   const now = dayjs()
   let nextRound = dayjs(campaign.startTime)
-  
+
   while (nextRound.isBefore(now) && nextRound.isBefore(campaign.endTime)) {
     nextRound = nextRound.add(roundInterval, 'hour')
   }
-  
+
   if (nextRound.isAfter(campaign.endTime)) {
     nextRound = dayjs(campaign.endTime)
   }

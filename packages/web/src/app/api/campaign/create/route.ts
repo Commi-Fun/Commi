@@ -11,7 +11,7 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   if (!session) {
     return error('Unauthorized', 401)
   }
-  const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
+  const userDto = { userId: session.user.userId, twitterId: session.user.id }
   const body: CreateCampaignRequestDto = await req.json()
   const result = await campaignService.create(userDto as never, body)
   if (!result.success) {

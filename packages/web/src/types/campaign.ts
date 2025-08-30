@@ -11,7 +11,7 @@ export interface CampaignCreateRequest {
   rewardRound: number
   tags: string[]
   socialLinks: ISocialLinks // JSON type to match Prisma schema
-  creatorId: number
+  creatorId?: number
   txHash?: string
 }
 export interface ISocialLinks {
