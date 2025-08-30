@@ -15,23 +15,18 @@ export const GET = withErrorHandler(async (req: NextRequest) => {
     userDto = null
   }
   
-  // Get campaign ID from query parameters
+  // Get campaign UID from query parameters
   const { searchParams } = new URL(req.url)
-  const id = searchParams.get('id')
+  const uid = searchParams.get('uid')
   
-  if (!id) {
-    return error('Campaign ID is required', 400)
+  if (!uid) {
+    return error('Campaign UID is required', 400)
   }
   
-  const campaignId = parseInt(id, 10)
-  if (isNaN(campaignId)) {
-    return error('Invalid campaign ID', 400)
-  }
-  
-  const result = await campaignService.get(userDto as never, campaignId)
+  const result = await campaignService.get(userDto as never, uid)
   if (!result.success) {
     return error(result.error || 'Failed to get campaign', 500)
   }
 
   return success(result.data)
-}); 
+});

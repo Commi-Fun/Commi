@@ -22,7 +22,7 @@ export const queryKeys = {
   campaign: {
     all: ['campaign'] as const,
     list: () => [...queryKeys.campaign.all, 'list'] as const,
-    detail: (id: number) => [...queryKeys.campaign.all, 'detail', id] as const,
+    detail: (uid: string) => [...queryKeys.campaign.all, 'detail', uid] as const,
     created: () => [...queryKeys.campaign.all, 'created'] as const,
   },
 } as const
@@ -57,11 +57,12 @@ export const useCreateCampaignMutation = () => {
       const response = await createCampaign(data)
       return response.data
     },
-    onSuccess: data => {
+    onSuccess: () => {
       // Invalidate campaign list to refetch with new campaign
       queryClient.invalidateQueries({ queryKey: queryKeys.campaign.list() })
       // Optionally add the new campaign to the cache
-      queryClient.setQueryData(queryKeys.campaign.detail(data.id), data)
+      // Note: data.id would need to be converted to uid for caching
+      // queryClient.setQueryData(queryKeys.campaign.detail(data.uid), data)
     },
     onError: error => {
       console.error('Failed to create campaign:', error)
@@ -77,11 +78,11 @@ export const useCampaigns = () => {
   })
 }
 
-export const useCampaign = (id: number) => {
+export const useCampaign = (uid: string) => {
   return useQuery({
-    queryKey: queryKeys.campaign.detail(id),
-    queryFn: () => getCampaignDetail(id),
-    enabled: !!id, // Only run query if id is provided
+    queryKey: queryKeys.campaign.detail(uid),
+    queryFn: () => getCampaignDetail(uid),
+    enabled: !!uid, // Only run query if uid is provided
   })
 }
 export const useCampaignCreated = () => {

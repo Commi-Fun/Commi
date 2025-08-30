@@ -43,12 +43,12 @@ export const getCampaignList = async (): Promise<Campaign[]> => {
 
   return response.data.data
 }
-export const getCampaignDetail = async (id: number): Promise<AxiosResponse<Campaign>> => {
+export const getCampaignDetail = async (uid: string): Promise<AxiosResponse<Campaign>> => {
   const response: AxiosResponse<Campaign> = await axiosGet({
     url: API_URLS.CAMPAIGN_DETAIL,
     config: {
       params: {
-        id,
+        uid,
       },
     },
   })
