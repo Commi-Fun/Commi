@@ -6,7 +6,7 @@ declare module 'next-auth' {
     user: {
       id: string
       twitterId: string
-      username?: string
+      handle: string
       userId: number
       referralCode?: string
       status?: string
@@ -22,8 +22,8 @@ declare module 'next-auth' {
 
   interface User extends DefaultUser {
     userId: number
-    username?: string
-    twitterId: string // 添加你的自定义字段
+    handle: string
+    twitterId: string
     referralCode?: string
     status?: string
     isNew?: boolean
@@ -40,7 +40,7 @@ declare module 'next-auth/jwt' {
   interface JWT extends DefaultJWT {
     userId: number
     id: string
-    username?: string
+    handle: string
     referralCode?: string
     status?: string
     isNew?: boolean
