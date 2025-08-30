@@ -3,14 +3,13 @@ import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment'
 import Avatar from '@mui/material/Avatar'
 import { XIcon } from '@/components/icons/XIcon'
 import Users from '@/components/icons/Users'
-import { customColors } from '@/shared-theme/themePrimitives'
 import { WalletAddress } from './WalletAddress'
 import { AlarmIcon } from '@/components/icons/AlarmIcon'
-import { Campaign } from '@/types/campaign'
 import moment from 'moment'
+import { CampaignResponseDto } from '@/types/dto'
 
 interface Props {
-  campaign?: Campaign
+  campaign?: CampaignResponseDto
 }
 
 const CampaignDetailCard = ({ campaign }: Props) => {
@@ -20,7 +19,7 @@ const CampaignDetailCard = ({ campaign }: Props) => {
   const address = campaign?.tokenAddress
   const marketCap = campaign?.marketCap ? `$${Number(campaign?.marketCap) / 1000}K` : '$0K'
   const description = campaign?.description || 'No description available'
-  const createdBy = `Creator ID: ${campaign?.creatorId}`
+  const createdBy = `Creator ID: ${campaign?.creator?.userId}`
   const startDate = moment(campaign?.startTime || 0).format('YYYY/MM/DD HH:mm')
   const endDate = moment(campaign?.endTime || 0).format('YYYY/MM/DD HH:mm')
 

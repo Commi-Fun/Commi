@@ -1,5 +1,6 @@
 import { GlobalContext } from '@/context/GlobalContext'
 import { dummyLeaders } from '@/lib/constants'
+import { CampaignResponseDto } from '@/types/dto'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import React, { useContext } from 'react'
 
@@ -89,7 +90,7 @@ const Card = (props: any) => {
   )
 }
 
-const LeaderboardCards = ({ cards = dummyCards }: any) => {
+const LeaderboardCards = ({ campaign }: { campaign?: CampaignResponseDto }) => {
   const params = useParams()
   const address = params.address as string
   const { campaigns } = useContext(GlobalContext)

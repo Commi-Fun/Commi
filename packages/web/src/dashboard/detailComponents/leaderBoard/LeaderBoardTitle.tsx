@@ -2,22 +2,24 @@ import { AlarmIcon } from '@/components/icons/AlarmIcon'
 import RedoIcon from '@/components/icons/RedoIcon'
 import { SpinningRefresh } from '@/components/SpinningRefresh'
 import { useCountdown } from '@/hooks/useCountDown'
+import { useCampaign } from '@/query/query'
 import dayjs from 'dayjs'
+import { useParams } from 'next/navigation'
 import { useMemo, useState } from 'react'
 
-export const LeaderBoardTitle = ({ setStatus }: { setStatus: (a: string) => void }) => {
+export const LeaderBoardTitle = () => {
   const targetDate = useMemo(() => dayjs().add(30, 'minutes').toDate(), [])
   const remainingTime = useCountdown(targetDate)
-
+  const params = useParams()
+  const address = useMemo(() => params.address as string, [params.address])
+  const { refetch } = useCampaign(address)
   console.log('remaining time', remainingTime)
   const [refreshing, setRefreshing] = useState(false)
 
-  const onRefreshClick = () => {
+  const onRefreshClick = async () => {
     setRefreshing(true)
-    setTimeout(() => {
-      setRefreshing(false)
-      setStatus('claimable')
-    }, 1000)
+    await refetch()
+    setRefreshing(false)
   }
 
   return (

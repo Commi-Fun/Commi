@@ -1,4 +1,5 @@
 import { dummyLeaders } from '@/lib/constants'
+import { CampaignResponseDto } from '@/types/dto'
 import React, { useState } from 'react'
 
 interface LeaderboardEntry {
@@ -13,7 +14,7 @@ interface LeaderboardTableProps {
   entries?: LeaderboardEntry[]
 }
 
-const LeaderboardTable = ({ address }: { address: string }) => {
+const LeaderboardTable = ({ campaign }: { campaign?: CampaignResponseDto }) => {
   const [activeTab, setActiveTab] = useState<'total' | 'last30min'>('total')
 
   return (

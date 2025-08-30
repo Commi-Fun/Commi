@@ -69,10 +69,10 @@ export async function get(
     }
 
     // Get participation count
-    const participationCount = await prisma.participation.count({
+    const participations = await prisma.participation.count({
       where: { campaignId: campaign.id },
     })
-    responseDto.participationCount = participationCount
+    responseDto.participationCount = participations
 
     // Check if user claimable amount
     if (user?.userId) {
@@ -86,6 +86,10 @@ export async function get(
           amount: true,
         },
       })
+      const joined = await prisma.participation.count({
+        where: { campaignId: campaign.id, twitterId: creator?.twitterId },
+      })
+      responseDto.joined = joined > 0
       responseDto.claimed = unclaimedRecords.length > 0
       responseDto.claimableAmount = unclaimedRecords.reduce(
         (acc, record) => acc + Number(record.amount),
@@ -386,6 +390,7 @@ function toCampaignResponseDto(campaign: Campaign): CampaignResponseDto {
     nextRound: nextRound.toDate(),
     socialLinks: campaign.socialLinks as unknown as ISocialLinks,
     leaderboard: [],
+    joined: false,
   }
 }
 

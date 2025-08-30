@@ -2,6 +2,7 @@ import { UserConnectRequest, connectedUser } from '../types/user'
 import { CampaignCreateRequest, Campaign } from '../types/campaign'
 import { axiosGet, axiosPost } from '../utils/axios'
 import { AxiosResponse } from '../types/axios'
+import { CampaignResponseDto } from '@/types/dto'
 
 export const API_URLS = {
   USER_CONNECT: 'api/user/connect',
@@ -44,7 +45,7 @@ export const getCampaignList = async (): Promise<Campaign[]> => {
 
   return response.data.data
 }
-export const getCampaignDetail = async (uid: string): Promise<Campaign> => {
+export const getCampaignDetail = async (uid: string): Promise<CampaignResponseDto> => {
   const response = await axiosGet({
     url: API_URLS.CAMPAIGN_DETAIL,
     config: {

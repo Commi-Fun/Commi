@@ -53,6 +53,7 @@ export interface CampaignResponseDto {
   claimed: boolean
   claimableAmount: number
   leaderboard?: LeaderboardDto[]
+  joined: boolean
 }
 
 export interface LeaderboardDto {

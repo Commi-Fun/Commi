@@ -8,6 +8,7 @@ import { PublicKey, Transaction } from '@solana/web3.js'
 import { createTransferInstruction, getAssociatedTokenAddress } from '@solana/spl-token'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
 import { useCampaigns } from '@/query/query'
+import { Campaign } from '@commi-dashboard/db'
 
 interface PoolInfoCardProps {
   tokenSupply?: string
@@ -15,6 +16,7 @@ interface PoolInfoCardProps {
   poolSizeUsd?: string
   currentPrice?: string
   participants?: number
+  campaign: Campaign
 }
 
 const PoolInfoCard = ({ address, status, setStatus }: any) => {
