@@ -8,13 +8,7 @@ const GetSearch = () => {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    const error = searchParams.get('error')
-
-    // TODO: Handle case if manually navigated
-
-    if (error === 'Callback') {
-      router.push('/')
-    }
+    router.push('/')
   }, [router, searchParams])
 
   return (
