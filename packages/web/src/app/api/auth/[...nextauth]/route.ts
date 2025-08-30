@@ -14,9 +14,9 @@ export const nextAuthOptions: NextAuthOptions = {
       version: '1.0a',
       authorization: {
         url: 'https://api.twitter.com/oauth/authorize',
-        params: {
-          force_login: true,
-        },
+        // params: {
+        //   force_login: true,
+        // },
       },
       profile(profile) {
         console.log('sign in profile', profile)
@@ -150,7 +150,7 @@ export const nextAuthOptions: NextAuthOptions = {
       return session
     },
 
-    async redirect({ url, baseUrl }) {
+    async redirect({ url, baseUrl, error }) {
       console.log('nextAuthOptions redirect', url, baseUrl)
       // // 检查是否是因用户取消授权导致的错误
       // if (url.includes('error=Callback') || url.includes('error=OAuthCallback')) {
