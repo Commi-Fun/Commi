@@ -1,32 +1,26 @@
 import React from 'react'
 import { WalletAddress } from './WalletAddress'
 import { useRouter } from 'next/navigation'
+import { Campaign } from '@/types/campaign'
 
 function truncateMiddle(text: string): string {
   return text.slice(0, 6) + '...' + text.slice(-4)
 }
 
 interface Props {
-  tokenName?: string
-  tokenImage?: string
-  address: string
-  marketCap?: string
-  changePercent?: number
-  currentAmount?: number
-  totalAmount?: number
+  campaign: Campaign
   members: { src: string }[]
 }
 
-const CampaignCard = ({
-  tokenName = 'Token Name',
-  tokenImage = '/images/campaign_image.png',
-  address,
-  marketCap = '$123.45K',
-  changePercent = 0,
-  currentAmount = 0,
-  totalAmount = 123.45,
-  members,
-}: any) => {
+const CampaignCard = ({ campaign, members }: Props) => {
+  // Extract values from campaign object
+  const tokenName = campaign.tokenName || 'Token Name'
+  const tokenImage = '/images/campaign_image.png' // Default image
+  const address = campaign.tokenAddress
+  const marketCap = campaign.marketCap ? `$${Number(campaign.marketCap) / 1000}K` : '$0K'
+  const changePercent = 0 // This would need to be calculated or passed separately
+  const totalAmount = campaign.totalAmount
+  const currentAmount = totalAmount - campaign.remainingAmount
   const router = useRouter()
   const progressPercentage = totalAmount > 0 ? (currentAmount / totalAmount) * 100 : 0
 
@@ -40,7 +34,7 @@ const CampaignCard = ({
   }
 
   const handleCampaignClick = () => {
-    router.push(`/detail/${address}`)
+    router.push(`/detail/${campaign.id}`)
   }
 
   return (

@@ -3,15 +3,12 @@ import CampaignCard from '@/dashboard/components/CampaignCard'
 import * as React from 'react'
 import Tabs from '@mui/material/Tabs'
 import Tab from '@mui/material/Tab'
-import { GlobalContext } from '@/context/GlobalContext'
+import { useCampaigns } from '@/query/query'
+import { Campaign } from '@/types/campaign'
 
 const CampaignsContainer = () => {
   const [value, setValue] = React.useState('one')
-  const { campaigns } = React.useContext(GlobalContext)
-
-  React.useEffect(() => {
-    fetch('/api/campaign/list')
-  }, [])
+  const { data: compaginList } = useCampaigns()
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
@@ -27,17 +24,8 @@ const CampaignsContainer = () => {
         </Tabs>
       </div>
       <div className="flex gap-4 overflow-auto">
-        {campaigns.map((item: Record<string, string>, index: number) => (
-          <CampaignCard
-            key={index}
-            tokenImage={item.imgUrl}
-            tokenName={item.name}
-            marketCap={item.MCap}
-            address={item.address}
-            members={item.members}
-            totalAmount={item.poolSize}
-            currentAmount={item.takenAmount}
-          />
+        {compaginList?.map((item: Campaign) => (
+          <CampaignCard key={item.id} campaign={item} members={[]} />
         ))}
       </div>
     </div>

@@ -7,30 +7,34 @@ import { GlobalContext } from '@/context/GlobalContext'
 import { PublicKey, Transaction } from '@solana/web3.js'
 import { createTransferInstruction, getAssociatedTokenAddress } from '@solana/spl-token'
 import { useConnection, useWallet } from '@solana/wallet-adapter-react'
+import { useCampaign, useCampaigns, useJoinCampaignMutation } from '@/query/query'
+import { Campaign } from '@commi-dashboard/db'
+import { CampaignResponseDto } from '@/types/dto'
+import { useEnded } from '@/hooks/useEnded'
 
 interface PoolInfoCardProps {
-  tokenSupply?: string
-  poolSize?: string
-  poolSizeUsd?: string
-  currentPrice?: string
-  participants?: number
+  address?: string
 }
 
-const PoolInfoCard = ({ address, status, setStatus }: any) => {
-  const { campaigns } = useContext(GlobalContext)
-  const targetCapaign = campaigns.find((item: any) => item.address === address)
-  const [joined, setJoined] = useState(false)
-  const [buttonDisabled, setButtonDisabled] = useState(false)
+const PoolInfoCard = ({ address }: PoolInfoCardProps) => {
   const { publicKey, sendTransaction } = useWallet()
+  const { data: campaign, refetch } = useCampaign(address || '')
   const { connection } = useConnection()
+  const joinCampaign = useJoinCampaignMutation()
+  const [claiming, setClaiming] = useState(false)
+  const isEnded = useEnded(campaign?.endTime)
 
-  const onClaimClick = async () => {
-    if (status === 'init') {
-      setStatus('joined')
+  const onBtnClick = async () => {
+    if (!campaign?.joined && !isEnded) {
+      await joinCampaign.mutateAsync(campaign?.id)
+      refetch()
+      return
     }
-    if (status === 'claimable') {
+
+    if (campaign?.status === 'claimable') {
       if (!publicKey) return
       try {
+        setClaiming(true)
         // 1. 将地址字符串转换为 PublicKey 对象
         const recipientPubKey = new PublicKey('7GF8EZRresw2QH26XLSvc5WK9mEwEqho55PEbHc1MwPM')
         const mintPubKey = new PublicKey('9jK7su8LmSi3DUcKZfYJYdvycUkvRQa1EokcusNkpump')
@@ -69,7 +73,9 @@ const PoolInfoCard = ({ address, status, setStatus }: any) => {
         await connection.confirmTransaction(txSignature, 'processed')
 
         alert(`转账成功！交易签名: ${txSignature}`)
+        setClaiming(false)
       } catch (err) {
+        setClaiming(false)
         console.log('transaltion error', err)
       } finally {
       }
@@ -83,17 +89,14 @@ const PoolInfoCard = ({ address, status, setStatus }: any) => {
       </div>
       <div className="space-y-4 flex flex-col">
         <p className="px-4 py-2 bg-blue-900 rounded-lg text-blue-200 font-bold text-sm">
-          Total Supply: {targetCapaign.totalAmount}
+          Total Supply: {campaign?.totalAmount}
         </p>
         <div className="flex items-center gap-2 font-bold text-lg w-full">
           <div className="w-1 h-4 bg-lime-400 rounded-full"></div>
           <span>Pool Size:</span>
-          <span className="text-lime-400">{targetCapaign.poolSize}</span>
-          <span className="-ml-1">
-            {' '}
-            ({((targetCapaign.poolSize / targetCapaign.totalAmount) * 100).toFixed(2)}%)
-          </span>
-          <span className="text-lime-400">≈ {targetCapaign.poolValue}Usd</span>
+          <span className="text-lime-400">{campaign?.totalAmount}</span>
+          <span className="-ml-1"> ({}%)</span>
+          <span className="text-lime-400">≈ {}Usd</span>
         </div>
 
         <div>
@@ -102,17 +105,27 @@ const PoolInfoCard = ({ address, status, setStatus }: any) => {
 
         <div className="flex justify-end mt-4">
           <span className="font-medium text-sm">
-            {targetCapaign.members.length} are sipping now
+            {campaign?.participationCount} are sipping now
           </span>
           {/* <AvatorGroup members={[{ src: 'https://1.com' }, { src: 'https://2.com' }]} /> */}
         </div>
 
         <div className="flex justify-end">
           <button
-            disabled={status === 'joined'}
-            onClick={onClaimClick}
+            disabled={
+              joinCampaign.isPending ||
+              claiming ||
+              (campaign?.status !== 'ONGOING' && campaign?.status !== 'CLAIMABLE')
+            }
+            onClick={onBtnClick}
             className={`h-10 cursor-pointer rounded-full ${status === 'joined' ? 'bg-gray-500' : 'primary-linear'} w-60 font-bold text-base flex items-center justify-center text-black`}>
-            {status === 'init' ? 'Join Now' : 'Claim'}
+            {joinCampaign.isPending
+              ? 'Joining ...'
+              : campaign?.joined || isEnded
+                ? claiming
+                  ? 'Claiming ...'
+                  : 'Claim'
+                : 'Join Now'}
           </button>
         </div>
       </div>

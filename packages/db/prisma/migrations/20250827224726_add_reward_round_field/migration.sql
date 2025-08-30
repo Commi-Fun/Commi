@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Campaign" ADD COLUMN "rewardRound" INTEGER NOT NULL DEFAULT 1;

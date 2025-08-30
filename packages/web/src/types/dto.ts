@@ -1,3 +1,5 @@
+import { ISocialLinks } from './campaign'
+
 export interface UserDTO {
   userId?: number
   twitterId: string
@@ -24,26 +26,42 @@ export interface CreateCampaignRequestDto {
   description: string
   tokenAddress: string
   tokenName: string
-  totalAmount: bigint
+  totalAmount: number
+  rewardRound: number
   duration: number // hours
   socialLinks: any
 }
 
 // Response DTOs - for API output
 export interface CampaignResponseDto {
-  id: number
+  id: string
   description: string
   tokenAddress: string
   tokenName: string
   ticker: string
-  totalAmount: bigint
-  remainingAmount: bigint
-  marketCap: bigint
+  totalAmount: number
+  remainingAmount: number
+  marketCap: number
   startTime: Date
   endTime: Date
   status: string
   participationCount: number
-  creator: string
+  creator?: UserDTO
   tags: string[]
+  nextRound: Date
+  socialLinks: ISocialLinks
   claimed: boolean
+  claimableAmount: number
+  leaderboard?: LeaderboardDto[]
+  joined: boolean
+}
+
+export interface LeaderboardDto {
+  twitterId: string
+  twitterHandle: string
+  rank: number
+  score: number
+  airdropAmount: number
+  percentage: number
+  timestamp: Date
 }

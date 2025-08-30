@@ -42,7 +42,10 @@ export async function findWhitelistByReferralCode(tx: PrismaTransaction, code: s
 // Service functions
 export async function getWhitelist(twitterId: string): Promise<ServiceResult<WhitelistDto | null>> {
   try {
+    console.log(`twitterId: ${twitterId}`)
     const result = await prisma.whitelist.findUnique({ where: { twitterId: twitterId } })
+
+    console.log('result', result)
 
     if (result != null) {
       return createSuccessResult(entityToWhitelistDTO(result))

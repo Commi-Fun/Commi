@@ -17,6 +17,8 @@ export const LogOutButton = (props: IconType) => {
         callbackUrl: '/invite',
         redirect: true, // 确保重定向生效
       })
+      localStorage.clear()
+      sessionStorage.clear()
       setOpen(false)
     } catch (error) {
       console.error('Logout error:', error)

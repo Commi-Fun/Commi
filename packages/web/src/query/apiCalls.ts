@@ -1,0 +1,116 @@
+import { UserConnectRequest, connectedUser } from '../types/user'
+import { CampaignCreateRequest, Campaign } from '../types/campaign'
+import { axiosGet, axiosPost } from '../utils/axios'
+import { AxiosResponse } from '../types/axios'
+import { CampaignResponseDto, LeaderboardDto } from '@/types/dto'
+
+export const API_URLS = {
+  USER_CONNECT: 'api/user/connect',
+  USER_CONNECTED: 'api/user/connected',
+  CAMPAIGN_CREATE: 'api/campaign/create',
+  CAMPAIGN_LIST: 'api/campaign/list',
+  CAMPAIGN_DETAIL: 'api/campaign/get',
+  CAMPAIGN_CREATED: 'api/campaign/created',
+  CAMPAIGN_LIST_PARTICIPATED: 'api/campaign/listParticipated',
+  CAMPAIGN_JOIN: 'api/campaign/join',
+  CAMPAIGN_LEADERBOARD_BY_TIME: 'api/campaign/leaderboardByTime',
+}
+
+// API call functions
+export const connectUser = async (
+  data: UserConnectRequest,
+): Promise<AxiosResponse<connectedUser>> => {
+  const response: AxiosResponse<connectedUser> = await axiosPost({
+    url: API_URLS.USER_CONNECT,
+    data,
+  })
+
+  return response
+}
+
+export const createCampaign = async (
+  data: CampaignCreateRequest,
+): Promise<AxiosResponse<Campaign>> => {
+  const response: AxiosResponse<Campaign> = await axiosPost({
+    url: API_URLS.CAMPAIGN_CREATE,
+    data,
+  })
+
+  return response
+}
+
+export const getCampaignList = async (): Promise<Campaign[]> => {
+  const response = await axiosGet({
+    url: API_URLS.CAMPAIGN_LIST,
+  })
+
+  return response.data.data
+}
+export const getCampaignDetail = async (uid: string): Promise<CampaignResponseDto> => {
+  const response = await axiosGet({
+    url: API_URLS.CAMPAIGN_DETAIL,
+    config: {
+      params: {
+        uid,
+      },
+    },
+  })
+
+  return response.data.data
+}
+export const getCampaignCreated = async (): Promise<AxiosResponse<Campaign[]>> => {
+  const response: AxiosResponse<Campaign[]> = await axiosGet({
+    url: API_URLS.CAMPAIGN_CREATED,
+  })
+
+  return response
+}
+export const checkUserConnected = async (address: string): Promise<boolean> => {
+  const response = await axiosPost({
+    url: API_URLS.USER_CONNECTED,
+    data: {
+      address,
+    },
+  })
+  return response.data.data
+}
+export const getCampaignListParticipated = async (
+  userId: string,
+): Promise<AxiosResponse<Campaign[]>> => {
+  const response = await axiosGet({
+    url: API_URLS.CAMPAIGN_LIST_PARTICIPATED,
+    config: {
+      params: {
+        twitterId: userId,
+      },
+    },
+  })
+
+  return response.data
+}
+
+export const joinCampaign = async (campaignId: string): Promise<AxiosResponse<null>> => {
+  const response: AxiosResponse<null> = await axiosPost({
+    url: API_URLS.CAMPAIGN_JOIN,
+    data: {
+      campaignId,
+    },
+  })
+
+  return response
+}
+
+export const getLeaderboardByTime = async (
+  campaignId: string,
+  afterTime: Date,
+): Promise<AxiosResponse<LeaderboardDto[]>> => {
+  const response = await axiosPost({
+    url: API_URLS.CAMPAIGN_LEADERBOARD_BY_TIME,
+    data: {
+      campaignId,
+      afterTime,
+    },
+  })
+
+  return response.data
+}

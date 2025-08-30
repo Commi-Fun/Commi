@@ -2,25 +2,40 @@
 import * as React from 'react'
 import CollapsibleSection from './CollapsibleSection'
 import ClaimCampaign from './ClaimCampaign'
-import { dummyCampaigns } from '@/lib/constants'
+import { useCampaignListParticipated } from '@/query/query'
+import { useSession } from 'next-auth/react'
+import { Campaign } from '@/types/campaign'
 
 const JoinedCampaignList = () => {
+  const { data: session } = useSession()
+  const { data: campaigns } = useCampaignListParticipated(session?.user?.id)
+  console.log('🚀 ~ JoinedCampaignList ~ campaigns:', session?.user)
+
   return (
     <CollapsibleSection title="Campaign Joined" defaultOpen={true}>
       <div className="w-full max-w-sm">
-        {dummyCampaigns.map((item: Record<string, string>, index: number) => (
-          <ClaimCampaign
-            key={index}
-            tokenName={item.name}
-            tokenPrice={item.price}
-            statusLabel="Claimable"
-            statusValue="123.45 (tick)"
-            buttonText="Claim"
-            variant="filled"
-            tokenImage={item.imgUrl}
-            onClick={() => console.log('Claim clicked')}
-          />
-        ))}
+        {campaigns?.map((campaign: Campaign) => {
+          const remainingAmount =
+            campaign.totalAmount - (campaign.totalAmount - campaign.remainingAmount)
+          const claimableAmount = campaign.claimed ? '0' : remainingAmount.toString()
+          const tokenPrice = campaign.marketCap
+            ? `$${(Number(campaign.marketCap) / campaign.totalAmount).toFixed(6)}`
+            : '$0.000000'
+
+          return (
+            <ClaimCampaign
+              key={campaign.id}
+              tokenName={campaign.tokenName}
+              tokenPrice={tokenPrice}
+              statusLabel="Claimable"
+              statusValue={`${claimableAmount} (${campaign.ticker || 'TOKEN'})`}
+              buttonText={campaign.claimed ? 'Claimed' : 'Claim'}
+              variant={campaign.claimed ? 'outline' : 'filled'}
+              disabled={campaign.claimed || Number(claimableAmount) === 0}
+              onClick={() => console.log('Claim clicked for campaign:', campaign.id)}
+            />
+          )
+        }) || []}
         {/* 
         <ClaimCampaign
           tokenName="Token name"
