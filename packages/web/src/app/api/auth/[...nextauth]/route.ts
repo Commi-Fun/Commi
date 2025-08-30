@@ -36,6 +36,9 @@ export const nextAuthOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
   },
+  pages: {
+    signIn: '/auth/signin',
+  },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
     async signIn({ user }) {
@@ -145,6 +148,14 @@ export const nextAuthOptions: NextAuthOptions = {
       console.log('sign in session', session)
 
       return session
+    },
+
+    async redirect({ url, baseUrl }) {
+      // 检查是否是因用户取消授权导致的错误
+      if (url.includes('error=Callback') || url.includes('error=OAuthCallback')) {
+        return '/' // 跳转到首页
+      }
+      return url.startsWith('/') ? new URL(url, baseUrl).href : url
     },
   },
 }
