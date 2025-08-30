@@ -10,12 +10,12 @@ export const POST = withErrorHandler(async (req: NextRequest) => {
   if (!session) {
     return error('Invalid token.', 401)
   }
-  const userDto = { userId: session.user.userId, twitterId: session.user.twitterId }
+  const userDto = { userId: session.user.userId, twitterId: session.user.id }
   const body = await req.json()
   const { campaignId } = body
   const result = await campaignService.joinCampaign(userDto, campaignId)
   if (!result.success) {
-    return error(result.error || 'Failed to calim rewards', 500)
+    return error(result.error || 'Failed to join campaign', 500)
   }
 
   return success(result.data)

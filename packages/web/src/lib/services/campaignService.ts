@@ -108,7 +108,7 @@ export async function get(
         airdropAmount: string
         percentage: number
       }>
-    >`SELECT u."twitterId", u."handle" as twitterHandle, l."rank", l."score", l."airdropAmount", l."percentage" FROM public."Leaderboard" l WHERE l."campaignId" = ${campaign.id} INNER JOIN public."User" u ON l."twitterId" = u."twitterId"`
+    >`SELECT u."twitterId", u."handle" as twitterHandle, l."rank", l."score", l."airdropAmount", l."percentage" FROM public."Leaderboard" l INNER JOIN public."User" u ON l."twitterId" = u."twitterId" WHERE l."campaignId" = ${campaign.id}`
     responseDto.leaderboard = leaderboardUsers.map(lb => ({
       twitterId: lb.twitterId,
       twitterHandle: lb.twitterHandle,
@@ -158,7 +158,7 @@ export async function create(
 export async function joinCampaign(user: UserDTO, campaignId: number): Promise<ServiceResult> {
   try {
     const dbUser = await prisma.user.findUnique({
-      where: { id: user.userId },
+      where: { twitterId: user.twitterId },
     })
     if (!dbUser) {
       throw new NotFoundError('User not found.')

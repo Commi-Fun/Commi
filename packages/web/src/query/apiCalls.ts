@@ -11,6 +11,7 @@ export const API_URLS = {
   CAMPAIGN_DETAIL: 'api/campaign/get',
   CAMPAIGN_CREATED: 'api/campaign/created',
   CAMPAIGN_LIST_PARTICIPATED: 'api/campaign/listParticipated',
+  CAMPAIGN_JOIN: 'api/campaign/join',
 }
 
 // API call functions
@@ -43,8 +44,8 @@ export const getCampaignList = async (): Promise<Campaign[]> => {
 
   return response.data.data
 }
-export const getCampaignDetail = async (uid: string): Promise<AxiosResponse<Campaign>> => {
-  const response: AxiosResponse<Campaign> = await axiosGet({
+export const getCampaignDetail = async (uid: string): Promise<Campaign> => {
+  const response = await axiosGet({
     url: API_URLS.CAMPAIGN_DETAIL,
     config: {
       params: {
@@ -53,7 +54,7 @@ export const getCampaignDetail = async (uid: string): Promise<AxiosResponse<Camp
     },
   })
 
-  return response
+  return response.data.data
 }
 export const getCampaignCreated = async (): Promise<AxiosResponse<Campaign[]>> => {
   const response: AxiosResponse<Campaign[]> = await axiosGet({
@@ -84,4 +85,15 @@ export const getCampaignListParticipated = async (
   })
 
   return response.data
+}
+
+export const joinCampaign = async (campaignId: number): Promise<AxiosResponse<null>> => {
+  const response: AxiosResponse<null> = await axiosPost({
+    url: API_URLS.CAMPAIGN_JOIN,
+    data: {
+      campaignId,
+    },
+  })
+
+  return response
 }

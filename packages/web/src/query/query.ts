@@ -7,6 +7,7 @@ import {
   getCampaignDetail,
   getCampaignList,
   getCampaignListParticipated,
+  joinCampaign,
 } from './apiCalls'
 import { UserConnectRequest, connectedUser } from '../types/user'
 import { CampaignCreateRequest, Campaign } from '../types/campaign'
@@ -106,6 +107,24 @@ export const useCampaignListParticipated = (userId: string | undefined) => {
       return response.data
     },
     enabled: !!userId,
+  })
+}
+
+export const useJoinCampaignMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async (campaignId: number): Promise<null> => {
+      const response = await joinCampaign(campaignId)
+      return response.data
+    },
+    onSuccess: () => {
+      // Invalidate campaign queries to refetch updated data
+      queryClient.invalidateQueries({ queryKey: queryKeys.campaign.all })
+    },
+    onError: error => {
+      console.error('Failed to join campaign:', error)
+    },
   })
 }
 

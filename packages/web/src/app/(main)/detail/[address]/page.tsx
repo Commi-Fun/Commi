@@ -7,17 +7,14 @@ import { Divider } from '@mui/material'
 import LeaderBoards from '@/dashboard/detailComponents/leaderBoard'
 import { useParams, useRouter } from 'next/navigation'
 import { useMemo, useState } from 'react'
-import { useCampaigns } from '@/query/query'
+import { useCampaign } from '@/query/query'
 
 const Detail = () => {
   const router = useRouter()
   const params = useParams()
   const address = useMemo(() => params.address as string, [params.address])
-  const { data: campaigns } = useCampaigns()
-  const taretCampaign = useMemo(
-    () => campaigns?.find(campaign => campaign.id.toString() === address),
-    [campaigns, address],
-  )
+  const { data: campaign } = useCampaign(address)
+
   const [status, setStatus] = useState<string>('init')
 
   return (
@@ -26,7 +23,7 @@ const Detail = () => {
         <ChevronLeft className="text-2xl cursor-pointer" onClick={() => router.push('/')} />
       </div>
       <div className="flex gap-6 px-10 justify-between">
-        <CampaignDetailCard campaign={taretCampaign} />
+        <CampaignDetailCard campaign={campaign} />
         <div className="flex-shrink-0">
           <PoolInfoCard address={address} status={status} setStatus={setStatus} />
         </div>
